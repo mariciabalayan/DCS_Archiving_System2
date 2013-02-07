@@ -4,11 +4,12 @@ from django.shortcuts import render_to_response
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect
+from django.shortcuts import render
 from django.template import RequestContext
 import scanner
 from django.contrib.auth.models import User
 from models import Faculty
-
+from forms import ScanForm
 # Create your views here.
 
 #To call scanner.py use:
@@ -44,10 +45,6 @@ def index(request):
 @login_required
 def dashboard(request):
     return render_to_response('dashboard.html', { 'user': request.user })
-
-@login_required
-def scanpage(request):
-    return render_to_response('scanpage.html', { 'user': request.user })
 	
 @login_required
 def upload(request):
@@ -57,6 +54,11 @@ def upload(request):
 def scan(request):
     scanner.SimpleApp(0).MainLoop()
     return render_to_response('scan.html')
+
+@login_required
+def scanpage(request):
+    return render_to_response('scanpage.html', { 'user': request.user })
+
 
 @login_required
 def view_users(request):
