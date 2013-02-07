@@ -1,0 +1,34 @@
+{% extends "template2.html" %}
+<title> Users </title>
+
+{%block content%}    
+ 
+<br>
+<form class="form-search">
+<div class="row">
+  <div class="span offset9">
+    <div class="input-append">
+		<input type="text" class="span2 search-query">
+		<button type="submit" class="btn">Search</button>
+	</div>
+  </div>
+</div>
+
+</form> 
+<h1 align=center>Faculty</h1>
+<table border=1 width=80% align=center class="table table-striped">
+	<tr><th>Last Name</th><th>First Name</th><th>Middle Name</th><th>Birthday</th><th>Highest Degree Attained</th><th>Length of Service</th><th>Action</th></tr>
+    {% for a in users_list %}
+        <tr>
+		<td>{{ a.last_name }}</td>
+		<td>{{ a.first_name }}</td>
+		<td>{{ a.middle_name }}</td>
+		<td>{{ a.birthday }}</td>
+		<td>{{ a.highest_degree_attained }}</td>
+		<td>{{ a.length_of_service }}</td>
+		<td><a href="{{ a.id }}/profile">View Profile</a></td>
+		</tr>		
+    {% endfor %}
+</table>
+    
+{% endblock %}

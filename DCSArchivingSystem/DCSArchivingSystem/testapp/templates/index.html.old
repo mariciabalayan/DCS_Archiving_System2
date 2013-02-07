@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% comment %}
+Index/Home Page
+{% endcomment %}
+
+{% block head %}
+    <title>DCS Archiving System</title>
+{% endblock %}
+
+{% block body %}
+    {% comment %}
+        Variables passed from views.py is enclosed in {{ }}
+        Functions like the for loop is enclosed in {% %}
+    {% endcomment %}
+    
+    This is the home page :)
+    <br>
+    Open <b>urls.py</b>, <b>view.py</b> and <b>index.html</b> to edit this.
+    <br>
+    Try adding your name in Members, put your name in Last Edited by and leave a message for carl
+    <br><br>
+    <b>Members:</b>
+    <ol>
+    {% for name in nameList %}
+        <li> {{ name }}
+    {% endfor %}
+    </ol>
+    <b>Last edited by:</b> {{ lastEditedBy }}
+    <br><br>
+    <b>Messages to Carl:</b>
+    <br>
+    {{ fromNoel }}
+<br>
+    {{ fromCha }}
+<br>
+    {{ fromCarl }}
+<br>
+    {{ fromMarc }}
+        <br>
+    {{ fromSmit }}
+<br>
+{{ fromJas }}
+{% endblock %}

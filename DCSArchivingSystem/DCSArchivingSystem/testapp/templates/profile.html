@@ -1,0 +1,28 @@
+{% extends "template2.html" %}
+<title> Users </title>
+
+{%block content%} 
+	
+	<div class = "row">
+	<br><div class="span offset10"><img src="/media/{{ MEDIA_URL }}{{ current_faculty.photo }}" class = "img-polaroid" width = 350px height = 350px/></div><br>
+	</div>
+	<span class="label label-info"><h2>{{ current_faculty.last_name }},{{ current_faculty.first_name }} {{ current_faculty.middle_name }}</h2></span>
+	<button class="btn btn-link" type="button">(Edit Profile)</button>
+	<table border=1 width=80% align=center class="table table-striped">	
+		<tr><th width = 200>Last Name</th><td>{{ current_faculty.last_name }}</td></tr>
+		<tr><th>First Name</th><td>{{ current_faculty.first_name }}</td></tr>
+		<tr><th>Middle Name</th><td>{{ current_faculty.middle_name }}</td></tr>
+		<tr><th>Birthday</th><td>{{ current_faculty.birthday }}</td></tr>
+		<tr><th>Highest Degree Attained</th><td>{{ current_faculty.highest_degree_attained }}</td></tr>
+		<tr><th>Length Of Service</th><td>{{ current_faculty.length_of_service }}</td></tr>		
+	</table>
+
+	<span class="label label-info"><h2>Records</h2></span>
+	<table border=1 width=80% align=center class="table table-striped">
+		<tr><td><a href="#">Link 1</a></td></tr>
+		<tr><td><a href="#">Link 2</a></td></tr>
+		<tr><td><a href="#">Link 3</a></td></tr>
+	</table>
+{% endblock %}
+
+</html>

@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% comment %}
+	Base template when logged in
+{% endcomment %}
+
+{% block head %}
+    <title>DCS Archiving System</title>
+    <style type="text/css">
+        .template_body
+        {
+            padding-top:40px;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="navbar navbar-fixed-top">
+        <div class="navbar-inner">
+			<a class="brand" href="#">DCS Archiving System</a>
+			<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">Menu <span class="icon-bar"></span></a>
+			<div class="nav-collapse collapse">
+				<ul class="nav pull-right">
+					<li class=""><a href="/dashboard/">Home</a>
+					<li class=""><a href="/scanpage/">Scan</a>
+					<li class=""><a href="/users/">Faculty</a>
+					<li class=""><a href="/logout/">Log out</a>
+				</ul>
+			</div>
+        </div>
+    </div>
+	
+    <div class="container">
+    <p class="template_body">
+    {% block content %}{% endblock %}
+    </p>
+	
+    <footer>
+        <br>
+        <span class="pull-right">&copy; DCS Archiving System 2012</span>
+    </footer>
+    </div>
+
+
+{% endblock %}
