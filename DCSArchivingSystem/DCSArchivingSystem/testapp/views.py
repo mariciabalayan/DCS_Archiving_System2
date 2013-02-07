@@ -57,7 +57,7 @@ def scan(request):
 
 @login_required
 def scanpage(request):
-    return render_to_response('scanpage.html', { 'user': request.user })
+    return render_to_response('scanpage.html', { 'user': request.user }, context_instance=RequestContext(request))
 
 
 @login_required

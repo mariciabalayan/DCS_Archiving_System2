@@ -1,15 +1,37 @@
 {% extends "template2.html" %}
-<title> Scan Page </title>
+<title> Users </title>
 
-{%block content%} 
-	<br><div class="hero-unit">
-           <h1>Scan</h1>
-           <p>Select files to scan and save.</p>
-		</h1>			
-			<form method="LINK" action="/scan/">
-			<button class="btn btn-primary" input type="submit" value="Scan">Scan</button>
-		</form>
-       </div>
+{%block content%}    
+<br>
+
+<form enctype="multipart/form-data" method="post" action="/upload/">
+    {% csrf_token %}
+  <div class="control-group">
+    <label class="control-label">Title</label>
+    <div class="controls">
+      <input type="text" id="title" placeholder="Title">
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label">No. of Pages</label>
+    <div class="controls">
+      <input type="text" id="pages" placeholder="# of Pages">
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label">Faculty</label>
+    <div class="controls">	
+    <select>
+        {% for a in faculty_list %}
+    <option>{{ a.last_name }}, {{ a.first_name}}</option>
+        {% endfor %}
+    </select>
+</div>  </div>
+  <div class="control-group">
+    <div class="controls">
+      <button type="submit" class="btn">Scan</button>
+    </div>
+  </div>
+</form>
+    
 {% endblock %}
-
-</html>
