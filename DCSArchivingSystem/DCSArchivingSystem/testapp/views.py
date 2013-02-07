@@ -50,6 +50,10 @@ def scanpage(request):
     return render_to_response('scanpage.html', { 'user': request.user })
 	
 @login_required
+def upload(request):
+    return render_to_response('upload.html', { 'user': request.user })
+	
+@login_required
 def scan(request):
     scanner.SimpleApp(0).MainLoop()
     return render_to_response('scan.html')

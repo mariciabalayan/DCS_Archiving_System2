@@ -36,9 +36,10 @@ urlpatterns = patterns('DCSArchivingSystem.testapp.views',
     #Users Page
     url(r'^users/$', 'view_users'),
 	
+	# Upload
+	url(r'^upload/$', 'upload'),
 	
 	#Profile
-	#url(r'^profile/$', 'view_profile'),
     url(r'^users/(?P<faculty_number>[0-9]+)/profile/$', 'view_profile'),
 
     # Main Page
