@@ -94,7 +94,7 @@ class Transaction(models.Model):
         return self.name
         
 class File(models.Model):
-    user            = models.ForeignKey(User)
+    faculty         = models.ForeignKey(Faculty)
     transaction     = models.ForeignKey(Transaction)
     file            = models.FileField(upload_to='files/%Y')
 
