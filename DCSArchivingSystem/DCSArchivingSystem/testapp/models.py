@@ -50,14 +50,17 @@ class Course(models.Model):
 
 class Faculty(models.Model):
     user            = models.ForeignKey(User)
-    first_name      = models.CharField(max_length=64, null=True, blank=True)
+    first_name      = models.CharField(max_length=64)
     middle_name     = models.CharField(max_length=32, null=True, blank=True)
-    last_name       = models.CharField(max_length=32, null=True, blank=True)
+    last_name       = models.CharField(max_length=32)
     photo           = models.FileField(upload_to='photos', null=True, blank=True)
     birthday        = models.DateField(null=True, blank=True)
     course          = models.ForeignKey(Course, null=True, blank=True)
     highest_degree_attained = models.CharField(max_length=100, null=True, blank=True)
     length_of_service       = models.CharField(max_length=100, null=True, blank=True)
+
+    def __unicode__(self):
+        return self.last_name+", "+ self.first_name
 
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
@@ -94,12 +97,13 @@ class Transaction(models.Model):
         return self.name
         
 class File(models.Model):
+    filename        = models.CharField(max_length=32)
     faculty         = models.ForeignKey(Faculty)
     transaction     = models.ForeignKey(Transaction)
     file            = models.FileField(upload_to='files/%Y')
 
     def __unicode__(self):
-        return file.name + " " + file.size + " bytes"
+        return self.filename
 
 class Action(models.Model):
     name     = models.CharField(max_length=100)
