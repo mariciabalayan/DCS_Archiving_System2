@@ -41,7 +41,7 @@ urlpatterns = patterns('DCSArchivingSystem.testapp.views',
 	
 	#Profile
     url(r'^users/(?P<faculty_number>[0-9]+)/profile/$', 'view_profile'),
-
+	
     # Main Page
     url(r'^$', 'index'),
 	

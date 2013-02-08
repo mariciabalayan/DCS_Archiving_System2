@@ -8,7 +8,7 @@ from django.shortcuts import render
 from django.template import RequestContext
 import scanner
 from django.contrib.auth.models import User
-from models import Faculty
+from models import Faculty, File
 from forms import ScanForm
 # Create your views here.
 
@@ -71,8 +71,9 @@ def view_profile(request, faculty_number):
 #    current_user = request.user
 #    current_faculty = Faculty.objects.get(user_id = current_user.id)
 #    return render_to_response('profile.html', {'current_user': current_user, 'current_faculty': current_faculty})
+    file_list= File.objects.filter(faculty_id = int(faculty_number))
     current_faculty = Faculty.objects.get(id = int(faculty_number))
-    return render_to_response('profile.html', {'current_faculty': current_faculty})
+    return render_to_response('profile.html', {'current_faculty': current_faculty, 'file_list': file_list})
 	
 def log_in(request):
     if request.user.is_authenticated():
