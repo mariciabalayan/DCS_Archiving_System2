@@ -38,6 +38,9 @@ urlpatterns = patterns('DCSArchivingSystem.testapp.views',
 	
 	# Upload
 	url(r'^upload/$', 'upload'),
+    
+    # Logs
+	url(r'^logs/$', 'view_logs'),
 	
 	#Profile
     url(r'^users/(?P<faculty_number>[0-9]+)/profile/$', 'view_profile'),

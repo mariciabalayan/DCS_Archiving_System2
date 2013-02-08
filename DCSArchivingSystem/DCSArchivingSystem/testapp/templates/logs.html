@@ -1,0 +1,32 @@
+{% extends "template2.html" %}
+<title> Users </title>
+
+{%block content%}    
+ 
+<br>
+<form class="form-search">
+<div class="row">
+  <div class="span offset9">
+    <div class="input-append">
+		<input type="text" class="span2 search-query">
+		<button type="submit" class="btn">Search</button>
+	</div>
+  </div>
+</div>
+
+</form> 
+<h1 align=center>Logs</h1>
+<table border=1 width=80% align=center class="table table-striped">
+	<tr><th>username</th><th>Action</th><th>File</th><th>Date</th><th>Time</th></tr>
+    {% for a in log_list %}
+        <tr>
+		<td>{{ a.user }}</td>
+		<td>{{ a.action }}</td>
+		<td>{{ a.file }}</td>
+		<td>{{ a.timestamp.date }}</td>
+		<td>{{ a.timestamp.time }}</td>
+		</tr>		
+    {% endfor %}
+</table>
+    
+{% endblock %}

@@ -8,7 +8,7 @@ from django.shortcuts import render
 from django.template import RequestContext
 import scanner
 from django.contrib.auth.models import User
-from models import Faculty, File
+from models import Faculty, File, Log
 from forms import ScanForm
 # Create your views here.
 
@@ -34,6 +34,7 @@ def index(request):
             if user.is_active:
                 login(request, user)
                 state = "Login ok!"
+                Log.create(user, "Logged in", None).save()
                 return HttpResponseRedirect("/dashboard/")
             else:
                 state = "Account not active."
@@ -65,6 +66,11 @@ def scanpage(request):
 def view_users(request):
     users_list= Faculty.objects.all()
     return render_to_response('users.html', {'users_list': users_list})
+    
+@login_required
+def view_logs(request):
+    log_list= Log.objects.all()
+    return render_to_response('logs.html', {'log_list': log_list})
 	
 @login_required
 def view_profile(request, faculty_number):
@@ -88,6 +94,7 @@ def log_in(request):
             if user.is_active:
                 login(request, user)
                 state = "Login ok!"
+                Log.create(user, "Logged in", None).save()
                 return HttpResponseRedirect("/dashboard/")
             else:
                 state = "Account not active."
@@ -97,6 +104,7 @@ def log_in(request):
     return render_to_response('login.html',RequestContext(request, {'state':state}))
 
 def log_out(request):
+    Log.create(request.user, "Logged out", None).save()
     logout(request)
     return HttpResponseRedirect('/')
     

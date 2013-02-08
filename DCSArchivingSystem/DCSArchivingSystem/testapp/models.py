@@ -105,18 +105,20 @@ class File(models.Model):
     def __unicode__(self):
         return self.filename
 
-class Action(models.Model):
-    name     = models.CharField(max_length=100)
+class Log(models.Model):
+
+    user            = models.ForeignKey(User)
+    action          = models.CharField(max_length=100)
+    file            = models.ForeignKey(File, null=True, blank=True)
+    timestamp       = models.DateTimeField(auto_now=True)
 
     def __unicode__(self):
-        return self.name
-
-# file_id is the affected file
-class Log(models.Model):
-    user            = models.ForeignKey(User)
-    action          = models.ForeignKey(Action)
-    file            = models.ForeignKey(File)
-    timestamp       = models.DateTimeField()
+        return str(self.user) + " " + self.action + " " + str(self.file) + " " + str(self.timestamp)
+        
+    @classmethod
+    def create(cls, user, action, file):
+        log = cls(user=user, action=action, file=file)
+        return log
 
 # Register Models to Django Admin
 admin.site.register(Department)
@@ -128,5 +130,4 @@ admin.site.register(Address)
 admin.site.register(Transaction)
 admin.site.register(Faculty)
 admin.site.register(File)
-admin.site.register(Action)
 admin.site.register(Log)
