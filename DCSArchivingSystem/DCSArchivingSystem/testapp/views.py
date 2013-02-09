@@ -69,6 +69,8 @@ def scanpage2(request):
         title= request.POST.get('title')
         faculty= request.POST.get('faculty')
         pages= request.POST.get('pages')
+        faculty= faculty.replace(' ', "")
+        faculty= faculty.replace(',', "")
 #        if (title!= None and title != '') and (faculty!= None and faculty!= '') and pages!='' and pages!= None:
         return render_to_response('scanpage2.html', { 'user': request.user, 'faculty_list': users_list, 'title':title, 'pages':pages, 'faculty':faculty, 'state':state}, context_instance=RequestContext(request))
         
