@@ -3,10 +3,9 @@
 
 {%block content%}    
 <br>
-
+{{ state }}
 <form enctype="multipart/form-data" method="post" action="/scanpage2/">
     {% csrf_token %}
-  {{state}}
   <div class="control-group">
     <label class="control-label">Title</label>
     <div class="controls">
