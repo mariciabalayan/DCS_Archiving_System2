@@ -4,24 +4,25 @@
 {%block content%}    
 <br>
 
-<form enctype="multipart/form-data" method="post" action="/upload/">
+<form enctype="multipart/form-data" method="post" action="/scanpage2/">
     {% csrf_token %}
+  {{state}}
   <div class="control-group">
     <label class="control-label">Title</label>
     <div class="controls">
-      <input type="text" id="title" placeholder="Title">
+      <input type="text" id="title" placeholder="Title" value="{{ title }}" >
     </div>
   </div>
   <div class="control-group">
     <label class="control-label">No. of Pages</label>
     <div class="controls">
-      <input type="text" id="pages" placeholder="# of Pages">
+      <input type="number" id="pages" placeholder="# of Pages" value= {{ pages}}>
     </div>
   </div>
   <div class="control-group">
     <label class="control-label">Faculty</label>
     <div class="controls">	
-    <select>
+    <select title= 'faculty'>
         {% for a in faculty_list %}
     <option>{{ a.last_name }}, {{ a.first_name}}</option>
         {% endfor %}
@@ -29,9 +30,10 @@
 </div>  </div>
   <div class="control-group">
     <div class="controls">
-      <a href = "scn://">Scan</a>
+      <button type="submit" class="btn">Scan</button>    
     </div>
   </div>
 </form>
+
     
 {% endblock %}

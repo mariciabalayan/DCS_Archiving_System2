@@ -59,8 +59,20 @@ def scan(request):
 @login_required
 def scanpage(request):
     users_list= Faculty.objects.all()
-    return render_to_response('scanpage.html', { 'user': request.user, 'faculty_list': users_list }, context_instance=RequestContext(request))
+    return render_to_response('scanpage.html', { 'user': request.user, 'faculty_list': users_list}, context_instance=RequestContext(request))
 
+@login_required
+def scanpage2(request):
+    users_list= Faculty.objects.all()
+    title= faculty= pages= state= ''
+    if request.method=='POST':
+        title= request.POST.get('title')
+        faculty= request.POST.get('faculty')
+        pages= request.POST.get('pages')
+#        if (title!= None and title != '') and (faculty!= None and faculty!= '') and pages!='' and pages!= None:
+        return render_to_response('scanpage2.html', { 'user': request.user, 'faculty_list': users_list, 'title':title, 'pages':pages, 'faculty':faculty, 'state':state}, context_instance=RequestContext(request))
+        
+    return render_to_response('scanpage.html', { 'user': request.user, 'faculty_list': users_list, 'title':title, 'pages':pages, 'faculty':faculty, 'state':state}, context_instance=RequestContext(request))
 
 @login_required
 def view_users(request):

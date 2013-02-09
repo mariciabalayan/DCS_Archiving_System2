@@ -29,6 +29,7 @@ urlpatterns = patterns('DCSArchivingSystem.testapp.views',
 
 	# Scan Page
 	url(r'^scanpage/$', 'scanpage'),
+	url(r'^scanpage2/$', 'scanpage2'),
 		
     # Scan
     url(r'^scan/$', 'scan'),
