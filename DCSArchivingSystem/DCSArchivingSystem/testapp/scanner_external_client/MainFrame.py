@@ -2,6 +2,7 @@
 
 import wx
 import gui
+import requests
 from simple_base import TwainBase
 
 # You can either Poll the TWAIN source, or process the scanned image in an
@@ -34,8 +35,12 @@ class MainFrame( gui.MainFrameBase, TwainBase):
 		self.m_statusBar.SetStatusText("")
 	
 	def m_btUploadClick( self, event ):
-		event.Skip()
-	
+                url = 'http://httpbin.org/post'
+                files = {'file': ('tmpnatively.bmp', open('tmpnatively.bmp', 'rb'))}
+                r = requests.post(url, files=files)
+                print r
+                r.text
+		
 	def m_btUploadHoverIn( self, event ):
 		self.m_statusBar.SetStatusText("Upload an image")
 	
