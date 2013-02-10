@@ -56,7 +56,6 @@ def upload(request):
         files = request.FILES['fileContents']
         #Needs to be in existing directory
         with open('DCSArchivingSystem/testapp/media/files/'+filename, 'wb+') as destination:
-            print 'a'
             for chunk in files.chunks():
                 destination.write(chunk)
         #Placeholder redirect. Won't matter anyway
