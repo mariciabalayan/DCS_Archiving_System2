@@ -2,7 +2,11 @@
 
 import wx
 import gui
-import requests
+import httplib, urllib, requests
+import json
+from poster.encode import multipart_encode
+from poster.streaminghttp import register_openers
+import urllib2
 from simple_base import TwainBase
 
 # You can either Poll the TWAIN source, or process the scanned image in an
@@ -10,59 +14,69 @@ from simple_base import TwainBase
 # Specifically this does not work with Tkinter.
 USE_CALLBACK=True
 
+register_openers()
+
 # Implementing MainFrameBase
 class MainFrame( gui.MainFrameBase, TwainBase):
-	def OnClose( self, event ):
-		self.Terminate()
-		self.Destroy()
-	
-	def m_btConnectClick( self, event ):
-		self.OpenScanner(self.GetHandle(), ProductName="Simple wxPython Demo", UseCallback=USE_CALLBACK)
-	
-	def m_btConnectHoverIn( self, event ):
-		self.m_statusBar.SetStatusText("Select a scanner for acquiring images")
-	
-	def m_btConnectHoverOut( self, event ):
-		self.m_statusBar.SetStatusText("")
-	
-	def m_btScanClick( self, event ):
-		return self.AcquireNatively()
-	
-	def m_btScanHoverIn( self, event ):
-		self.m_statusBar.SetStatusText("Scan an image")
-	
-	def m_btScanHoverOut( self, event ):
-		self.m_statusBar.SetStatusText("")
-	
-	def m_btUploadClick( self, event ):
-                url = 'http://httpbin.org/post'
-                files = {'file': ('tmpnatively.bmp', open('tmpnatively.bmp', 'rb'))}
-                r = requests.post(url, files=files)
-                print r
-                r.text
-		
-	def m_btUploadHoverIn( self, event ):
-		self.m_statusBar.SetStatusText("Upload an image")
-	
-	def m_btUploadHoverOut( self, event ):
-		self.m_statusBar.SetStatusText("")
+        def setParams(self,facultyName,totalPages,formTitle):
+                self.name=facultyName
+                self.pages=totalPages
+                self.title=formTitle
+                print self.name
+                print self.pages
+                print self.title
+        
+        def OnClose( self, event ):
+                self.Terminate()
+                self.Destroy()
+        
+        def m_btConnectClick( self, event ):
+                self.OpenScanner(self.GetHandle(), ProductName="Simple wxPython Demo", UseCallback=USE_CALLBACK)
+        
+        def m_btConnectHoverIn( self, event ):
+                self.m_statusBar.SetStatusText("Select a scanner for acquiring images")
+        
+        def m_btConnectHoverOut( self, event ):
+                self.m_statusBar.SetStatusText("")
+        
+        def m_btScanClick( self, event ):
+                return self.AcquireNatively()
+        
+        def m_btScanHoverIn( self, event ):
+                self.m_statusBar.SetStatusText("Scan an image")
+        
+        def m_btScanHoverOut( self, event ):
+                self.m_statusBar.SetStatusText("")
+        
+        def m_btUploadClick( self, event ):
+                #"http://httpbin.org/post": Test link. Change to appropriate upload link
+                datagen, headers = multipart_encode({"fileContents": open("tmpnatively.bmp", "rb"), "filename": str(self.title+"_"+str(self.pages)+".bmp"), "faculty": str(self.name)})
+                request=urllib2.Request("http://httpbin.org/post",datagen,headers)
+                print urllib2.urlopen(request).read()
+                        
+        def m_btUploadHoverIn( self, event ):
+                self.m_statusBar.SetStatusText("Upload an image")
+        
+        def m_btUploadHoverOut( self, event ):
+                self.m_statusBar.SetStatusText("")
 
-	def m_btExitClick( self, event ):
-		self.Close(1)
-	
-	def m_btExitHoverIn( self, event ):
-		self.m_statusBar.SetStatusText("Terminate this program")
-	
-	def m_btExitHoverOut( self, event ):
-		self.m_statusBar.SetStatusText("")
+        def m_btExitClick( self, event ):
+                self.Close(1)
+        
+        def m_btExitHoverIn( self, event ):
+                self.m_statusBar.SetStatusText("Terminate this program")
+        
+        def m_btExitHoverOut( self, event ):
+                self.m_statusBar.SetStatusText("")
 
-	def DisplayImage(self, ImageFileName):
-		bmp = wx.Image(ImageFileName, wx.BITMAP_TYPE_BMP).ConvertToBitmap()
-		self.m_bitmap.SetBitmap(bmp)
-		self.m_scrolledWindow.maxWidth = bmp.GetWidth()
-		self.m_scrolledWindow.maxHeight = bmp.GetHeight()
-		self.m_scrolledWindow.SetScrollbars(20, 20, bmp.GetWidth()/20, bmp.GetHeight()/20)
-		self.m_bitmap.Refresh()
-		
-	
-	
+        def DisplayImage(self, ImageFileName):
+                bmp = wx.Image(ImageFileName, wx.BITMAP_TYPE_BMP).ConvertToBitmap()
+                self.m_bitmap.SetBitmap(bmp)
+                self.m_scrolledWindow.maxWidth = bmp.GetWidth()
+                self.m_scrolledWindow.maxHeight = bmp.GetHeight()
+                self.m_scrolledWindow.SetScrollbars(20, 20, bmp.GetWidth()/20, bmp.GetHeight()/20)
+                self.m_bitmap.Refresh()
+                
+                
+        
+        
