@@ -9,10 +9,9 @@ from django.template import RequestContext
 from django.contrib.auth.models import User
 from models import Faculty, File, Log
 from forms import ScanForm
-# Create your views here.
+from django.views.decorators.csrf import csrf_exempt
 
-#To call scanner.py use:
-#scanner.SimpleApp(0).MainLoop()
+# Create your views here.
 
 # This is the function that is called by a url(...), in urls.py
 #def index(request):
@@ -46,13 +45,26 @@ def index(request):
 def dashboard(request):
     return render_to_response('dashboard.html', { 'user': request.user })
 	
-@login_required
+#@login_required
+
+@csrf_exempt
 def upload(request):
-    return render_to_response('upload.html', { 'user': request.user })
+    
+    if request.POST:
+        filename = request.POST.get('filename')
+        faculty = request.POST.get('faculty')
+        files = request.FILES['fileContents']
+        #Needs to be in existing directory
+        with open('DCSArchivingSystem/testapp/media/files/'+filename, 'wb+') as destination:
+            print 'a'
+            for chunk in files.chunks():
+                destination.write(chunk)
+        #Placeholder redirect. Won't matter anyway
+        return HttpResponseRedirect("/dashboard/")
+    return render_to_response('upload.html', {'form': form}, context_instance=RequestContext(request))
 	
 @login_required
 def scan(request):
-    scanner.SimpleApp(0).MainLoop()
     return render_to_response('scan.html')
 
 @login_required

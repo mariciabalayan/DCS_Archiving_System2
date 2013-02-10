@@ -50,8 +50,8 @@ class MainFrame( gui.MainFrameBase, TwainBase):
         
         def m_btUploadClick( self, event ):
                 #"http://httpbin.org/post": Test link. Change to appropriate upload link
-                datagen, headers = multipart_encode({"fileContents": open("tmpnatively.bmp", "rb"), "filename": str(self.title+"_"+str(self.pages)+".bmp"), "faculty": str(self.name)})
-                request=urllib2.Request("http://httpbin.org/post",datagen,headers)
+                datagen, headers = multipart_encode({"fileContents": open("tmpnatively.bmp", "rb"), "filename": str(self.name+"_"+self.title+"_"+str(self.pages)+".bmp"), "faculty": str(self.name)})
+                request=urllib2.Request("http://127.0.0.1:8000/upload/",datagen,headers)
                 print urllib2.urlopen(request).read()
                         
         def m_btUploadHoverIn( self, event ):
