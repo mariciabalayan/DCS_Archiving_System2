@@ -76,6 +76,14 @@ def upload(request):
             with open('DCSArchivingSystem/testapp/media/files/'+filename, 'wb+') as destination:
                 for chunk in files.chunks():
                     destination.write(chunk)
+                ######################### not tested ###################
+                file = File()
+                file.filename = filename
+                file.faculty = faculty
+                #file.transaction = transaction             #note: wala to sa mga given fields sa upload pero meron sa DB
+                file.file = "files/" + filename
+                file.save()
+                ########################################################
             return HttpResponseRedirect("/dashboard/")
         
     else: return render_to_response('upload.html', context_instance=RequestContext(request))
