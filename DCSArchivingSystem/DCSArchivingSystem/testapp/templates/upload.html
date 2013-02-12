@@ -1,35 +1,3 @@
-{% extends "template2.html" %}
-<title> Users </title>
-
-{%block content%}    
-<br>
-
 <form enctype="multipart/form-data" method="post" action="/upload/">
     {% csrf_token %}
-  <div class="control-group">
-	<input type="file" value="title" name="title" id="title" />
-    <label class="control-label">Title</label>
-    <div class="controls">
-      <input type="text" id="title" placeholder="Title">
-    </div>
-  </div>
-  <div class="control-group">
-    <label class="control-label">No. of Pages</label>
-    <div class="controls">
-      <input type="text" id="pages" placeholder="# of Pages">
-    </div>
-  </div>
-  <div class="control-group">
-    <label class="control-label">Faculty</label>
-    <div class="controls">
-      <input type="text" id="faculty" placeholder="Faculty">
-    </div>
-  </div>
-  <div class="control-group">
-    <div class="controls">
-      <button type="submit" class="btn">Upload</button>
-    </div>
-  </div>
 </form>
-    
-{% endblock %}

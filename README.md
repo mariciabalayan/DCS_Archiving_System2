@@ -7,8 +7,12 @@
 * [MySQL](http://www.mysql.com/downloads/installer/)
 * MySQL-Python - [Official (x86)](http://sourceforge.net/projects/mysql-python/) - [Unofficial (has x64)](http://www.lfd.uci.edu/~gohlke/pythonlibs/#mysql-python)
 * [Python Image Library](http://www.lfd.uci.edu/~gohlke/pythonlibs/#pil) - Required by ImageField model
-* [TWAINmodule] (http://www.lfd.uci.edu/~gohlke/pythonlibs/#twainmodule) - Required by scanner.py  _Deprecated_
-* wxPython - [Official] (http://www.wxpython.org/download.php#stable) - [Unofficial (contains wxPython-common for Windows)] (http://www.lfd.uci.edu/~gohlke/pythonlibs/#wxpython) Required by scanner.py _Deprecated_
+* [M2Crypto] (http://chandlerproject.org/Projects/MeTooCrypto) _Get the win32-py2.7.exe version_
+
+Required to run /scanner_external_client/scanner.py from python.exe
+* [TWAINmodule] (http://www.lfd.uci.edu/~gohlke/pythonlibs/#twainmodule)
+* wxPython - [Official] (http://www.wxpython.org/download.php#stable)
+* [poster] (http://atlee.ca/software/poster/dist/0.8.1/) _Get the 2.7.egg version. Using 7-Zip, extract "poster" folder to %Python Directory%\Lib\site-packages\_
 
 
 

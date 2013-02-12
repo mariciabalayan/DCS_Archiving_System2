@@ -2,11 +2,10 @@
 
 import wx
 import gui
-import httplib, urllib, requests
-import json
+import urllib2
+import cookielib
 from poster.encode import multipart_encode
 from poster.streaminghttp import register_openers
-import urllib2
 from simple_base import TwainBase
 
 # You can either Poll the TWAIN source, or process the scanned image in an
@@ -14,14 +13,34 @@ from simple_base import TwainBase
 # Specifically this does not work with Tkinter.
 USE_CALLBACK=True
 
-register_openers()
+#pOpener=register_openers()
+#pOpener.add_handler(urllib2.HTTPCookieProcessor(cookielib.CookieJar()))
 
 # Implementing MainFrameBase
 class MainFrame( gui.MainFrameBase, TwainBase):
-        def setParams(self,facultyName,totalPages,formTitle):
+        cookies = cookielib.LWPCookieJar()
+        handlers = [
+            urllib2.HTTPHandler(),
+            urllib2.HTTPSHandler(),
+            urllib2.HTTPCookieProcessor(cookies)
+            ]
+        opener=register_openers()
+        for handler in handlers:
+                opener.add_handler(handler)
+
+        def fetch(self,uri):
+            req = urllib2.Request(uri)
+            return self.opener.open(req)
+
+        def getCookie(self,cookieName):
+            for cookie in self.cookies:
+                if cookie.name==cookieName: return cookie
+        
+        def setParams(self,facultyName,totalPages,formTitle,sessid):
                 self.name=facultyName
                 self.pages=totalPages
                 self.title=formTitle
+                self.sessid=sessid
                 print self.name
                 print self.pages
                 print self.title
@@ -49,9 +68,17 @@ class MainFrame( gui.MainFrameBase, TwainBase):
                 self.m_statusBar.SetStatusText("")
         
         def m_btUploadClick( self, event ):
+                #uri = "http://127.0.0.1:8000/upload/"
+                #request=urllib2.Request("http://127.0.0.1:8000/upload/")
+                #print urllib2.urlopen(request).read()
+
+                res=self.fetch("http://127.0.0.1:8000/upload/")
+                XCSRFToken=self.getCookie("csrftoken")
+
                 #"http://httpbin.org/post": Test link. Change to appropriate upload link
-                datagen, headers = multipart_encode({"fileContents": open("tmpnatively.bmp", "rb"), "filename": str(self.name+"_"+self.title+"_"+str(self.pages)+".bmp"), "faculty": str(self.name)})
+                datagen, headers = multipart_encode({"fileContents": open("tmpnatively.bmp", "rb"), "faculty": str(self.name), "filename": str(self.name+"_"+self.title+"_"+str(self.pages)+".bmp"), "page": str(self.pages), "sessid": self.sessid})
                 request=urllib2.Request("http://127.0.0.1:8000/upload/",datagen,headers)
+                request.add_header("X-CSRFToken", XCSRFToken.value)
                 print urllib2.urlopen(request).read()
                         
         def m_btUploadHoverIn( self, event ):

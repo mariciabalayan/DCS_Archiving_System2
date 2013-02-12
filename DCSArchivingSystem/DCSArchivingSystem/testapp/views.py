@@ -9,7 +9,9 @@ from django.template import RequestContext
 from django.contrib.auth.models import User
 from models import Faculty, File, Log
 from forms import ScanForm
-from django.views.decorators.csrf import csrf_exempt
+from django.contrib.sessions.models import Session
+from datetime import datetime
+import uuid, M2Crypto
 
 # Create your views here.
 
@@ -19,6 +21,7 @@ from django.views.decorators.csrf import csrf_exempt
 #        return render_to_response('dashboard.html', {'user': request.user})
 #    else:
 #        return render_to_response('index.html')
+
 def index(request):
     if request.user.is_authenticated():
         return render_to_response('dashboard.html', {'user': request.user})
@@ -31,8 +34,12 @@ def index(request):
         if user is not None:
             if user.is_active:
                 login(request, user)
+
+                #Add session id
+                request.session['_auth_sess_id'] = uuid.UUID(bytes = M2Crypto.m2.rand_bytes(16))
+                
                 state = "Login ok!"
-                Log.create(user, "Logged in", None).save()
+                #Log.create(user, "Logged in", None).save() <-- Has error
                 return HttpResponseRedirect("/dashboard/")
             else:
                 state = "Account not active."
@@ -44,23 +51,33 @@ def index(request):
 @login_required
 def dashboard(request):
     return render_to_response('dashboard.html', { 'user': request.user })
-	
-#@login_required
 
-@csrf_exempt
 def upload(request):
-    
     if request.POST:
-        filename = request.POST.get('filename')
-        faculty = request.POST.get('faculty')
-        files = request.FILES['fileContents']
-        #Needs to be in existing directory
-        with open('DCSArchivingSystem/testapp/media/files/'+filename, 'wb+') as destination:
-            for chunk in files.chunks():
-                destination.write(chunk)
-        #Placeholder redirect. Won't matter anyway
-        return HttpResponseRedirect("/dashboard/")
-    return render_to_response('upload.html', {'form': form}, context_instance=RequestContext(request))
+        sessid = request.POST.get('sessid')
+        
+        # Query all non-expired sessions
+        sessions = Session.objects.filter(expire_date__gte=datetime.now())
+        sessid_list = []
+
+        # Build a list of non-expired session ids
+        for session in sessions:
+            data = session.get_decoded()
+            found_sessid=data.get('_auth_sess_id')
+            if found_sessid!=None: sessid_list.append(found_sessid)
+
+        # Prceeds when session id is validated
+        if uuid.UUID(sessid) in sessid_list:
+            faculty = request.POST.get('faculty')
+            filename = request.POST.get('filename')
+            page = request.POST.get('pages')
+            files = request.FILES['fileContents']
+            with open('DCSArchivingSystem/testapp/media/files/'+filename, 'wb+') as destination:
+                for chunk in files.chunks():
+                    destination.write(chunk)
+            return HttpResponseRedirect("/dashboard/")
+        
+    else: return render_to_response('upload.html', context_instance=RequestContext(request))
 	
 @login_required
 def scan(request):
@@ -79,13 +96,14 @@ def scanpage2(request):
         title= request.POST.get('title')
         faculty= request.POST.get('faculty')
         pages= request.POST.get('pages')
+        sessid= request.session['_auth_sess_id']
         faculty= faculty.replace(' ', "")
         faculty= faculty.replace(',', "")
         if (title!= None and title != '') and (faculty!= None and faculty!= '') and pages!='' and pages!= None:
             if int(pages)<0:
                 state= 'Invalid number of pages.'
 
-            else: return render_to_response('scanpage2.html', { 'user': request.user, 'faculty_list': users_list, 'title':title, 'pages':pages, 'faculty':faculty, 'state':state}, context_instance=RequestContext(request))
+            else: return render_to_response('scanpage2.html', { 'user': request.user, 'faculty_list': users_list, 'title':title, 'pages':pages, 'faculty':faculty, 'sessid':request.session['_auth_sess_id'], 'state':state}, context_instance=RequestContext(request))
         
     return render_to_response('scanpage.html', { 'user': request.user, 'faculty_list': users_list, 'title':title, 'pages':pages, 'faculty':faculty, 'state':state}, context_instance=RequestContext(request))
 
@@ -131,7 +149,7 @@ def log_in(request):
     return render_to_response('login.html',RequestContext(request, {'state':state}))
 
 def log_out(request):
-    Log.create(request.user, "Logged out", None).save()
+    #Log.create(request.user, "Logged out", None).save() <--Has error
     logout(request)
     return HttpResponseRedirect('/')
     

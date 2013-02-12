@@ -63,6 +63,7 @@ class TwainBase:
         self.SD = self.SM.OpenSource()
         if self.SD:
             self.LogMessage(self.ProductName+': ' + self.SD.GetSourceName())
+            self.SetTitle("Scanner - " + self.SD.GetSourceName())
 
         if UseCallback:
             self.SM.SetCallback(self.OnTwainEvent)
