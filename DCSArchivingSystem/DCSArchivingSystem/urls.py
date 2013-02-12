@@ -16,39 +16,42 @@ urlpatterns = patterns('DCSArchivingSystem.testapp.views',
 
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
-		
+        
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
-	
+    
     # Logged in
     url(r'^dashboard/$', 'dashboard'),
     
-	# Login/Logout
+    # Login/Logout
     url(r'^login/$', 'log_in'),
     url(r'^logout/$', 'log_out'),
 
-	# Scan Page
-	url(r'^scanpage/$', 'scanpage'),
-	url(r'^scanpage2/$', 'scanpage2'),
-		
+    # Scan Page
+    url(r'^scanpage/$', 'scanpage'),
+    url(r'^scanpage2/$', 'scanpage2'),
+        
     # Scan
     url(r'^scan/$', 'scan'),
     
+    #Search Page
+    url(r'^search/$', 'search'),
+    
     #Users Page
     url(r'^users/$', 'view_users'),
-	
-	# Upload
-	url(r'^upload/$', 'upload'),
+    
+    # Upload
+    url(r'^upload/$', 'upload'),
     
     # Logs
-	url(r'^logs/$', 'view_logs'),
-	
-	#Profile
+    url(r'^logs/$', 'view_logs'),
+    
+    #Profile
     url(r'^users/(?P<faculty_number>[0-9]+)/profile/$', 'view_profile'),
-	
+    
     # Main Page
     url(r'^$', 'index'),
-	
+    
 
     
     # URL format:

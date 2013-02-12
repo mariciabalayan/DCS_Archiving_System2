@@ -12,6 +12,7 @@ from forms import ScanForm
 from django.contrib.sessions.models import Session
 from datetime import datetime
 import uuid, M2Crypto
+from django.views.decorators.csrf import csrf_exempt
 
 # Create your views here.
 
@@ -47,7 +48,7 @@ def index(request):
             state = "* Wrong username or password."
 
     return render_to_response('login.html',RequestContext(request, {'state':state}))
-	
+    
 @login_required
 def dashboard(request):
     return render_to_response('dashboard.html', { 'user': request.user })
@@ -78,7 +79,7 @@ def upload(request):
             return HttpResponseRedirect("/dashboard/")
         
     else: return render_to_response('upload.html', context_instance=RequestContext(request))
-	
+    
 @login_required
 def scan(request):
     return render_to_response('scan.html')
@@ -116,7 +117,7 @@ def view_users(request):
 def view_logs(request):
     log_list= Log.objects.all()
     return render_to_response('logs.html', {'log_list': log_list})
-	
+    
 @login_required
 def view_profile(request, faculty_number):
 #    current_user = request.user
@@ -125,7 +126,7 @@ def view_profile(request, faculty_number):
     file_list= File.objects.filter(faculty_id = int(faculty_number))
     current_faculty = Faculty.objects.get(id = int(faculty_number))
     return render_to_response('profile.html', {'current_faculty': current_faculty, 'file_list': file_list})
-	
+    
 def log_in(request):
     if request.user.is_authenticated():
         return render_to_response('dashboard.html', {'user': request.user})
@@ -175,3 +176,15 @@ def log_out(request):
 def log_out(request):
     logout(request)
     return HttpResponseRedirect('/')"""
+
+@csrf_exempt
+def search(request):
+    state = ""
+    if request.POST:
+        search_term = request.POST.get('term')
+        results = Faculty.objects.filter(first_name__icontains=search_term) or Faculty.objects.filter(last_name__icontains=search_term)
+        if results is not None:
+            state = "Results available"
+        else:
+            state = "No results found."
+    return render_to_response('search.html', {'user': request.user, 'state': state, 'results': results}, context_instance=RequestContext(request))
