@@ -12,6 +12,7 @@ from simple_base import TwainBase
 # event callback. The event callback has not been fully tested using GTK.
 # Specifically this does not work with Tkinter.
 USE_CALLBACK=True
+PROXY='http://proxy8.upd.edu.ph:8080'
 
 #pOpener=register_openers()
 #pOpener.add_handler(urllib2.HTTPCookieProcessor(cookielib.CookieJar()))
@@ -22,6 +23,7 @@ class MainFrame( gui.MainFrameBase, TwainBase):
         handlers = [
             urllib2.HTTPHandler(),
             urllib2.HTTPSHandler(),
+            #urllib2.ProxyHandler({'http': PROXY}),
             urllib2.HTTPCookieProcessor(cookies)
             ]
         opener=register_openers()
@@ -29,7 +31,7 @@ class MainFrame( gui.MainFrameBase, TwainBase):
                 opener.add_handler(handler)
 
         def fetch(self,uri):
-            req = urllib2.Request(uri)
+            req = urllib2.Request(uri,headers={'User-Agent' : 'Mozilla/5.0'}) #browser spoofing
             return self.opener.open(req)
 
         def getCookie(self,cookieName):
@@ -79,6 +81,7 @@ class MainFrame( gui.MainFrameBase, TwainBase):
                 datagen, headers = multipart_encode({"fileContents": open("tmpnatively.bmp", "rb"), "faculty": str(self.name), "filename": str(self.name+"_"+self.title+"_"+str(self.pages)+".bmp"), "page": str(self.pages), "sessid": self.sessid})
                 request=urllib2.Request("http://127.0.0.1:8000/upload/",datagen,headers)
                 request.add_header("X-CSRFToken", XCSRFToken.value)
+                request.add_header("User-Agent", "Mozilla/5.0") #browser spoofing
                 print urllib2.urlopen(request).read()
                         
         def m_btUploadHoverIn( self, event ):

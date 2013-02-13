@@ -79,10 +79,10 @@ def upload(request):
                 ######################### not tested ###################
                 file = File()
                 file.filename = filename
-                file.faculty = faculty
+                #file.faculty = faculty                     #note: error
                 #file.transaction = transaction             #note: wala to sa mga given fields sa upload pero meron sa DB
                 file.file = "files/" + filename
-                file.save()
+                #file.save()                                #note: error
                 ########################################################
             return HttpResponseRedirect("/dashboard/")
         
