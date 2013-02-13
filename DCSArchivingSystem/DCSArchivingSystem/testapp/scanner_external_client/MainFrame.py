@@ -23,7 +23,7 @@ class MainFrame( gui.MainFrameBase, TwainBase):
         handlers = [
             urllib2.HTTPHandler(),
             urllib2.HTTPSHandler(),
-            #urllib2.ProxyHandler({'http': PROXY}),
+            urllib2.ProxyHandler({'http': PROXY}),
             urllib2.HTTPCookieProcessor(cookies)
             ]
         opener=register_openers()

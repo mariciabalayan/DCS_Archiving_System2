@@ -78,7 +78,7 @@ class TwainBase:
             self.SD.SetCapability(twain.ICAP_YRESOLUTION, twain.TWTY_FIX32, 100.0) 
         except:
             pass
-        self.SD.RequestAcquire(0, 0)  # 1,1 to show scanner user interface
+        self.SD.RequestAcquire(1, 1)  # 1,1 to show scanner user interface
         self.AcquirePending=True
         self.LogMessage(self.ProductName + ':' + 'Waiting for Scanner')
 
