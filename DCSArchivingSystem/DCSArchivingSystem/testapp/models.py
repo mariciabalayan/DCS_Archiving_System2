@@ -97,7 +97,7 @@ class Transaction(models.Model):
         return self.name
         
 class File(models.Model):
-    filename        = models.CharField(max_length=32)
+    filename        = models.CharField(max_length=100)
     faculty         = models.ForeignKey(Faculty)
     transaction     = models.ForeignKey(Transaction)
     file            = models.FileField(upload_to='files/%Y')

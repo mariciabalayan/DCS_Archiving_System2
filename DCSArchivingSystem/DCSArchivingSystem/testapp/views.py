@@ -7,12 +7,13 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.template import RequestContext
 from django.contrib.auth.models import User
-from models import Faculty, File, Log
+from models import Faculty, File, Log, Transaction
 from forms import ScanForm
 from django.contrib.sessions.models import Session
+from django.contrib.auth.models import User
 from datetime import datetime
-import uuid #, M2Crypto
 from django.views.decorators.csrf import csrf_exempt
+import uuid, M2Crypto
 
 # Create your views here.
 
@@ -37,10 +38,10 @@ def index(request):
                 login(request, user)
 
                 #Add session id
-                #request.session['_auth_sess_id'] = uuid.UUID(bytes = M2Crypto.m2.rand_bytes(16))
+                request.session['_auth_sess_id'] = uuid.UUID(bytes = M2Crypto.m2.rand_bytes(16))
                 
                 state = "Login ok!"
-                Log.create(user, "Logged in", None).save() # walang error, di lng kayo nagsyncdb
+                Log.create(user, "Logged in", None).save()
                 return HttpResponseRedirect("/dashboard/")
             else:
                 state = "Account not active."
@@ -59,34 +60,41 @@ def upload(request):
         
         # Query all non-expired sessions
         sessions = Session.objects.filter(expire_date__gte=datetime.now())
-        sessid_list = []
 
-        # Build a list of non-expired session ids
+        # Checks if session is active
         for session in sessions:
             data = session.get_decoded()
             found_sessid=data.get('_auth_sess_id')
-            if found_sessid!=None: sessid_list.append(found_sessid)
-
-        # Prceeds when session id is validated
-        if uuid.UUID(sessid) in sessid_list:
-            faculty = request.POST.get('faculty')
-            filename = request.POST.get('filename')
-            page = request.POST.get('pages')
-            files = request.FILES['fileContents']
-            with open('DCSArchivingSystem/testapp/media/files/'+filename, 'wb+') as destination:
-                for chunk in files.chunks():
-                    destination.write(chunk)
-                ######################### not tested ###################
-                file = File()
-                file.filename = filename
-                #file.faculty = faculty                     #note: error
-                #file.transaction = transaction             #note: wala to sa mga given fields sa upload pero meron sa DB
-                file.file = "files/" + filename
-                #file.save()                                #note: error
-                ########################################################
-            Log.create(request.user, "Uploaded file", file).save()    
-            return HttpResponseRedirect("/dashboard/")
-        
+            if found_sessid!=None and uuid.UUID(sessid)==found_sessid:
+                user = User.objects.filter(id=data.get('_auth_user_id'))[0]
+                # Prceeds when session id is validated
+                faculty=None
+                faculty_id = request.POST.get('faculty')
+                for person in Faculty.objects.all():
+                    if int(faculty_id) is int(person.id): faculty=person;
+                reqfname = request.POST.get('filename')
+                filename = faculty.last_name +'_' + faculty.first_name + reqfname
+                print filename, len(filename)
+                page = request.POST.get('pages')
+                transaction_name = request.POST.get('transaction')
+                transaction = Transaction()
+                transaction.name=transaction_name
+                transaction.save()
+                files = request.FILES['fileContents']
+                with open('DCSArchivingSystem/testapp/media/files/'+filename, 'wb+') as destination:
+                    for chunk in files.chunks():
+                        destination.write(chunk)
+                    ######################### now okay ###################
+                    file = File()
+                    file.filename = filename
+                    file.faculty = faculty                     
+                    file.transaction = transaction
+                    file.file = 'files/' + filename
+                    file.save()                                
+                    ########################################################
+                Log.create(user, "Uploaded file", file).save()    
+                return HttpResponseRedirect("/dashboard/")
+            
     else: return render_to_response('upload.html', context_instance=RequestContext(request))
     
 @login_required
@@ -107,14 +115,15 @@ def scanpage2(request):
         faculty= request.POST.get('faculty')
         pages= request.POST.get('pages')
         sessid= request.session['_auth_sess_id']
-        faculty= faculty.replace(' ', "")
         faculty= faculty.replace(',', "")
+        for person in users_list:
+            if faculty.split(' ')[0]==person.last_name: faculty_id=person.id
         if (title!= None and title != '') and (faculty!= None and faculty!= '') and pages!='' and pages!= None:
             if int(pages)<0:
                 state= 'Invalid number of pages.'
 
             else:
-                return render_to_response('scanpage2.html', { 'user': request.user, 'faculty_list': users_list, 'title':title, 'pages':pages, 'faculty':faculty, 'sessid':request.session['_auth_sess_id'], 'state':state}, context_instance=RequestContext(request))
+                return render_to_response('scanpage2.html', { 'user': request.user, 'faculty_list': users_list, 'title':title, 'pages':pages, 'faculty':faculty_id, 'sessid':request.session['_auth_sess_id'], 'state':state}, context_instance=RequestContext(request))
         
     return render_to_response('scanpage.html', { 'user': request.user, 'faculty_list': users_list, 'title':title, 'pages':pages, 'faculty':faculty, 'state':state}, context_instance=RequestContext(request))
 

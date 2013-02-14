@@ -1,0 +1,8 @@
+ISSUES LIST
+
+DATABASE:
+1. "Unknown column '<COLUMN>' in 'field list'" IN Log.create() (RESOLVED)
+{
+	RESOLLUTION:
+	- Drop schema, syncdb, and DO NOT USE outdated dumped sql file to populate data. (.sql file overwrites conflicting syncdb changes)
+}
