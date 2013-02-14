@@ -11,7 +11,7 @@ from models import Faculty, File, Log
 from forms import ScanForm
 from django.contrib.sessions.models import Session
 from datetime import datetime
-import uuid, M2Crypto
+import uuid #, M2Crypto
 from django.views.decorators.csrf import csrf_exempt
 
 # Create your views here.
@@ -37,10 +37,10 @@ def index(request):
                 login(request, user)
 
                 #Add session id
-                request.session['_auth_sess_id'] = uuid.UUID(bytes = M2Crypto.m2.rand_bytes(16))
+                #request.session['_auth_sess_id'] = uuid.UUID(bytes = M2Crypto.m2.rand_bytes(16))
                 
                 state = "Login ok!"
-                #Log.create(user, "Logged in", None).save() <-- Has error
+                Log.create(user, "Logged in", None).save() # walang error, di lng kayo nagsyncdb
                 return HttpResponseRedirect("/dashboard/")
             else:
                 state = "Account not active."
@@ -84,6 +84,7 @@ def upload(request):
                 file.file = "files/" + filename
                 #file.save()                                #note: error
                 ########################################################
+            Log.create(request.user, "Uploaded file", file).save()    
             return HttpResponseRedirect("/dashboard/")
         
     else: return render_to_response('upload.html', context_instance=RequestContext(request))
@@ -112,7 +113,8 @@ def scanpage2(request):
             if int(pages)<0:
                 state= 'Invalid number of pages.'
 
-            else: return render_to_response('scanpage2.html', { 'user': request.user, 'faculty_list': users_list, 'title':title, 'pages':pages, 'faculty':faculty, 'sessid':request.session['_auth_sess_id'], 'state':state}, context_instance=RequestContext(request))
+            else:
+                return render_to_response('scanpage2.html', { 'user': request.user, 'faculty_list': users_list, 'title':title, 'pages':pages, 'faculty':faculty, 'sessid':request.session['_auth_sess_id'], 'state':state}, context_instance=RequestContext(request))
         
     return render_to_response('scanpage.html', { 'user': request.user, 'faculty_list': users_list, 'title':title, 'pages':pages, 'faculty':faculty, 'state':state}, context_instance=RequestContext(request))
 
@@ -158,7 +160,7 @@ def log_in(request):
     return render_to_response('login.html',RequestContext(request, {'state':state}))
 
 def log_out(request):
-    #Log.create(request.user, "Logged out", None).save() <--Has error
+    Log.create(request.user, "Logged out", None).save()
     logout(request)
     return HttpResponseRedirect('/')
     
