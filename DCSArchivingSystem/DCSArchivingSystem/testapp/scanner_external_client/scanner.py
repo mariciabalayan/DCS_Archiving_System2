@@ -13,13 +13,13 @@ class scannerApp(wx.App):
         
         str=(sys.argv[1].split('/'))[2]
         temp=str
-        name=(temp.split('&'))[0].split('=')[1]
-        pages=(str.split('&'))[1].split('=')[1]
+        fid=(temp.split('&'))[0].split('=')[1]
+        name=(str.split('&'))[1].split('=')[1]
         title=(str.split('&'))[2].split('=')[1]
         sessid=(str.split('&'))[3].split('=')[1]
-        print name,pages,title,sessid
+        print fid,name,title,sessid
         self.m_frame = MainFrame(None)
-        self.m_frame.setParams(name,pages,title,sessid)
+        self.m_frame.setParams(fid,name,title,sessid)
         self.m_frame.Show()
         self.SetTopWindow(self.m_frame)
         return True

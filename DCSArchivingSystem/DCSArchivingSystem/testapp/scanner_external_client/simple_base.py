@@ -23,6 +23,7 @@ class TwainBase:
     XferMethod = XferNatively      # Transfer method currently in use
     AcquirePending = False         # Flag to indicate that there is an acquire pending
     mainWindow = None              # Window handle for the application window
+    filename = None                # Temporary filename of scanned file
 
     # Methods to be implemented by Sub-Class
     def LogMessage(self, message):
@@ -82,9 +83,10 @@ class TwainBase:
         self.AcquirePending=True
         self.LogMessage(self.ProductName + ':' + 'Waiting for Scanner')
 
-    def AcquireNatively(self):
+    def AcquireNatively(self,filename):
         """Acquire Natively - this is a memory based transfer"""
         self.XferMethod = XferNatively
+        self.filename=filename
         return self._Acquire()
 
     def AcquireByFile(self):
@@ -105,7 +107,7 @@ class TwainBase:
         more_to_come = False
         try:
             if self.XferMethod == XferNatively:
-                XferFileName=tmpfilename
+                XferFileName=self.filename
                 (handle, more_to_come) = self.SD.XferImageNatively()
                 twain.DIBToBMFile(handle, XferFileName)
                 twain.GlobalHandleFree(handle)
@@ -135,6 +137,7 @@ class TwainBase:
                 self.LogMessage(self.ProductName + ':' + "Image acquired by file (%s)" % XferFileName)
 
             self.DisplayImage(XferFileName)
+            self.UpdateFiles()
             if more_to_come: self.AcquirePending = True
             else: self.SD = None
         except:

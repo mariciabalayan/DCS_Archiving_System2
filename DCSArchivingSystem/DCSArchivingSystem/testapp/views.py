@@ -68,8 +68,9 @@ def upload(request):
             if found_sessid!=None and uuid.UUID(sessid)==found_sessid:
                 user = User.objects.filter(id=data.get('_auth_user_id'))[0]
                 # Prceeds when session id is validated
+                print request.FILES
                 faculty=None
-                faculty_id = request.POST.get('faculty')
+                faculty_id = request.POST.get('fid')
                 for person in Faculty.objects.all():
                     if int(faculty_id) is int(person.id): faculty=person;
                 reqfname = request.POST.get('filename')
@@ -80,19 +81,20 @@ def upload(request):
                 transaction = Transaction()
                 transaction.name=transaction_name
                 transaction.save()
-                files = request.FILES['fileContents']
-                with open('DCSArchivingSystem/testapp/media/files/'+filename, 'wb+') as destination:
-                    for chunk in files.chunks():
-                        destination.write(chunk)
-                    ######################### now okay ###################
-                    file = File()
-                    file.filename = filename
-                    file.faculty = faculty                     
-                    file.transaction = transaction
-                    file.file = 'files/' + filename
-                    file.save()                                
-                    ########################################################
-                Log.create(user, "Uploaded file", file).save()    
+                for key in request.FILES:
+                    files = request.FILES[key]
+                    with open('DCSArchivingSystem/testapp/media/files/' + key + '.bmp', 'wb+') as destination:
+                        for chunk in files.chunks():
+                            destination.write(chunk)
+                        ######################### now okay ###################
+                        file = File()
+                        file.filename = filename
+                        file.faculty = faculty                     
+                        file.transaction = transaction
+                        file.file = 'files/' + filename
+                        file.save()                                
+                        ########################################################
+                    Log.create(user, "Uploaded file", file).save()    
                 return HttpResponseRedirect("/dashboard/")
             
     else: return render_to_response('upload.html', context_instance=RequestContext(request))
@@ -115,6 +117,7 @@ def scanpage2(request):
         faculty= request.POST.get('faculty')
         pages= request.POST.get('pages')
         sessid= request.session['_auth_sess_id']
+        faculty_name= faculty
         faculty= faculty.replace(',', "")
         for person in users_list:
             if faculty.split(' ')[0]==person.last_name: faculty_id=person.id
@@ -123,7 +126,7 @@ def scanpage2(request):
                 state= 'Invalid number of pages.'
 
             else:
-                return render_to_response('scanpage2.html', { 'user': request.user, 'faculty_list': users_list, 'title':title, 'pages':pages, 'faculty':faculty_id, 'sessid':request.session['_auth_sess_id'], 'state':state}, context_instance=RequestContext(request))
+                return render_to_response('scanpage2.html', { 'user': request.user, 'faculty_list': users_list, 'title':title, 'faculty':faculty_name, 'fid':faculty_id, 'sessid':request.session['_auth_sess_id'], 'state':state}, context_instance=RequestContext(request))
         
     return render_to_response('scanpage.html', { 'user': request.user, 'faculty_list': users_list, 'title':title, 'pages':pages, 'faculty':faculty, 'state':state}, context_instance=RequestContext(request))
 
