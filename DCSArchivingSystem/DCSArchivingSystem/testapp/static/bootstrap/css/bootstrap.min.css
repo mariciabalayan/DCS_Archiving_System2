@@ -22,7 +22,7 @@ textarea{overflow:auto;vertical-align:top;}
 .clearfix:after{clear:both;}
 .hide-text{font:0/0 a;color:transparent;text-shadow:none;background-color:transparent;border:0;}
 .input-block-level{display:block;width:100%;min-height:31px;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;}
-body{margin:0;font-family:Georgia,"Times New Roman",Times,serif;font-size:15px;line-height:21px;color:#555555;background-color:#ffffff;}
+body{margin:0;font-family:Georgia,"Times New Roman",Times,serif;font-size:15px;line-height:21px;color:#555555;background-color:white;background-image:url(/static/images/bg.png);background-position:left top;background-repeat:repeat;}
 a{color:#028d79;text-decoration:none;}
 a:hover{color:#028d79;text-decoration:underline;}
 .img-rounded{-webkit-border-radius:6px;-moz-border-radius:6px;border-radius:6px;}

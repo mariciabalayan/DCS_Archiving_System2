@@ -210,7 +210,10 @@ body {
   font-size: 15px;
   line-height: 21px;
   color: #555555;
-  background-color: #ffffff;
+  background-color: white;
+  background-image:url(/static/images/bg.png);
+  background-position:left top;
+  background-repeat:repeat;
 }
 a {
   color: #028d79;
