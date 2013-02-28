@@ -19,7 +19,7 @@ class scannerApp(wx.App):
         sessid=(str.split('&'))[3].split('=')[1]
         print fid,name,title,sessid
         self.m_frame = MainFrame(None)
-        self.m_frame.setParams(fid,name,title,sessid)
+        self.m_frame.setParams(fid,name,title,sessid,debug=True)
         self.m_frame.Show()
         self.SetTopWindow(self.m_frame)
         return True

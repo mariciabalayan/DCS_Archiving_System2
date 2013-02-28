@@ -83,7 +83,7 @@ def upload(request):
                 transaction.save()
                 for key in request.FILES:
                     files = request.FILES[key]
-                    with open('DCSArchivingSystem/testapp/media/files/' + key + '.bmp', 'wb+') as destination:
+                    with open('DCSArchivingSystem/testapp/media/files/' + filename + key.split('_')[1] + '.bmp', 'wb+') as destination:
                         for chunk in files.chunks():
                             destination.write(chunk)
                         ######################### now okay ###################
