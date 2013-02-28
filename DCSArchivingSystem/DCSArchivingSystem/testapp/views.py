@@ -57,8 +57,8 @@ def dashboard(request):
 
 @login_required
 def records(request):
-    files_list= Dokument.objects.all()
-    return render_to_response('records.html', {'user': request.user, 'files_list':files_list} )
+    doc_list= Dokument.objects.all()
+    return render_to_response('records.html', {'user': request.user, 'doc_list':doc_list} )
 	
 def upload(request):
     if request.POST:

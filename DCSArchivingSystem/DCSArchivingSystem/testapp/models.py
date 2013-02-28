@@ -110,7 +110,7 @@ class Dokument(models.Model):
     files           = models.ManyToManyField(File)
     
     def __unicode__(self):
-        return self.faculty+ ": "+ self.transaction
+        return self.faculty.last_name+", "+ self.faculty.first_name+ ": "+ self.transaction.name
 
 class Log(models.Model):
 
@@ -128,6 +128,7 @@ class Log(models.Model):
         return log
 
 # Register Models to Django Admin
+admin.site.register(Dokument)
 admin.site.register(Department)
 admin.site.register(College)
 admin.site.register(Course)
