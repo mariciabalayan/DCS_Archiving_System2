@@ -13,7 +13,8 @@ from django.contrib.sessions.models import Session
 from django.contrib.auth.models import User
 from datetime import datetime
 from django.views.decorators.csrf import csrf_exempt
-import uuid, M2Crypto
+import uuid#, M2Crypto
+from itertools import *
 
 # Create your views here.
 
@@ -200,13 +201,38 @@ def log_out(request):
     return HttpResponseRedirect('/')"""
 
 @csrf_exempt
-def search(request):
+def search_Faculty(request):
     state = ""
     if request.POST:
         search_term = request.POST.get('term')
-        results = Faculty.objects.filter(first_name__icontains=search_term) or Faculty.objects.filter(last_name__icontains=search_term)
-        if results is not None:
-            state = "Results available"
-        else:
-            state = "No results found."
-    return render_to_response('search.html', {'user': request.user, 'state': state, 'results': results}, context_instance=RequestContext(request))
+        keywords = search_term.split(' ')
+        print "keywords: "
+        print keywords
+        results = ""
+        for x in keywords:
+            FN_starts = Faculty.objects.filter(first_name__istartswith=x+" ")
+            FN_ends = Faculty.objects.filter(first_name__iendswith=" "+x)
+            FN_mids = Faculty.objects.filter(first_name__icontains=" "+x+" ")
+            FN_exact = Faculty.objects.filter(first_name__iexact=x)
+            LN_starts = Faculty.objects.filter(last_name__istartswith=x+" ")
+            LN_ends = Faculty.objects.filter(last_name__iendswith=x+" ")
+            LN_mids = Faculty.objects.filter(last_name__icontains=" "+x+" ")
+            LN_exact = Faculty.objects.filter(last_name__iexact=x)
+            results = chain(results, FN_starts, FN_ends, FN_mids, FN_exact, LN_starts, LN_ends, LN_mids, LN_exact)
+        state = "Search results for: " + search_term
+    return render_to_response('searchFaculty.html', {'user': request.user, 'state': state, 'results': results}, context_instance=RequestContext(request))
+
+@csrf_exempt
+def search_Files(request, current_id):
+    print "andito ako"
+    state = ""
+    results = ""
+    current_faculty = Faculty.objects.get(id = int(current_id))
+    if request.POST:
+        search_term = request.POST.get('term')
+        keywords = search_term.split(' ')
+        print "keywords: "
+        for x in keywords:
+            results = File.objects.filter(faculty_id = int(current_id), filename__icontains=x)
+        state = "Search results for: " + search_term
+    return render_to_response('searchFiles.html', {'user': request.user, 'state': state, 'current_faculty': current_faculty, 'results': results}, context_instance=RequestContext(request))

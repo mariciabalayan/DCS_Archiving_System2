@@ -35,8 +35,11 @@ urlpatterns = patterns('DCSArchivingSystem.testapp.views',
     url(r'^scan/$', 'scan'),
     
     #Search Page
-    url(r'^search/$', 'search'),
-    
+    url(r'^users/search/$', 'search_Faculty'),
+	
+	#url(r'^profile/search/$', 'search_Files'),
+	url(r'^users/(?P<current_id>[0-9]+)/profile/search/$', 'search_Files'),
+	
     #Users Page
     url(r'^users/$', 'view_users'),
     

@@ -16,7 +16,7 @@
 		<tr><th>Length Of Service</th><td>{{ current_faculty.length_of_service }}</td></tr>		
 	</table>
 	<br>
-	<form class="form-search" method="post" action="search/">
+	<form class="form-search" method="post" action="/users/{{current_faculty.id}}/profile/search/">
 	{% csrf_token %}
 	<div class="row">
 	  <div class="span offset9">
@@ -26,12 +26,14 @@
 		</div>
 	  </div>
 	</div>
+	<h4>{{ state }}</h4>
 	<span class="label label-info"><h2>Records</h2></span>
 	<table border=1 width=80% align=center class="table table-striped">
-	    {% for a in file_list %}
+	    {% for a in results %}
 		<tr><td><a href="#">{{ a.filename }}</a></td></tr>					<!-- Sa link nalang idagdag yung para sa pag view, download, print file -->
 		{% endfor %}
 	</table>
+	<br> <a href="/users/{{ current_faculty.id }}/profile/">Back to profile</a>
 {% endblock %}
 
 </html>

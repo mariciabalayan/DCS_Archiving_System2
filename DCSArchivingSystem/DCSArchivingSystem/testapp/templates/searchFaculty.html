@@ -2,9 +2,8 @@
 <title> Users </title>
 
 {%block content%}    
- 
 <br>
-<form class="form-search" method="post" action="/search/">
+<form class="form-search" method="post" action="/users/search/">
 {% csrf_token %}
 <div class="row">
   <div class="span offset9">
@@ -17,6 +16,7 @@
 
 </form> 
 <h1 align=center>Faculty</h1>
+<h4>{{ state }}</h4>
 <table border=1 width=80% align=center class="table table-striped">
 	<tr><th>Last Name</th><th>First Name</th><th>Middle Name</th><th>Birthday</th><th>Highest Degree Attained</th><th>Length of Service</th><th>Action</th></tr>
     {% for a in results %}
@@ -27,7 +27,7 @@
 		<td>{{ a.birthday }}</td>
 		<td>{{ a.highest_degree_attained }}</td>
 		<td>{{ a.length_of_service }}</td>
-		<td><a href="{{ a.id }}/profile">View Faculty</a></td>
+		<td><a href="/users/{{ a.id }}/profile">View Faculty</a></td>
 		</tr>		
     {% endfor %}
 </table>
