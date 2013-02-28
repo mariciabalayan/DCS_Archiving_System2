@@ -1,0 +1,47 @@
+{% extends "template2.html" %}
+<title> Files </title>
+
+{%block content%}    
+ 
+<br>
+{{ state }}
+<form class="form-search" method="post" action="search/">
+{% csrf_token %}
+<div class="row">
+  <div class="span offset9">
+    <div class="input-append">
+        <input class="form-data" type="text" id="term" name="term" placeholder="Search here"/>
+        <button type="submit" class="btn">Search</button>
+    </div>
+  </div>
+</div>
+
+</form> 
+<script>
+$(document).ready(function() 
+	{ 
+		$("#doc_table").tablesorter(); 
+	} 
+); 
+</script>
+
+
+<h1 align=center>Records</h1>
+<table id = "users_table" border=1 width=80% align=center class="table table-striped">
+	<thead> 
+	<tr> 
+		<th>Faculty</th> 
+		<th>Transaction</th> 
+	</tr> 
+	</thead> 
+	<tbody> 
+    {% for a in doc_list %}
+        <tr>
+        <td>{{ a.faculty }}</td>
+        <td>{{ a.transaction }}</td>
+		</tr>		
+    {% endfor %}
+	</tbody>
+</table>
+    
+{% endblock %}

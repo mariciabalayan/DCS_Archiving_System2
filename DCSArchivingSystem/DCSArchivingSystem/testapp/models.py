@@ -92,18 +92,25 @@ class Address(models.Model):
     
 class Transaction(models.Model):
     name            = models.CharField(max_length=100)
+    
 
     def __unicode__(self):
         return self.name
         
 class File(models.Model):
     filename        = models.CharField(max_length=100)
-    faculty         = models.ForeignKey(Faculty)
-    transaction     = models.ForeignKey(Transaction)
     file            = models.FileField(upload_to='files/%Y')
 
     def __unicode__(self):
         return self.filename
+
+class Dokument(models.Model):
+    faculty         = models.ForeignKey(Faculty)
+    transaction     = models.ForeignKey(Transaction)
+    files           = models.ManyToManyField(File)
+    
+    def __unicode__(self):
+        return self.faculty+ ": "+ self.transaction
 
 class Log(models.Model):
 

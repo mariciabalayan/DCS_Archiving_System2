@@ -7,7 +7,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.template import RequestContext
 from django.contrib.auth.models import User
-from models import Faculty, File, Log, Transaction
+from models import Faculty, File, Log, Transaction, Dokument
 from forms import ScanForm
 from django.contrib.sessions.models import Session
 from django.contrib.auth.models import User
@@ -55,6 +55,11 @@ def index(request):
 def dashboard(request):
     return render_to_response('dashboard.html', { 'user': request.user })
 
+@login_required
+def records(request):
+    files_list= Dokument.objects.all()
+    return render_to_response('records.html', {'user': request.user, 'files_list':files_list} )
+	
 def upload(request):
     if request.POST:
         sessid = request.POST.get('sessid')
@@ -82,6 +87,9 @@ def upload(request):
                 transaction = Transaction()
                 transaction.name=transaction_name
                 transaction.save()
+                document = Document()
+                document.faculty= faculty
+                document.transaction= transaction
                 for key in request.FILES:
                     files = request.FILES[key]
                     with open('DCSArchivingSystem/testapp/media/files/' + filename + key.split('_')[1] + '.bmp', 'wb+') as destination:
@@ -90,12 +98,13 @@ def upload(request):
                         ######################### now okay ###################
                         file = File()
                         file.filename = filename
-                        file.faculty = faculty                     
-                        file.transaction = transaction
                         file.file = 'files/' + filename
-                        file.save()                                
+                        file.save()                    
+                        document.files.add(file)
                         ########################################################
                     Log.create(user, "Uploaded file", file).save()    
+                document.save()
+                Log.create(user, "Created Document", file).save()    
                 return HttpResponseRedirect("/dashboard/")
             
     else: return render_to_response('upload.html', context_instance=RequestContext(request))
