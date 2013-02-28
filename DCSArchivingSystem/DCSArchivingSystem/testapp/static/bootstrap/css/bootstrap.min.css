@@ -844,7 +844,9 @@ a.label:hover,a.badge:hover{color:#ffffff;text-decoration:none;cursor:pointer;}
 .carousel-caption h4,.carousel-caption p{color:#ffffff;line-height:21px;}
 .carousel-caption h4{margin:0 0 5px;}
 .carousel-caption p{margin-bottom:0;}
-.hero-unit{padding:60px;margin-bottom:30px;font-size:18px;font-weight:200;line-height:31.5px;color:inherit;background-color:#dddddd;-webkit-border-radius:6px;-moz-border-radius:6px;border-radius:6px;}.hero-unit h1{margin-bottom:0;font-size:60px;line-height:1;color:#333333;letter-spacing:-1px;}
+.hero-unit{padding:60px;margin-bottom:30px;font-size:18px;font-weight:200;line-height:31.5px;color:inherit;background-color:#dddddd;-webkit-border-radius:6px;-moz-border-radius:6px;border-radius:6px;}
+.hero-unit2{padding:60px;margin-bottom:30px;font-size:18px;font-weight:200;line-height:31.5px;color:inherit;background-color:#b3cbcf;-webkit-border-radius:6px;-moz-border-radius:6px;border-radius:6px;}
+.hero-unit h1{margin-bottom:0;font-size:60px;line-height:1;color:#333333;letter-spacing:-1px;}
 .hero-unit li{line-height:31.5px;}
 .pull-right{float:right;}
 .pull-left{float:left;}

@@ -39,7 +39,7 @@ def index(request):
                 login(request, user)
 
                 #Add session id
-                request.session['_auth_sess_id'] = uuid.UUID(bytes = M2Crypto.m2.rand_bytes(16))
+#                request.session['_auth_sess_id'] = uuid.UUID(bytes = M2Crypto.m2.rand_bytes(16))
                 
                 state = "Login ok!"
                 Log.create(user, "Logged in", None).save()

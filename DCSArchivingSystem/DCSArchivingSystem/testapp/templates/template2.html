@@ -11,14 +11,28 @@
             padding-top:40px;
         }
     </style>
+	<script src="/static/jquery.tablesorter.min.js"></script> 
+	<style type="text/css">
+        table thead tr .header {
+            background-image: url(/static/bg.gif);
+            background-repeat: no-repeat;
+            background-position: center right;
+        }
+        table thead tr .headerSortUp {
+            background-image: url(/static/asc.gif);
+        }
+        table thead tr .headerSortDown {
+            background-image: url(/static/desc.gif);
+        }
+    </style>
 {% endblock %}
 
 {% block body %}
     <div class="navbar navbar-fixed-top">
         <div class="navbar-inner">
 			<a class="brand" href="#">DCS Archiving System</a>
-			<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">Menu <span class="icon-bar"></span></a>
-			<div class="nav-collapse collapse">
+			<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></a>
+            <div class="nav-collapse nav-collapse_  collapse">
 				<ul class="nav pull-right">
 					<li class=""><a href="/dashboard/">Home</a>
 					<li class=""><a href="/scanpage/">Scan</a>

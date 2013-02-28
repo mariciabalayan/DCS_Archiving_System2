@@ -11,27 +11,34 @@
 	
 	<br><div class="hero-unit">
 		<h1>Welcome</h1>
-			<p>Navigate.... </p>
-			<p>Say stuff here..</p>
+			<p>This is the DCS Archiving System, made for the management of files and transactions of the UP Diliman DCS Faculty.</p>
 		</h1>			
 	</div>
 
 	<div class="row">
-        <div class="span4">
-			<h2>Scan</h2>
-				<p>Begin by scanning a faculty record, and uploading it to the database.</p>
-				<p><a class="btn" href="/scanpage/">Scan &raquo;</a></p>
-            </div>
-            <div class="span4">
-				<h2>Profile</h2>
-				<p>View and update a faculty profile.</p>
-				<p><a class="btn" href="/users/">View profile &raquo;</a></p>
-            </div>
-            <div class="span4">
-				<h2>Records</h2>
-				<p>View, download, and print faculty records.</p>
-				<p><a class="btn" href="#">Records &raquo;</a></p>
-            </div>
-        </div>	
+		<div class="span4">
+			<div class="hero-unit2">
+				<center>
+				{% load static %}<img width = 200px height = 200px src="{% static "images/scan.png" %}" class = "img-rounded" />
+				<a class="btn btn-inverse" href="/scanpage/">Scan &raquo;</a></center>
+				</center>
+			</div>
+		</div>
+		<div class="span4">
+			<div class="hero-unit2">
+				<center>
+				{% load static %} <img width = 200px height = 200px src="{% static "images/prof.png" %}" class = "img-rounded"/>
+				<a class="btn btn-inverse" href="/users/">View Faculty List &raquo;</a></center>
+			</div>
+		</div>
+		<div class="span4">
+			<div class="hero-unit2">
+				<center>
+				{% load static %} <img width = 200px height = 200px src="{% static "images/rex.png" %}" class = "img-rounded"/>
+				<a class="btn btn-inverse" href="">View Records &raquo;</a>
+				</center>
+			</div>
+		</div>
+	</div>	
 
 {% endblock %}
