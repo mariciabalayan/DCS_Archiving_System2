@@ -7,7 +7,6 @@
 * [MySQL](http://www.mysql.com/downloads/installer/)
 * MySQL-Python - [Official (x86)](http://sourceforge.net/projects/mysql-python/) - [Unofficial (has x64)](http://www.lfd.uci.edu/~gohlke/pythonlibs/#mysql-python)
 * [Python Image Library](http://www.lfd.uci.edu/~gohlke/pythonlibs/#pil) - Required by ImageField model
-* [M2Crypto] (http://chandlerproject.org/Projects/MeTooCrypto) _Get the win32-py2.7.exe version_
 
 Required to run /scanner_external_client/scanner.py from python.exe
 * [TWAINmodule] (http://www.lfd.uci.edu/~gohlke/pythonlibs/#twainmodule)

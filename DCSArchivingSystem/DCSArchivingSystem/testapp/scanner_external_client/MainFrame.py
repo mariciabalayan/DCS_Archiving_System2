@@ -56,11 +56,17 @@ class MainFrame( gui.MainFrameBase, TwainBase):
                 self.m_lbAllpages.ChangeValue(str(page))
 
         def cleanUp(self):
+                self.m_bitmap.SetBitmap(wx.NullBitmap)
                 fileList=os.listdir('.')
+                for x in self.params:
+                        if type(self.params[x])==file:
+                                print 'closing'
+                                self.params[x].close()
+                                self.params[x]=None
                 for x in fileList:
-                        if(".bmp" in x): os.remove(x)
+                        if ".bmp" in x: os.remove(x)
         
-        def setParams(self,facultyID,facultyName,formTitle,sessid,debug=False):
+        def setParams(self,facultyID,facultyName,formTitle,userid,debug=False):
                 self.name=facultyName
                 self.m_lbFaculty.ChangeValue(facultyName)
                 self.fid=facultyID
@@ -70,7 +76,7 @@ class MainFrame( gui.MainFrameBase, TwainBase):
                 self.title=formTitle
                 self.m_lbDoctype.ChangeValue(formTitle)
                 self.m_btChangePage.SetRange(1,self.maxPage)
-                self.sessid=sessid
+                self.userid=userid
                 self.filenameList.append(None)
                 self.debugMode=debug
                 self.cleanUp()
@@ -179,7 +185,7 @@ class MainFrame( gui.MainFrameBase, TwainBase):
                 XCSRFToken=self.getCookie("csrftoken")
 
                 #"http://httpbin.org/post": Test link. Change to appropriate upload link
-                self.params.update({"fid": str(self.fid), "faculty": str(self.name), "filename": str("_"+self.title+"_"), "page": str(self.pages), "sessid": self.sessid, "transaction": self.title})
+                self.params.update({"fid": str(self.fid), "faculty": str(self.name), "filename": str("_"+self.title+"_"), "page": str(self.pages), "userid": self.userid, "transaction": self.title})
                 datagen, headers = multipart_encode(self.params)
                 request=urllib2.Request("http://127.0.0.1:8000/upload/",datagen,headers)
                 request.add_header("X-CSRFToken", XCSRFToken.value)

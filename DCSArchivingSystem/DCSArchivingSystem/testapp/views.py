@@ -3,7 +3,7 @@
 from django.shortcuts import render_to_response
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.template import RequestContext
 from django.contrib.auth.models import User
@@ -13,7 +13,6 @@ from django.contrib.sessions.models import Session
 from django.contrib.auth.models import User
 from datetime import datetime
 from django.views.decorators.csrf import csrf_exempt
-import uuid#, M2Crypto
 from itertools import *
 
 # Create your views here.
@@ -38,8 +37,7 @@ def index(request):
             if user.is_active:
                 login(request, user)
 
-                #Add session id
-#                request.session['_auth_sess_id'] = uuid.UUID(bytes = M2Crypto.m2.rand_bytes(16))
+                print request.session
                 
                 state = "Login ok!"
                 Log.create(user, "Logged in", None).save()
@@ -62,18 +60,19 @@ def records(request):
 	
 def upload(request):
     if request.POST:
-        sessid = request.POST.get('sessid')
+        userid = request.POST.get('userid')
         
-        # Query all non-expired sessions
+        # Queries all non-expired sessions
         sessions = Session.objects.filter(expire_date__gte=datetime.now())
 
         # Checks if session is active
         for session in sessions:
             data = session.get_decoded()
-            found_sessid=data.get('_auth_sess_id')
-            if found_sessid!=None and uuid.UUID(sessid)==found_sessid:
+            print long(userid),data
+            found_userid=data.get('_auth_user_id')
+            if found_userid!=None and long(userid)==found_userid:
                 user = User.objects.filter(id=data.get('_auth_user_id'))[0]
-                # Prceeds when session id is validated
+                # Prceeds when user id is validated
                 print request.FILES
                 faculty=None
                 faculty_id = request.POST.get('fid')
@@ -87,9 +86,10 @@ def upload(request):
                 transaction = Transaction()
                 transaction.name=transaction_name
                 transaction.save()
-                document = Document()
+                document = Dokument()
                 document.faculty= faculty
                 document.transaction= transaction
+                document.save()
                 for key in request.FILES:
                     files = request.FILES[key]
                     with open('DCSArchivingSystem/testapp/media/files/' + filename + key.split('_')[1] + '.bmp', 'wb+') as destination:
@@ -103,11 +103,11 @@ def upload(request):
                         document.files.add(file)
                         ########################################################
                     Log.create(user, "Uploaded file", file).save()    
-                document.save()
                 Log.create(user, "Created Document", file).save()    
                 return HttpResponseRedirect("/dashboard/")
             
-    else: return render_to_response('upload.html', context_instance=RequestContext(request))
+    else:
+        return render_to_response('upload.html', context_instance=RequestContext(request))
     
 @login_required
 def scan(request):
@@ -116,6 +116,7 @@ def scan(request):
 @login_required
 def scanpage(request):
     users_list= Faculty.objects.all()
+
     return render_to_response('scanpage.html', { 'user': request.user, 'faculty_list': users_list}, context_instance=RequestContext(request))
 
 @login_required
@@ -126,7 +127,6 @@ def scanpage2(request):
         title= request.POST.get('title')
         faculty= request.POST.get('faculty')
         pages= request.POST.get('pages')
-        sessid= request.session['_auth_sess_id']
         faculty_name= faculty
         faculty= faculty.replace(',', "")
         for person in users_list:
@@ -136,7 +136,10 @@ def scanpage2(request):
                 state= 'Invalid number of pages.'
 
             else:
-                return render_to_response('scanpage2.html', { 'user': request.user, 'faculty_list': users_list, 'title':title, 'faculty':faculty_name, 'fid':faculty_id, 'sessid':request.session['_auth_sess_id'], 'state':state}, context_instance=RequestContext(request))
+                location = "scn://fid=%d&name=%s&title=%s&user_id=%s" %(faculty_id,request.POST.get('faculty'),title,request.session['_auth_user_id'])
+                res = HttpResponse(location, status=302)
+                res['Location'] = location
+                return res
         
     return render_to_response('scanpage.html', { 'user': request.user, 'faculty_list': users_list, 'title':title, 'pages':pages, 'faculty':faculty, 'state':state}, context_instance=RequestContext(request))
 
