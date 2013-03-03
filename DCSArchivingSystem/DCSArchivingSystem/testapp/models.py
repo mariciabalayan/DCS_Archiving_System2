@@ -27,27 +27,6 @@ class Course(models.Model):
         return self.name + ", " + self.department.name
 
 
-#class UserProfile(models.Model):
-#    user            = models.OneToOneField(User)
-#    middlename      = models.CharField(max_length=32, null=True, blank=True)
-#    photo           = models.FileField(upload_to='photos', null=True, blank=True)
-#    birthday        = models.DateField(null=True, blank=True)
-#    course          = models.ForeignKey(Course, null=True, blank=True)
-#    highest_degree_attained = models.CharField(max_length=100, null=True, blank=True)
-#    length_of_service       = models.CharField(max_length=100, null=True, blank=True)
-
-#    def save(self, *args, **kwargs):
-#        if not self.pk:
-#            try:
-#                p = UserProfile.objects.get(user=self.user)
-#                self.pk = p.pk
-#            except UserProfile.DoesNotExist:
-#                pass
-#        super(UserProfile, self).save(*args, **kwargs)
-
-#    def __unicode__(self):
-#        return self.user.username+': '+ self.user.last_name + ", " + self.user.first_name
-
 class Faculty(models.Model):
     user            = models.ForeignKey(User)
     first_name      = models.CharField(max_length=64)
@@ -113,6 +92,13 @@ class Dokument(models.Model):
     def __unicode__(self):
         return self.faculty.last_name+", "+ self.faculty.first_name+ ": "+ self.transaction.name
 
+class Tag(models.Model):
+    faculty         = models.ForeignKey(Faculty)
+    dokument        = models.ForeignKey(Dokument)
+
+    def __unicode__(self):
+        return self.faculty.last_name+", "+ self.faculty.first_name+": "+ self.dokument.transaction.name
+
 class Log(models.Model):
 
     user            = models.ForeignKey(User)
@@ -140,3 +126,4 @@ admin.site.register(Transaction)
 admin.site.register(Faculty)
 admin.site.register(File)
 admin.site.register(Log)
+admin.site.register(Tag)

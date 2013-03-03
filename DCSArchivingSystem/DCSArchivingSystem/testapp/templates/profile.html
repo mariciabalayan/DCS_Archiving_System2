@@ -37,7 +37,9 @@
 
         <span class="label label-info"><h2>Tagged</h2></span>
         <table border=1 width=80% align=center class="table table-striped">
-                <thead> <tr> <th>Faculty</th> <th>Transaction</th> </tr> </thead> 
+                {% if tagged_docs %}
+                        <thead> <tr> <th>Faculty</th> <th>Transaction</th> </tr> </thead> 
+                {% endif %}
                 <tbody> 
                         {% for a in tagged_docs %}
                                 <tr> <td>{{ a.faculty }}</td> <td><a href="#">{{ a.dokument.transaction }}</a></td> </tr>           

@@ -7,7 +7,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.template import RequestContext
 from django.contrib.auth.models import User
-from models import Faculty, File, Log, Transaction, Dokument
+from models import Faculty, File, Log, Transaction, Dokument, Tag
 from forms import ScanForm
 from django.contrib.sessions.models import Session
 from django.contrib.auth.models import User
