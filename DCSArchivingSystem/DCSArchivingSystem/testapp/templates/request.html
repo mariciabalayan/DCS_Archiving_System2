@@ -1,1 +1,26 @@
 {% extends "template2.html" %}
+
+{%block content%}    
+<br>
+<br>
+
+<table id = "users_table" border=1 width=80% align=center class="table table-striped">
+	<thead> 
+	<tr> 
+		<th>Faculty</th> 
+        <th>Request Delete</th>
+	</tr> 
+	</thead> 
+	<tbody> 
+    {% for a in doc_list %}
+        <tr>
+        <td>{{ a.faculty }}</td>
+        <td><a href= "{{a.id}}/delete">{{ a.transaction }}<a></td>
+		</tr>		
+    {% endfor %}
+	</tbody>
+</table>
+
+
+
+{% endblock %}

@@ -23,7 +23,9 @@ urlpatterns = patterns('DCSArchivingSystem.testapp.views',
     
 	#Records
     url(r'^records/$', 'records'),
-	
+
+    #Request
+    url(r'^request/$', 'request'),
 	
     # Logged in
     url(r'^dashboard/$', 'dashboard'),
@@ -56,6 +58,9 @@ urlpatterns = patterns('DCSArchivingSystem.testapp.views',
     
     #Profile
     url(r'^users/(?P<faculty_number>[0-9]+)/profile/$', 'view_profile'),
+    
+    #Request Delete
+    url(r'^request/(?P<document_number>[0-9]+)/delete/$', 'request_delete'),
     
     # Main Page
     url(r'^$', 'index'),

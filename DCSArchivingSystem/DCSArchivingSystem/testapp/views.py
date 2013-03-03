@@ -164,10 +164,15 @@ def view_profile(request, faculty_number):
 
     
 @login_required
-def request_delete(request):
-    
-    return render_to_response('request.html')
+def request(request):
+    doc_list= Dokument.objects.all()
+    return render_to_response('request.html', {'doc_list':doc_list})
 
+@login_required
+def request_delete(request, document_number):
+    doc= Dokument.objects.get(id= int(document_number))
+    return render_to_response('request_delete.html', {'doc':doc})
+    
 def log_in(request):
     if request.user.is_authenticated():
         return render_to_response('dashboard.html', {'user': request.user})
