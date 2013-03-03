@@ -170,10 +170,21 @@ def request(request):
     doc_list= Dokument.objects.all()
     return render_to_response('request.html', {'doc_list':doc_list})
 
-@login_required
+@csrf_exempt
 def request_delete(request, document_number):
-    doc= Dokument.objects.get(id= int(document_number))
-    return render_to_response('request_delete.html', {'doc':doc})
+    if request.POST:
+        doc= Dokument.objects.get(id= int(document_number))
+        for k in doc.files.all():
+#            print request.POST.get(str(k.id)), k.id
+            if request.POST.get(str(k.id))!=None:
+                k.delete=1
+            else:
+                k.delete=0
+            k.save()
+        return HttpResponseRedirect("#")
+    else:
+        doc= Dokument.objects.get(id= int(document_number))
+        return render_to_response('request_delete.html', {'doc':doc})
     
 def log_in(request):
     if request.user.is_authenticated():
@@ -201,29 +212,6 @@ def log_out(request):
     Log.create(request.user, "Logged out", None).save()
     logout(request)
     return HttpResponseRedirect('/')
-    
-"""def log_in(request):
-    state = ""
-    username = password = ''
-    if request.POST:
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-        user = authenticate(username=username, password=password)
-        if user is not None:
-            if user.is_active:
-                login(request, user)
-                state = "Login ok!"
-                return HttpResponseRedirect("/dashboard/")
-            else:
-                state = "Account not active."
-        else:
-            state = "* Wrong username or password."
-
-    return render_to_response('login.html',RequestContext(request, {'state':state}))
-
-def log_out(request):
-    logout(request)
-    return HttpResponseRedirect('/')"""
 
 @csrf_exempt
 def search_Faculty(request):

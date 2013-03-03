@@ -12,9 +12,16 @@
     </table>
 	<br>
 	<span class="label label-info"><h2>Files</h2></span>
-	<table border=1 width=80% align=center class="table table-striped">
+    <form action="" method="POST">
+
 	    {% for a in doc.files.all %}
-		<tr><td><a href="#">{{ a }}</a></td></tr>					<!-- Sa link nalang idagdag yung para sa pag view, download, print file -->
+            {% if a.delete %}
+                <td><input type="checkbox" checked="checked" name={{a.id}}>{{a}}</td><br>
+            {% else %}
+                <td><input type="checkbox" name= "{{a.id}}">{{a}}</td><br>
+            {% endif %}
+
 		{% endfor %}
-	</table>
+    <button type="submit" class="btn">Request Delete</button>
+    </form>
 {% endblock %}

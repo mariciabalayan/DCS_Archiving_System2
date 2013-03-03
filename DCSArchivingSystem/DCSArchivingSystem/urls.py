@@ -61,6 +61,7 @@ urlpatterns = patterns('DCSArchivingSystem.testapp.views',
     
     #Request Delete
     url(r'^request/(?P<document_number>[0-9]+)/delete/$', 'request_delete'),
+    url(r'^records/(?P<document_number>[0-9]+)/delete/$', 'request_delete'),
     
     # Main Page
     url(r'^$', 'index'),
