@@ -114,6 +114,12 @@ def scan(request):
     return render_to_response('scan.html')
 
 @login_required
+def print_page(request, file_number):
+    file= File.objects.get(id=int(file_number))
+    print file.file.path
+    return render_to_response('print.html', {'file':file})
+    
+@login_required
 def view(request, document_number):
     doc= Dokument.objects.get(id=int(document_number))
     for a in doc.files.all():

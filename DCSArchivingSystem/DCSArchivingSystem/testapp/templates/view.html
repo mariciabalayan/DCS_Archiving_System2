@@ -6,10 +6,13 @@
     {% for a in doc.files.all %}
         <img src= "/media/{{ MEDIA_URL }}{{a.file}}" width = 1000px height = 2500px >
         
+        
         <br>
         {{a}}
         <br>
+        <a href="/media/{{ MEDIA_URL }}{{a.file}}"> Download </a>
         <br>
+        <a href="/print/{{a.id}}" target="_blank">Print</a>
         
     {% endfor %}
 {%endblock%}
