@@ -150,8 +150,10 @@ def view_users(request):
     
 @login_required
 def view_logs(request):
-    log_list= Log.objects.all()
-    return render_to_response('logs.html', {'log_list': log_list})
+    if request.user.is_staff:
+        log_list= Log.objects.all()
+        return render_to_response('logs.html', {'log_list': log_list})
+    return HttpResponseRedirect("/dashboard/")
     
 @login_required
 def view_profile(request, faculty_number):
