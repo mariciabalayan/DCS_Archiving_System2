@@ -72,6 +72,8 @@ urlpatterns = patterns('DCSArchivingSystem.testapp.views',
     #print
     url(r'^print/(?P<file_number>[0-9]+)/$', 'print_page'),
 
+    url(r'^files/(?P<file_number>[0-9]+)/$', 'view_file'),
+
     
     # Main Page
     url(r'^$', 'index'),

@@ -114,9 +114,14 @@ def scan(request):
     return render_to_response('scan.html')
 
 @login_required
+def view_file(request, file_number):
+    file= File.objects.get(id=int(file_number))
+    return render_to_response('view_file.html', {'file':file})
+
+@login_required
 def print_page(request, file_number):
     file= File.objects.get(id=int(file_number))
-    print file.file.path
+#    print file.file.path
     return render_to_response('print.html', {'file':file})
     
 @login_required
@@ -177,6 +182,7 @@ def view_profile(request, faculty_number):
     current_faculty = Faculty.objects.get(id = int(faculty_number))
     tagged_docs = Tag.objects.filter(faculty_id = int(faculty_number))
     return render_to_response('profile.html', {'current_faculty': current_faculty, 'file_list': doc_list, 'tagged_docs':tagged_docs})
+
 
     
 @login_required

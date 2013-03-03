@@ -11,16 +11,15 @@
 		<tr><th>Transcation</th><td>{{ doc.transaction }}</td></tr>
     </table>
 	<br>
-	<span class="label label-info"><h2>Files</h2></span>
     <form action="" method="POST">
-    
+	<span class="label label-info"><h2>Files</h2></span>
 	<table border=1 width=80% align=center class="table table-striped">	
 
 	    {% for a in doc.files.all %}
             {% if a.delete %}
-                <td><input type="checkbox" checked="checked" name={{a.id}}>{{a}}</td><br>
+                <td><input type="checkbox" checked="checked" name="{{a.id}}"> <a href= "/files/{{a.id}}" target="_blank"> {{a}}</a></td><br>
             {% else %}
-                <td><input type="checkbox" name= "{{a.id}}">{{a}}</td><br>
+                <td><input type="checkbox" name= "{{a.id}}"><a href= "/files/{{a.id}}" target="_blank"> {{a}}</a></td><br>
             {% endif %}
 
 		{% endfor %}
