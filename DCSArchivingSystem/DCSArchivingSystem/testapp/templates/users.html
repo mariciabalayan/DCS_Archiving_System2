@@ -36,12 +36,15 @@ $(document).ready(function()
 	</tr> 
 	</thead> 
 	<tbody> 
+	
     {% for a in users_list %}
         <tr>
         <td>{{ a.last_name }}</td>
         <td>{{ a.first_name }}</td>
 		<td><a href="{{ a.id }}/profile">View Faculty</a></td>
-		</tr>		
+		</tr>
+		{% empty %}
+		<tr><td>There are no faculty members yet.</a></td></tr>		
     {% endfor %}
 	</tbody>
 </table>

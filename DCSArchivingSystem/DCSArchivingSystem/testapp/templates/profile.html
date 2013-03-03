@@ -29,7 +29,9 @@
 	<span class="label label-info"><h2>Records</h2></span>
 	<table border=1 width=80% align=center class="table table-striped">
 	    {% for a in file_list %}
-		<tr><td><a href="#">{{ a.transaction }}</a></td></tr>					<!-- Sa link nalang idagdag yung para sa pag view, download, print file -->
+		<tr><td><a href="#">{{ a.transaction }}</a></td></tr>
+		{% empty %}
+		<tr><td>There are no files for this faculty yet.</a></td></tr>
 		{% endfor %}
 	</table>
 {% endblock %}
