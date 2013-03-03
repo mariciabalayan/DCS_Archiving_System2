@@ -186,16 +186,15 @@ def request(request):
 
 @csrf_exempt
 def request_delete(request, document_number):
-    if request.POST:
+    if request.method=="POST":
         doc= Dokument.objects.get(id= int(document_number))
         for k in doc.files.all():
-#            print request.POST.get(str(k.id)), k.id
             if request.POST.get(str(k.id))!=None:
                 k.delete=1
             else:
                 k.delete=0
             k.save()
-        return HttpResponseRedirect("#")
+        return HttpResponseRedirect("/records")
     else:
         doc= Dokument.objects.get(id= int(document_number))
         return render_to_response('request_delete.html', {'doc':doc})

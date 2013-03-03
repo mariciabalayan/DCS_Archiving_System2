@@ -5,7 +5,7 @@
 <br>
 	<div class = "row">
 	</div>
-	<span class="label label-info"><h2>{{ doc.faculty }},{{ doc.transaction }}</h2></span>
+	<span class="label label-info"><h2>{{ doc.faculty }}: {{ doc.transaction }}</h2></span>
 	<table border=1 width=80% align=center class="table table-striped">	
 		<tr><th width = 200>Faculty</th><td>{{ doc.faculty }}</td></tr>
 		<tr><th>Transcation</th><td>{{ doc.transaction }}</td></tr>
@@ -13,6 +13,8 @@
 	<br>
 	<span class="label label-info"><h2>Files</h2></span>
     <form action="" method="POST">
+    
+	<table border=1 width=80% align=center class="table table-striped">	
 
 	    {% for a in doc.files.all %}
             {% if a.delete %}
@@ -22,6 +24,8 @@
             {% endif %}
 
 		{% endfor %}
+    </table>
     <button type="submit" class="btn">Request Delete</button>
+    
     </form>
 {% endblock %}

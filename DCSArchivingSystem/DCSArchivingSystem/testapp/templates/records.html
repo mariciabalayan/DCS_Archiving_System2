@@ -38,7 +38,7 @@ $(document).ready(function()
 	<tbody> 
     {% for a in doc_list %}
         <tr>
-        <td>{{ a.faculty }}</td>
+        <td><a href="/users/{{a.faculty_id}}/profile">{{ a.faculty }}</a></td>
         <td><a href="{{a.id}}/view/">{{ a.transaction }}</a></td>
         <td><a href="{{a.id}}/delete/"> Delete </a></td>
 		</tr>		
