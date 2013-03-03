@@ -24,7 +24,16 @@
 				<div class="control-group">
 					<label class="control-label">Title</label>
 					<div class="controls">
-						<input type="text" name="title" id="title" placeholder="Title">
+						<!--<input type="text" name="title" id="title" placeholder="Title">-->
+                                                <select name='transaction'>
+                                                        {% for transaction in transactions %}
+                                                                {% ifequal transaction.id selected_transaction.id %}
+                                                                        <option value="{{transaction.key}}" selected = "selected"> {{transaction.name}} </option>
+                                                                {% else %}
+                                                                        <option value="{{transaction.key}}"> {{transaction.name}} </option>
+                                                                {% endifequal %}
+                                                        {% endfor %}
+                                                </select>
 					</div>
 				</div>
 				

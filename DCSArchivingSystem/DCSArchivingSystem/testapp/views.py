@@ -117,7 +117,7 @@ def scan(request):
 def scanpage(request):
     users_list= Faculty.objects.all()
 
-    return render_to_response('scanpage.html', { 'user': request.user, 'faculty_list': users_list}, context_instance=RequestContext(request))
+    return render_to_response('scanpage.html', { 'user': request.user, 'faculty_list': users_list, 'transactions': Transaction.objects.all()}, context_instance=RequestContext(request))
 
 @login_required
 def scanpage2(request):
@@ -248,3 +248,4 @@ def search_Files(request, current_id):
             results = File.objects.filter(faculty_id = int(current_id), filename__icontains=x)
         state = "Search results for: " + search_term
     return render_to_response('searchFiles.html', {'user': request.user, 'state': state, 'current_faculty': current_faculty, 'results': results}, context_instance=RequestContext(request))
+
