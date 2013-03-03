@@ -57,7 +57,7 @@ def dashboard(request):
 def records(request):
     doc_list= Dokument.objects.all()
     return render_to_response('records.html', {'user': request.user, 'doc_list':doc_list} )
-	
+    
 def upload(request):
     if request.POST:
         userid = request.POST.get('userid')
@@ -230,12 +230,14 @@ def log_out(request):
 @csrf_exempt
 def search_Faculty(request):
     state = ""
+    results = ""
+    search_term = ""
     if request.POST:
         search_term = request.POST.get('term')
+        x = search_term
         keywords = search_term.split(' ')
         print "keywords: "
         print keywords
-        results = ""
         for x in keywords:
             FN_starts = Faculty.objects.filter(first_name__istartswith=x+" ")
             FN_ends = Faculty.objects.filter(first_name__iendswith=" "+x)
@@ -245,22 +247,25 @@ def search_Faculty(request):
             LN_ends = Faculty.objects.filter(last_name__iendswith=x+" ")
             LN_mids = Faculty.objects.filter(last_name__icontains=" "+x+" ")
             LN_exact = Faculty.objects.filter(last_name__iexact=x)
-            results = chain(results, FN_starts, FN_ends, FN_mids, FN_exact, LN_starts, LN_ends, LN_mids, LN_exact)
+            results = FN_starts| FN_ends| FN_mids| FN_exact| LN_starts| LN_ends| LN_mids| LN_exact
         state = "Search results for: " + search_term
-    return render_to_response('searchFaculty.html', {'user': request.user, 'state': state, 'results': results}, context_instance=RequestContext(request))
+    return render_to_response('searchFaculty.html', {'user': request.user, 'results': results, 'keyword': search_term}, context_instance=RequestContext(request))
 
 @csrf_exempt
 def search_Files(request, current_id):
-    print "andito ako"
     state = ""
     results = ""
     current_faculty = Faculty.objects.get(id = int(current_id))
     if request.POST:
         search_term = request.POST.get('term')
-        keywords = search_term.split(' ')
-        print "keywords: "
-        for x in keywords:
-            results = File.objects.filter(faculty_id = int(current_id), filename__icontains=x)
-        state = "Search results for: " + search_term
-    return render_to_response('searchFiles.html', {'user': request.user, 'state': state, 'current_faculty': current_faculty, 'results': results}, context_instance=RequestContext(request))
+        results = Dokument.objects.filter(transaction__name=search_term)
+    return render_to_response('searchFiles.html', {'user': request.user, 'current_faculty': current_faculty, 'results': results, 'keyword': search_term}, context_instance=RequestContext(request))
 
+@csrf_exempt
+def search_Records(request):
+    state = ""
+    results = ""
+    if request.POST:
+        search_term = request.POST.get('term')
+        results = Dokument.objects.filter(transaction__name=search_term)
+    return render_to_response('searchRecords.html', {'user': request.user, 'results': results, 'keyword': search_term}, context_instance=RequestContext(request))

@@ -1,16 +1,17 @@
 {% extends "template2.html" %}
-<title> Users </title>
+<title> Files </title>
 
 {%block content%}    
+ 
 <br>
-<form class="form-search" method="post" action="/users/search/">
+<form class="form-search" method="post" action="/records/search/">
 {% csrf_token %}
 <div class="row">
   <div class="span offset9">
     <div class="input-append">
-		<input class="form-data" type="text" id="term" name="term" placeholder="Search here"/>
-		<button type="submit" class="btn">Search</button>
-	</div>
+        <input class="form-data" type="text" id="term" name="term" placeholder="Search here"/>
+        <button type="submit" class="btn">Search</button>
+    </div>
   </div>
 </div>
 
@@ -18,29 +19,27 @@
 <script>
 $(document).ready(function() 
 	{ 
-		$("#users_table").tablesorter(); 
+		$("#doc_table").tablesorter(); 
 	} 
 ); 
 </script>
 
-<h1 align=center>Faculty</h1>
 
+<h1 align=center>Records</h1>
 {% if results|length > 0 %}
 <h4>Search results for: {{ keyword }}</h4>
 <table id = "users_table" border=1 width=80% align=center class="table table-striped">
 	<thead> 
 	<tr> 
-		<th>Last Name</th> 
-		<th>First Name</th> 
-		<th>Action</th> 
+		<th>Faculty</th> 
+		<th>Transaction</th> 
 	</tr> 
 	</thead> 
 	<tbody> 
     {% for a in results %}
         <tr>
-        <td>{{ a.last_name }}</td>
-        <td>{{ a.first_name }}</td>
-		<td><a href="/users/{{ a.id }}/profile">View Faculty</a></td>
+        <td>{{ a.faculty }}</td>
+        <td><a href="#">{{ a.transaction }}</a></td>
 		</tr>		
     {% endfor %}
 	</tbody>
@@ -48,6 +47,4 @@ $(document).ready(function()
 {% else %}
 <h4>No results found for: {{ keyword }}</h4>
 {% endif %}
-
-    
 {% endblock %}

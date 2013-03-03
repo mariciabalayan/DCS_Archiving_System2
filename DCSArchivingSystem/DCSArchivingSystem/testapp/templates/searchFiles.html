@@ -26,14 +26,21 @@
 		</div>
 	  </div>
 	</div>
-	<h4>{{ state }}</h4>
 	<span class="label label-info"><h2>Records</h2></span>
-	<table border=1 width=80% align=center class="table table-striped">
-	    {% for a in results %}
-		<tr><td><a href="#">{{ a.filename }}</a></td></tr>					<!-- Sa link nalang idagdag yung para sa pag view, download, print file -->
-		{% endfor %}
-	</table>
-	<br> <a href="/users/{{ current_faculty.id }}/profile/">Back to profile</a>
+	{% if results|length > 0 %}
+		<h4>Search results for: {{ keyword }}</h4>
+		<table border=1 width=80% align=center class="table table-striped">
+			{% for a in results %}
+				{% if a.faculty_id == current_faculty.id %}
+			<tr><td><a href="#">{{ a.transaction }}</a></td></tr>					<!-- Sa link nalang idagdag yung para sa pag view, download, print file -->
+				{% else %}
+				{% endif %}
+			{% endfor %}
+		</table>
+		<br> <a href="/users/{{ current_faculty.id }}/profile/">Back to profile</a>
+	{% else %}
+		<h4>No results found for: {{ keyword }}</h4>
+	{% endif %}
 {% endblock %}
 
 </html>
