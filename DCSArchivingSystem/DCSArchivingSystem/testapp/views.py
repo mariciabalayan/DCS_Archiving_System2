@@ -114,6 +114,13 @@ def scan(request):
     return render_to_response('scan.html')
 
 @login_required
+def view(request, document_number):
+    doc= Dokument.objects.get(id=int(document_number))
+    for a in doc.files.all():
+        print "YO",a.file.path
+    return render_to_response('view.html', {'doc':doc})
+
+@login_required
 def scanpage(request):
     users_list= Faculty.objects.all()
 

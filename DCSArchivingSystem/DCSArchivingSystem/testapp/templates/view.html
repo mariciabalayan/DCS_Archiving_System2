@@ -1,0 +1,15 @@
+{% extends "template2.html" %}
+
+{%block content%}
+	<span class="label label-info"><h2>{{doc}}</h2></span>
+
+    {% for a in doc.files.all %}
+        <img src= "/media/{{ MEDIA_URL }}{{a.file}}" width = 1000px height = 2500px >
+        
+        <br>
+        {{a}}
+        <br>
+        <br>
+        
+    {% endfor %}
+{%endblock%}

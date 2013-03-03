@@ -20,6 +20,9 @@ urlpatterns = patterns('DCSArchivingSystem.testapp.views',
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
     
+    #view
+    url(r'^records/(?P<document_number>[0-9]+)/view/$', 'view'),
+
     
 	#Records
     url(r'^records/$', 'records'),
