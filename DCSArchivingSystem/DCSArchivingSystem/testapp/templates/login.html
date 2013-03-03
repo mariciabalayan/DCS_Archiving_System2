@@ -8,7 +8,16 @@
 {% endblock %}
 
 {% block content %}
-
-
-
+<div class="container">
+		<br><p class="template_body">
+		<div class="hero-unit">
+			<div class = "span">{% load static %} <img src="{% static "images/head.png" %}" width=100%/></div>
+			<center><h5>For the management of files and transactions of the faculty of the Department of Computer Science in UP Diliman.</h5></center>
+		    <center><form action="." method="post" class = "form-inline"> {% csrf_token %}
+				<input class="input-medium" type="text" name="username" placeholder="Username"/>
+				<input class="input-medium" type="password" name="password" placeholder="Password" value="" />
+				<button class="btn btn-primary" type="submit">Log in</button>
+				<div><label>{{ state }}</label></div>
+			</form></center>
+		</div>
 {% endblock %}
