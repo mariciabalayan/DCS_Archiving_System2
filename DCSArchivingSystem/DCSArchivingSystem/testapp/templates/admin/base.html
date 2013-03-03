@@ -34,6 +34,7 @@
                 {% endif %}
                 <a href="{% url 'admin:password_change' %}">{% trans 'Change password' %}</a> /
                 <a href="/">{% trans 'Home' %}</a> /
+                <a href="/logs" target="_blank">{% trans 'View Logs' %}</a> /
                 <a href="{% url 'admin:logout' %}">{% trans 'Log out' %}</a> 
             {% endblock %}
         </div>
