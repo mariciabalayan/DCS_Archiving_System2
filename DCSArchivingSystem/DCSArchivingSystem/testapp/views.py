@@ -158,10 +158,16 @@ def view_profile(request, faculty_number):
 #    current_user = request.user
 #    current_faculty = Faculty.objects.get(user_id = current_user.id)
 #    return render_to_response('profile.html', {'current_user': current_user, 'current_faculty': current_faculty})
-    file_list= File.objects.filter(faculty_id = int(faculty_number))
+    doc_list= Dokument.objects.filter(faculty_id = int(faculty_number))
     current_faculty = Faculty.objects.get(id = int(faculty_number))
-    return render_to_response('profile.html', {'current_faculty': current_faculty, 'file_list': file_list})
+    return render_to_response('profile.html', {'current_faculty': current_faculty, 'file_list': doc_list})
+
     
+@login_required
+def request_delete(request):
+    
+    return render_to_response('request.html')
+
 def log_in(request):
     if request.user.is_authenticated():
         return render_to_response('dashboard.html', {'user': request.user})
