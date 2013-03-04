@@ -56,7 +56,7 @@ def dashboard(request):
 @login_required
 def records(request):
     doc_list= Dokument.objects.all()
-    return render_to_response('records.html', {'user': request.user, 'doc_list':doc_list} )
+    return render_to_response('records.html', {'user': request.user, 'doc_list':doc_list}, context_instance=RequestContext(request))
     
 def upload(request):
     if request.POST:
@@ -164,7 +164,7 @@ def scanpage2(request):
 @login_required
 def view_users(request):
     users_list= Faculty.objects.all()
-    return render_to_response('users.html', {'users_list': users_list})
+    return render_to_response('users.html', {'users_list': users_list}, context_instance=RequestContext(request))
     
 @login_required
 def view_logs(request):
@@ -181,7 +181,7 @@ def view_profile(request, faculty_number):
     doc_list= Dokument.objects.filter(faculty_id = int(faculty_number))
     current_faculty = Faculty.objects.get(id = int(faculty_number))
     tagged_docs = Tag.objects.filter(faculty_id = int(faculty_number))
-    return render_to_response('profile.html', {'current_faculty': current_faculty, 'file_list': doc_list, 'tagged_docs':tagged_docs})
+    return render_to_response('profile.html', {'current_faculty': current_faculty, 'file_list': doc_list, 'tagged_docs':tagged_docs}, context_instance=RequestContext(request))
 
 
     

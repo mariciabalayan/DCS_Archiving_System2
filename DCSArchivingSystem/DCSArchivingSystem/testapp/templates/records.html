@@ -1,4 +1,5 @@
 {% extends "template2.html" %}
+{% load pagination_tags %}
 <title> Files </title>
 
 {%block content%}    
@@ -35,7 +36,8 @@ $(document).ready(function()
         <th>Request Delete</th>
 	</tr> 
 	</thead> 
-	<tbody> 
+	<tbody>
+	{% autopaginate doc_list 10 %}
     {% for a in doc_list %}
         <tr>
         <td><a href="/users/{{a.faculty_id}}/profile">{{ a.faculty }}</a></td>
@@ -43,6 +45,7 @@ $(document).ready(function()
         <td><a href="{{a.id}}/delete/"> Delete </a></td>
 		</tr>		
     {% endfor %}
+	{% paginate %}
 	</tbody>
 </table>
     
