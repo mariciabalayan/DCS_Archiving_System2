@@ -7,7 +7,7 @@
 * [MySQL](http://www.mysql.com/downloads/installer/)
 * MySQL-Python - [Official (x86)](http://sourceforge.net/projects/mysql-python/) - [Unofficial (has x64)](http://www.lfd.uci.edu/~gohlke/pythonlibs/#mysql-python)
 * [Python Image Library](http://www.lfd.uci.edu/~gohlke/pythonlibs/#pil) - Required by ImageField model
-* [django-pagination 1.0.7](https://pypi.python.org/pypi/django-pagination)
+* [django-pagination 1.0.7](https://pypi.python.org/pypi/django-pagination) - Just download and extract. No need to edit settings.py
 * [setuptools for Python 2.7](https://pypi.python.org/pypi/setuptools)
 
 Required to run /scanner_external_client/scanner.py from python.exe
