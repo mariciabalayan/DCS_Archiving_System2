@@ -1,10 +1,11 @@
 {% extends "template2.html" %}
+{% load pagination_tags %}
 <title> Files </title>
 
 {%block content%}    
  
 <br>
-<form class="form-search" method="post" action="/records/search/">
+<form class="form-search" method="get" action="/records/search/">
 {% csrf_token %}
 <div class="row">
   <div class="span offset9">
@@ -36,12 +37,14 @@ $(document).ready(function()
 	</tr> 
 	</thead> 
 	<tbody> 
+	{% autopaginate results 10 %}
     {% for a in results %}
         <tr>
         <td>{{ a.faculty }}</td>
         <td><a href="#">{{ a.transaction }}</a></td>
 		</tr>		
     {% endfor %}
+	{% paginate %}
 	</tbody>
 </table>
 {% else %}

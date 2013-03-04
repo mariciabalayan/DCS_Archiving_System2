@@ -16,7 +16,7 @@
 		<tr><th>Length Of Service</th><td>{{ current_faculty.length_of_service }}</td></tr>		
 	</table>
 	<br>
-	<form class="form-search" method="post" action="search/">
+	<form class="form-search" method="get" action="search/">
 	{% csrf_token %}
 	<div class="row">
 	  <div class="span offset9">

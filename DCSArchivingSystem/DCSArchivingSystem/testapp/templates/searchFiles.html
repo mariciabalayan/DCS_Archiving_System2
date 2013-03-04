@@ -1,4 +1,5 @@
 {% extends "template2.html" %}
+{% load pagination_tags %}
 <title> Users </title>
 
 {%block content%} 
@@ -16,7 +17,7 @@
 		<tr><th>Length Of Service</th><td>{{ current_faculty.length_of_service }}</td></tr>		
 	</table>
 	<br>
-	<form class="form-search" method="post" action="/users/{{current_faculty.id}}/profile/search/">
+	<form class="form-search" method="get" action="/users/{{current_faculty.id}}/profile/search/">
 	{% csrf_token %}
 	<div class="row">
 	  <div class="span offset9">
@@ -27,20 +28,37 @@
 	  </div>
 	</div>
 	<span class="label label-info"><h2>Records</h2></span>
-	{% if results|length > 0 %}
-		<h4>Search results for: {{ keyword }}</h4>
 		<table border=1 width=80% align=center class="table table-striped">
+	<tbody>
+	{% if results %}
+		<tr><td>Search results for: <b>{{ keyword }}</b></a></td></tr>
+	{% endif %}
+			{% autopaginate results 10 %}
 			{% for a in results %}
 				{% if a.faculty_id == current_faculty.id %}
 			<tr><td><a href="#">{{ a.transaction }}</a></td></tr>					<!-- Sa link nalang idagdag yung para sa pag view, download, print file -->
-				{% else %}
 				{% endif %}
+				{% empty %}
+                                <tr><td>There are no search results for: <b>{{ keyword }}</b></a></td></tr>
 			{% endfor %}
+			{% paginate %}
+	</tbody>
 		</table>
-		<br> <a href="/users/{{ current_faculty.id }}/profile/">Back to profile</a>
-	{% else %}
-		<h4>No results found for: {{ keyword }}</h4>
-	{% endif %}
+	
+	<span class="label label-info"><h2>Tagged</h2></span>
+        <table border=1 width=80% align=center class="table table-striped">
+                {% if tagged_docs %}
+                        <thead> <tr> <th>Faculty</th> <th>Transaction</th> </tr> </thead> 
+                {% endif %}
+                <tbody> 
+                        {% for a in tagged_docs %}
+                                <tr> <td>{{ a.faculty }}</td> <td><a href="#">{{ a.dokument.transaction }}</a></td> </tr>           
+                        {% empty %}
+                                <tr><td>There are no tagged files for this faculty.</a></td></tr>
+                        {% endfor %}
+                </tbody>
+        </table>
+	<br> <a href="/users/{{ current_faculty.id }}/profile/">Back to profile</a>
 {% endblock %}
 
 </html>

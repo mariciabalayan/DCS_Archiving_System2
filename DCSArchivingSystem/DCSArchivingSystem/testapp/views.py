@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
-from django.template import RequestContext
+# from django.template import RequestContext
 from django.contrib.auth.models import User
 from models import Faculty, File, Log, Transaction, Dokument, Tag
 from forms import ScanForm
@@ -13,7 +13,7 @@ from django.contrib.sessions.models import Session
 from django.contrib.auth.models import User
 from datetime import datetime
 from django.views.decorators.csrf import csrf_exempt
-from itertools import *
+from django.template.context import RequestContext
 
 # Create your views here.
 
@@ -234,43 +234,43 @@ def log_out(request):
 
 @csrf_exempt
 def search_Faculty(request):
-    state = ""
     results = ""
+    list = ""
     search_term = ""
-    if request.POST:
-        search_term = request.POST.get('term')
+    post_data = ""
+    x = ""
+    if request.GET:
+        print "asdfasdfsadf"
+        search_term = request.GET.get('term')
+        print search_term
         x = search_term
-        keywords = search_term.split(' ')
-        print "keywords: "
-        print keywords
-        for x in keywords:
-            FN_starts = Faculty.objects.filter(first_name__istartswith=x+" ")
-            FN_ends = Faculty.objects.filter(first_name__iendswith=" "+x)
-            FN_mids = Faculty.objects.filter(first_name__icontains=" "+x+" ")
-            FN_exact = Faculty.objects.filter(first_name__iexact=x)
-            LN_starts = Faculty.objects.filter(last_name__istartswith=x+" ")
-            LN_ends = Faculty.objects.filter(last_name__iendswith=x+" ")
-            LN_mids = Faculty.objects.filter(last_name__icontains=" "+x+" ")
-            LN_exact = Faculty.objects.filter(last_name__iexact=x)
-            results = FN_starts| FN_ends| FN_mids| FN_exact| LN_starts| LN_ends| LN_mids| LN_exact
-        state = "Search results for: " + search_term
+        FN_starts = Faculty.objects.filter(first_name__istartswith=x+" ")
+        FN_ends = Faculty.objects.filter(first_name__iendswith=" "+x)
+        FN_mids = Faculty.objects.filter(first_name__icontains=" "+x+" ")
+        FN_exact = Faculty.objects.filter(first_name__iexact=x)
+        LN_starts = Faculty.objects.filter(last_name__istartswith=x+" ")
+        LN_ends = Faculty.objects.filter(last_name__iendswith=x+" ")
+        LN_mids = Faculty.objects.filter(last_name__icontains=" "+x+" ")
+        LN_exact = Faculty.objects.filter(last_name__iexact=x)
+        results = FN_starts| FN_ends| FN_mids| FN_exact| LN_starts| LN_ends| LN_mids| LN_exact
     return render_to_response('searchFaculty.html', {'user': request.user, 'results': results, 'keyword': search_term}, context_instance=RequestContext(request))
 
 @csrf_exempt
 def search_Files(request, current_id):
-    state = ""
     results = ""
     current_faculty = Faculty.objects.get(id = int(current_id))
-    if request.POST:
-        search_term = request.POST.get('term')
-        results = Dokument.objects.filter(transaction__name=search_term)
-    return render_to_response('searchFiles.html', {'user': request.user, 'current_faculty': current_faculty, 'results': results, 'keyword': search_term}, context_instance=RequestContext(request))
+    search_term = ""
+    tagged_docs = ""
+    if request.GET:
+        search_term = request.GET.get('term')
+        results = Dokument.objects.filter(transaction__name=search_term, faculty_id = int (current_id))
+        tagged_docs = Tag.objects.filter(faculty_id = int(current_id))
+    return render_to_response('searchFiles.html', {'user': request.user, 'current_faculty': current_faculty, 'results': results, 'keyword': search_term, 'tagged_docs': tagged_docs}, context_instance=RequestContext(request))
 
 @csrf_exempt
 def search_Records(request):
-    state = ""
     results = ""
-    if request.POST:
-        search_term = request.POST.get('term')
+    if request.GET:
+        search_term = request.GET.get('term')
         results = Dokument.objects.filter(transaction__name=search_term)
     return render_to_response('searchRecords.html', {'user': request.user, 'results': results, 'keyword': search_term}, context_instance=RequestContext(request))

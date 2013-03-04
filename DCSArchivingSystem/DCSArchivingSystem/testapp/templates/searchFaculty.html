@@ -1,9 +1,10 @@
 {% extends "template2.html" %}
+{% load pagination_tags %}
 <title> Users </title>
 
 {%block content%}    
 <br>
-<form class="form-search" method="post" action="/users/search/">
+<form class="form-search" method="get" action="/users/search/">
 {% csrf_token %}
 <div class="row">
   <div class="span offset9">
@@ -26,7 +27,7 @@ $(document).ready(function()
 <h1 align=center>Faculty</h1>
 
 {% if results|length > 0 %}
-<h4>Search results for: {{ keyword }}</h4>
+<h4>Search results for: <b>{{ keyword }}</b></h4>
 <table id = "users_table" border=1 width=80% align=center class="table table-striped">
 	<thead> 
 	<tr> 
@@ -35,7 +36,8 @@ $(document).ready(function()
 		<th>Action</th> 
 	</tr> 
 	</thead> 
-	<tbody> 
+	<tbody>
+	{% autopaginate results 10 %}
     {% for a in results %}
         <tr>
         <td>{{ a.last_name }}</td>
@@ -43,6 +45,7 @@ $(document).ready(function()
 		<td><a href="/users/{{ a.id }}/profile">View Faculty</a></td>
 		</tr>		
     {% endfor %}
+	{% paginate %}
 	</tbody>
 </table>
 {% else %}
