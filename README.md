@@ -7,6 +7,8 @@
 * [MySQL](http://www.mysql.com/downloads/installer/)
 * MySQL-Python - [Official (x86)](http://sourceforge.net/projects/mysql-python/) - [Unofficial (has x64)](http://www.lfd.uci.edu/~gohlke/pythonlibs/#mysql-python)
 * [Python Image Library](http://www.lfd.uci.edu/~gohlke/pythonlibs/#pil) - Required by ImageField model
+* [django-pagination 1.0.7](https://pypi.python.org/pypi/django-pagination)
+* [setuptools for Python 2.7](https://pypi.python.org/pypi/setuptools)
 
 Required to run /scanner_external_client/scanner.py from python.exe
 * [TWAINmodule] (http://www.lfd.uci.edu/~gohlke/pythonlibs/#twainmodule)
@@ -31,6 +33,12 @@ Required to run /scanner_external_client/scanner.py from python.exe
 4. Install Django by: unzip the folder > open cmd > go to folder > type  "python setup.py install"
 
 5. Install MySQL, MySQL-Python and Python Image Library
+
+6. Install setuptools.
+
+7. Install django-pagination via command line:
+ 1. Go to django-pagination-1.0.7 folder
+ 2. python setup.py install
 
 ### Getting the Project
 1. Clone [https://github.com/noelsison2/DCS-Archiving-System](https://github.com/noelsison2/DCS-Archiving-System)
