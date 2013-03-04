@@ -46,4 +46,5 @@ class UserProfileAdmin(UserAdmin):
 
 
 admin.site.unregister(User)
+del User.get_absolute_url
 admin.site.register(User, UserProfileAdmin)
