@@ -142,19 +142,21 @@ def scanpage2(request):
     users_list= Faculty.objects.all()
     title= faculty= pages= state= ''
     if request.method=='POST':
-        title= request.POST.get('title')
+        print request.META.get('HTTP_ORIGIN')
+        title= request.POST.get('transaction')
         faculty= request.POST.get('faculty')
         pages= request.POST.get('pages')
         faculty_name= faculty
         faculty= faculty.replace(',', "")
         for person in users_list:
             if faculty.split(' ')[0]==person.last_name: faculty_id=person.id
+        print title, faculty, pages
         if (title!= None and title != '') and (faculty!= None and faculty!= '') and pages!='' and pages!= None:
             if int(pages)<0:
                 state= 'Invalid number of pages.'
 
             else:
-                location = "scn://fid=%d&name=%s&title=%s&user_id=%s" %(faculty_id,request.POST.get('faculty'),title,request.session['_auth_user_id'])
+                location = "scn://fid=%d&name=%s&title=%s&uid=%s&origin=%s" %(faculty_id,request.POST.get('faculty'),title,request.session['_auth_user_id'],request.META.get('HTTP_ORIGIN'))
                 res = HttpResponse(location, status=302)
                 res['Location'] = location
                 return res

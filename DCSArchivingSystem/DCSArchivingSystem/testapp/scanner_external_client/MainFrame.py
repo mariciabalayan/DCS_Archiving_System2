@@ -66,7 +66,7 @@ class MainFrame( gui.MainFrameBase, TwainBase):
                 for x in fileList:
                         if ".bmp" in x: os.remove(x)
         
-        def setParams(self,facultyID,facultyName,formTitle,userid,debug=False):
+        def setParams(self,facultyID,facultyName,formTitle,userid,hostname,debug=False):
                 self.name=facultyName
                 self.m_lbFaculty.ChangeValue(facultyName)
                 self.fid=facultyID
@@ -79,6 +79,7 @@ class MainFrame( gui.MainFrameBase, TwainBase):
                 self.userid=userid
                 self.filenameList.append(None)
                 self.debugMode=debug
+                self.serverHost=hostname
                 self.cleanUp()
 
         def genFilename(self):
@@ -181,13 +182,14 @@ class MainFrame( gui.MainFrameBase, TwainBase):
                 self.m_statusBar.SetStatusText("")
 
         def m_btUploadClick( self, event ):
-                res=self.fetch("http://127.0.0.1:8000/upload/")
+                self.log("connecting to " + self.serverHost)
+                res=self.fetch(self.serverHost+"/upload/")
                 XCSRFToken=self.getCookie("csrftoken")
 
                 #"http://httpbin.org/post": Test link. Change to appropriate upload link
                 self.params.update({"fid": str(self.fid), "faculty": str(self.name), "filename": str("_"+self.title+"_"), "page": str(self.pages), "userid": self.userid, "transaction": self.title})
                 datagen, headers = multipart_encode(self.params)
-                request=urllib2.Request("http://127.0.0.1:8000/upload/",datagen,headers)
+                request=urllib2.Request(self.serverHost+"/upload/",datagen,headers)
                 request.add_header("X-CSRFToken", XCSRFToken.value)
                 request.add_header("User-Agent", "Mozilla/5.0") #browser spoofing
                 try:

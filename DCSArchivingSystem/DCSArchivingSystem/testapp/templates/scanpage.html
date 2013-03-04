@@ -28,9 +28,9 @@
                                                 <select name='transaction'>
                                                         {% for transaction in transactions %}
                                                                 {% ifequal transaction.id selected_transaction.id %}
-                                                                        <option value="{{transaction.key}}" selected = "selected"> {{transaction.name}} </option>
+                                                                        <option selected = "selected"> {{transaction.name}} </option>
                                                                 {% else %}
-                                                                        <option value="{{transaction.key}}"> {{transaction.name}} </option>
+                                                                        <option> {{transaction.name}} </option>
                                                                 {% endifequal %}
                                                         {% endfor %}
                                                 </select>
