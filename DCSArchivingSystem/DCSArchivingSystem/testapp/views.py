@@ -91,6 +91,7 @@ def upload(request):
                 document.faculty= faculty
                 document.transaction= transaction
                 document.save()
+                first_filename = filename + '1.bmp'
                 for key in request.FILES:
                     files = request.FILES[key]
                     with open('DCSArchivingSystem/testapp/media/files/' + filename + key.split('_')[1] + '.bmp', 'wb+') as destination:
@@ -98,8 +99,8 @@ def upload(request):
                             destination.write(chunk)
                         ######################### now okay ###################
                         file = File()
-                        file.filename = filename
-                        file.file = 'files/' + filename
+                        file.filename = first_filename
+                        file.file = 'files/' + first_filename
                         file.save()                    
                         document.files.add(file)
                         ########################################################
