@@ -124,6 +124,27 @@ def print_page(request, file_number):
 #    print file.file.path
     return render_to_response('print.html', {'file':file})
     
+@csrf_exempt
+def change(request, document_number):
+    doc= Dokument.objects.get(id=int(document_number))
+    users_list= Faculty.objects.all()
+    if request.method=='POST':
+        faculty= request.POST.get('faculty')
+        faculty_name= faculty
+        faculty= faculty.replace(',', "")
+        for person in users_list:
+            if faculty.split(' ')[0]==person.last_name: 
+                for k in faculty.split(' '):
+                    if k== person.last_name: continue
+                    elif k not in person.first_name: break
+                    doc.faculty_id=person.id
+        doc.save()
+        return HttpResponseRedirect("/records")
+    else:
+        print 'hi'
+        faculty_list= Faculty.objects.all()
+        return render_to_response('change.html', {'doc':doc, 'faculty_list':faculty_list})
+
 @login_required
 def view(request, document_number):
     doc= Dokument.objects.get(id=int(document_number))

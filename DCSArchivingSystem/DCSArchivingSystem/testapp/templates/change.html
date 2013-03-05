@@ -1,0 +1,26 @@
+{% extends "template2.html" %}
+
+{%block content%}
+            <br><br><br>
+            {{doc}}
+            <form method="post">
+            			{% csrf_token %}
+
+				<div class="control-group">
+					<label class="control-label">Change Owner</label>
+					<div class="controls">	
+					<select name= "faculty">
+					{% for a in faculty_list %}
+						<option>{{ a.last_name }}, {{ a.first_name}}</option>
+					{% endfor %}
+					</select>
+					</div> 
+				</div>
+                
+   				<div class="control-group">
+					<div class="controls">
+					<button type="submit" class="btn btn-primary">Change</button>
+					</div>
+				</div>
+            </form>
+{%endblock%}

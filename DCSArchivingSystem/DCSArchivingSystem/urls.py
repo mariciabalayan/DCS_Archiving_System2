@@ -21,7 +21,7 @@ urlpatterns = patterns('DCSArchivingSystem.testapp.views',
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
     
-    #view
+    #view records
     url(r'^records/(?P<document_number>[0-9]+)/view/$', 'view'),
 
     
@@ -75,6 +75,8 @@ urlpatterns = patterns('DCSArchivingSystem.testapp.views',
 
     url(r'^files/(?P<file_number>[0-9]+)/$', 'view_file'),
 
+    #change owner
+    url(r'^records/(?P<document_number>[0-9]+)/change/$', 'change'),
     
     # Main Page
     url(r'^$', 'index'),

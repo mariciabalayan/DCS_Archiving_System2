@@ -2,7 +2,7 @@
 
 {%block content%}
 	<span class="label label-info"><h2>{{doc}}</h2></span>
-
+    <a href="/records/{{doc.id}}/change"> Change Owner </a><br>
     {% for a in doc.files.all %}
         {{a}}
         <br>
