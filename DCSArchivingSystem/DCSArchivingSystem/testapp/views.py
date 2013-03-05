@@ -14,6 +14,7 @@ from django.contrib.auth.models import User
 from datetime import datetime
 from django.views.decorators.csrf import csrf_exempt
 from django.template.context import RequestContext
+import urllib2
 
 # Create your views here.
 
@@ -81,12 +82,8 @@ def upload(request):
                     if int(faculty_id) is int(person.id): faculty=person;
                 reqfname = request.POST.get('filename')
                 filename = faculty.last_name +'_' + faculty.first_name + reqfname
-                print filename, len(filename)
-                page = request.POST.get('pages')
-                transaction_name = request.POST.get('transaction')
-                transaction = Transaction()
-                transaction.name=transaction_name
-                transaction.save()
+                tid= request.POST.get('transaction')
+                transaction = Transaction.objects.filter(id=tid)[0]
                 document = Dokument()
                 document.faculty= faculty
                 document.transaction= transaction
@@ -163,28 +160,21 @@ def scanpage(request):
 @login_required
 def scanpage2(request):
     users_list= Faculty.objects.all()
-    title= faculty= pages= state= ''
+    transaction= faculty= state= ''
     if request.method=='POST':
-        print request.META.get('HTTP_ORIGIN')
         title= request.POST.get('transaction')
-        faculty= request.POST.get('faculty')
-        pages= request.POST.get('pages')
-        faculty_name= faculty
-        faculty= faculty.replace(',', "")
-        for person in users_list:
-            if faculty.split(' ')[0]==person.last_name: faculty_id=person.id
-        print title, faculty, pages
-        if (title!= None and title != '') and (faculty!= None and faculty!= '') and pages!='' and pages!= None:
-            if int(pages)<0:
-                state= 'Invalid number of pages.'
-
-            else:
-                location = "scn://fid=%d&name=%s&title=%s&uid=%s&origin=%s" %(faculty_id,request.POST.get('faculty'),title,request.session['_auth_user_id'],request.META.get('HTTP_ORIGIN'))
-                res = HttpResponse(location, status=302)
-                res['Location'] = location
-                return res
+        faculty_name= request.POST.get('faculty')
+        faculty_name= faculty_name.replace(',', "")
+        nameParts=faculty_name.split(' ',1)
+        faculty= Faculty.objects.filter(last_name=nameParts[0],first_name=nameParts[1])[0]
+        faculty_id= faculty.id
+        if (title!= None and title != '') and (faculty!= None and faculty!= ''):
+            location = "scn://" + urllib2.quote("fid=%d&name=%s&title=%s&uid=%s&origin=%s" %(faculty_id,request.POST.get('faculty'),title,request.session['_auth_user_id'],request.META.get('HTTP_ORIGIN')))
+            res = HttpResponse(location, status=302)
+            res['Location'] = location
+            return res
         
-    return render_to_response('scanpage.html', { 'user': request.user, 'faculty_list': users_list, 'title':title, 'pages':pages, 'faculty':faculty, 'state':state}, context_instance=RequestContext(request))
+    return render_to_response('scanpage.html', { 'user': request.user, 'faculty_list': users_list, 'transaction':transaction, 'faculty':faculty, 'state':state}, context_instance=RequestContext(request))
 
 @login_required
 def view_users(request):
