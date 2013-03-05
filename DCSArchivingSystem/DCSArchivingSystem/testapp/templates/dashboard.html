@@ -8,11 +8,12 @@
 {% endblock %}
 
 {% block content %}
-	
 	<br><div class="hero-unit">
-		<h1>Welcome</h1>
+		<h1>Welcome, {{user}}</h1>
 			<p>This is the DCS Archiving System, made for the management of files and transactions of the UP Diliman DCS Faculty.</p>
+{% if user.is_superuser %}
             <a href="/admin">Administration</a>
+{% endif %}
 		</h1>			
 	</div>
 

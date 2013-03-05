@@ -51,6 +51,7 @@ def index(request):
     
 @login_required
 def dashboard(request):
+    print request.user.is_superuser
     return render_to_response('dashboard.html', { 'user': request.user })
 
 @login_required
