@@ -40,9 +40,10 @@ $(document).ready(function()
 	{% autopaginate results 10 %}
     {% for a in results %}
         <tr>
-        <td>{{ a.faculty }}</td>
-        <td><a href="#">{{ a.transaction }}</a></td>
-		</tr>		
+        <td><a href="/users/{{a.faculty_id}}/profile">{{ a.faculty }}</a></td>
+        <td><a href="/records/{{a.id}}/view/">{{ a.transaction }}</a></td>
+        <td><a href="{{a.id}}/delete/"> Delete </a></td>
+		</tr>	
     {% endfor %}
 	{% paginate %}
 	</tbody>

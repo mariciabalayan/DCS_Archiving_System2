@@ -28,7 +28,8 @@ $(document).ready(function()
 
 
 <h1 align=center>Records</h1>
-<table id = "users_table" border=1 width=80% align=center class="table table-striped">
+{% if doc_list|length > 0 %}
+<table id = "records_table" border=1 width=80% align=center class="table table-striped">
 	<thead> 
 	<tr> 
 		<th>Faculty</th> 
@@ -48,5 +49,7 @@ $(document).ready(function()
 	{% paginate %}
 	</tbody>
 </table>
-    
+{% else %}
+<h4>There are no records yet.</h4>
+{% endif %}
 {% endblock %}

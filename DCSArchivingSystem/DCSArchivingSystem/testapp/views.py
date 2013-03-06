@@ -254,10 +254,8 @@ def log_out(request):
 def search_Faculty(request):
     results = ""
     search_term = ""
-    x = ""
     keywords = ""
     if request.GET:
-        print "asdfasdfsadf"
         search_term = request.GET.get('term')
         keywords = search_term.split(' ')
         for x in keywords:
@@ -278,16 +276,30 @@ def search_Files(request, current_id):
     current_faculty = Faculty.objects.get(id = int(current_id))
     search_term = ""
     tagged_docs = ""
+    x = ""
     if request.GET:
         search_term = request.GET.get('term')
-        results = Dokument.objects.filter(transaction__name=search_term, faculty_id = int (current_id))
+        keywords = search_term.split(' ')
+        for x in keywords:
+            trans_starts = Dokument.objects.filter(transaction__name__istartswith=x+" ", faculty_id = int (current_id))
+            trans_ends = Dokument.objects.filter(transaction__name__iendswith=" "+x, faculty_id = int (current_id))
+            trans_mids = Dokument.objects.filter(transaction__name__icontains=" "+x+" ", faculty_id = int (current_id))
+            trans_exact = Dokument.objects.filter(transaction__name__iexact=x, faculty_id = int (current_id))
+            results = trans_starts | trans_ends | trans_mids | trans_exact
         tagged_docs = Tag.objects.filter(faculty_id = int(current_id))
     return render_to_response('searchFiles.html', {'user': request.user, 'current_faculty': current_faculty, 'results': results, 'keyword': search_term, 'tagged_docs': tagged_docs}, context_instance=RequestContext(request))
 
 @csrf_exempt
 def search_Records(request):
     results = ""
+    keywords = ""
     if request.GET:
         search_term = request.GET.get('term')
-        results = Dokument.objects.filter(transaction__name=search_term)
+        keywords = search_term.split(' ')
+        for x in keywords:
+            trans_starts = Dokument.objects.filter(transaction__name__istartswith=x+" ")
+            trans_ends = Dokument.objects.filter(transaction__name__iendswith=" "+x)
+            trans_mids = Dokument.objects.filter(transaction__name__icontains=" "+x+" ")
+            trans_exact = Dokument.objects.filter(transaction__name__iexact=x)
+            results = trans_starts | trans_ends | trans_mids | trans_exact
     return render_to_response('searchRecords.html', {'user': request.user, 'results': results, 'keyword': search_term}, context_instance=RequestContext(request))

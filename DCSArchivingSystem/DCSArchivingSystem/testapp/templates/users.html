@@ -28,6 +28,7 @@ $(document).ready(function()
 
 
 <h1 align=center>Faculty</h1>
+{% if users_list|length > 0 %}
 <table id = "users_table" border=1 width=80% align=center class="table table-striped">
 	<thead> 
 	<tr> 
@@ -43,12 +44,13 @@ $(document).ready(function()
         <td>{{ a.last_name }}</td>
         <td>{{ a.first_name }}</td>
 		<td><a href="{{ a.id }}/profile">View Faculty</a></td>
-		</tr>
-		{% empty %}
-		<tr><td>There are no faculty members yet.</a></td></tr>		
+		</tr>	
     {% endfor %}
 	{% paginate %}
 	</tbody>
 </table>
+{% else %}
+<h4>There are no faculty members yet.</h4>
+{% endif %}
     
 {% endblock %}
