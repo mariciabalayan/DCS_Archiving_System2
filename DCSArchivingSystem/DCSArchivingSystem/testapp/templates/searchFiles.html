@@ -36,7 +36,7 @@
 			{% autopaginate results 10 %}
 			{% for a in results %}
 				{% if a.faculty_id == current_faculty.id %}
-			<tr><td><a href="#">{{ a.transaction }}</a></td></tr>					<!-- Sa link nalang idagdag yung para sa pag view, download, print file -->
+			<tr><td><a href="/records/{{a.id}}/view">{{ a.transaction }}</a></td></tr>					<!-- Sa link nalang idagdag yung para sa pag view, download, print file -->
 				{% endif %}
 				{% empty %}
                                 <tr><td>There are no search results for: <b>{{ keyword }}</b></a></td></tr>
