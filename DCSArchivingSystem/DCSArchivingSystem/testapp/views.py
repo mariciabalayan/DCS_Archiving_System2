@@ -250,24 +250,23 @@ def log_out(request):
 @csrf_exempt
 def search_Faculty(request):
     results = ""
-    list = ""
     search_term = ""
-    post_data = ""
     x = ""
+    keywords = ""
     if request.GET:
         print "asdfasdfsadf"
         search_term = request.GET.get('term')
-        print search_term
-        x = search_term
-        FN_starts = Faculty.objects.filter(first_name__istartswith=x+" ")
-        FN_ends = Faculty.objects.filter(first_name__iendswith=" "+x)
-        FN_mids = Faculty.objects.filter(first_name__icontains=" "+x+" ")
-        FN_exact = Faculty.objects.filter(first_name__iexact=x)
-        LN_starts = Faculty.objects.filter(last_name__istartswith=x+" ")
-        LN_ends = Faculty.objects.filter(last_name__iendswith=x+" ")
-        LN_mids = Faculty.objects.filter(last_name__icontains=" "+x+" ")
-        LN_exact = Faculty.objects.filter(last_name__iexact=x)
-        results = FN_starts| FN_ends| FN_mids| FN_exact| LN_starts| LN_ends| LN_mids| LN_exact
+        keywords = search_term.split(' ')
+        for x in keywords:
+            FN_starts = Faculty.objects.filter(first_name__istartswith=x+" ")
+            FN_ends = Faculty.objects.filter(first_name__iendswith=" "+x)
+            FN_mids = Faculty.objects.filter(first_name__icontains=" "+x+" ")
+            FN_exact = Faculty.objects.filter(first_name__iexact=x)
+            LN_starts = Faculty.objects.filter(last_name__istartswith=x+" ")
+            LN_ends = Faculty.objects.filter(last_name__iendswith=x+" ")
+            LN_mids = Faculty.objects.filter(last_name__icontains=" "+x+" ")
+            LN_exact = Faculty.objects.filter(last_name__iexact=x)
+            results = FN_starts| FN_ends| FN_mids| FN_exact| LN_starts| LN_ends| LN_mids| LN_exact
     return render_to_response('searchFaculty.html', {'user': request.user, 'results': results, 'keyword': search_term}, context_instance=RequestContext(request))
 
 @csrf_exempt
