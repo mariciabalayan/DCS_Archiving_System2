@@ -15,6 +15,7 @@ from datetime import datetime
 from django.views.decorators.csrf import csrf_exempt
 from django.template.context import RequestContext
 import urllib2
+import random,string
 
 # Create your views here.
 
@@ -70,37 +71,39 @@ def upload(request):
         # Checks if session is active
         for session in sessions:
             data = session.get_decoded()
-            print long(userid),data
             found_userid=data.get('_auth_user_id')
+
+            # Prceeds when user id is validated
             if found_userid!=None and long(userid)==found_userid:
-                user = User.objects.filter(id=data.get('_auth_user_id'))[0]
-                # Prceeds when user id is validated
-                print request.FILES
+                user = User.objects.filter(id=userid)[0]
                 faculty=None
-                faculty_id = request.POST.get('fid')
-                for person in Faculty.objects.all():
-                    if int(faculty_id) is int(person.id): faculty=person;
+                faculty=Faculty.objects.filter(id=request.POST.get('fid'))[0]
                 reqfname = request.POST.get('filename')
-                filename = faculty.last_name +'_' + faculty.first_name + reqfname
-                tid= request.POST.get('transaction')
-                transaction = Transaction.objects.filter(id=tid)[0]
+                transaction = Transaction.objects.filter(id=request.POST.get('transaction'))[0]
                 document = Dokument()
                 document.faculty= faculty
                 document.transaction= transaction
                 document.save()
-                first_filename = filename + '1.bmp'
+
+                #Generates a random alphanum string for filename template
+                while True:
+                    fnameTemplate=''
+                    fnameTemplate = ''.join(random.choice(string.ascii_lowercase))
+                    fnameTemplate += ''.join(random.choice(string.ascii_lowercase + string.digits) for x in range(4)) + '_'
+                    if len(File.objects.filter(filename=fnameTemplate + '_1.bmp'))==0: break
+
+                #Processes uploaded files, page by page
                 for key in request.FILES:
                     files = request.FILES[key]
-                    with open('DCSArchivingSystem/testapp/media/files/' + filename + key.split('_')[1] + '.bmp', 'wb+') as destination:
+                    filename = fnameTemplate + key.split('_')[1] + '.bmp'
+                    with open('DCSArchivingSystem/testapp/media/files/' + filename, 'wb+') as destination:
                         for chunk in files.chunks():
                             destination.write(chunk)
-                        ######################### now okay ###################
                         file = File()
-                        file.filename = first_filename
-                        file.file = 'files/' + first_filename
+                        file.filename = filename
+                        file.file = 'files/' + filename
                         file.save()                    
                         document.files.add(file)
-                        ########################################################
                     Log.create(user, "Uploaded file", file).save()    
                 Log.create(user, "Created Document", file).save()    
                 return HttpResponseRedirect("/dashboard/")
