@@ -1,18 +1,43 @@
 {% extends "template2.html" %}
 
 {%block content%}
-	<span class="label label-info"><h2>{{doc}}</h2></span>
-    <a href="/records/{{doc.id}}/change"> Change Owner </a><br>
+    <script src="/static/bootstrap/js/bootstrap.min.js"></script>
+	<br><div class="hero-unit2">
+		<center>
+		<h2>{{doc}}</h2>
+		<a href="/records/{{doc.id}}/change">(Change Owner)</a><br>
+		</center>
+	</div>
     {% for a in doc.files.all %}
-        {{a}}
-        <br>
-        <img src= "/media/{{ MEDIA_URL }}{{a.file}}" width = 1000px height = 2500px >
         
-        
-        <br>
-        <a href="/media/{{ MEDIA_URL }}{{a.file}}"> Download </a>
-        <br>
-        <a href="/print/{{a.id}}" target="_blank">Print</a>
-        <br><br>
     {% endfor %}
+	
+<div id="myCarousel" class="carousel slide">
+  <!-- Carousel items -->
+  <div class="carousel-inner">
+    {% for a in doc.files.all %}
+	{% if forloop.first %}  
+		<div class="active item"><img src= "/media/{{ MEDIA_URL }}{{a.file}}" width = 1500px height = 2500px ></div>
+		<div class="carousel-caption">
+			<h4>File: {{a}}</h4>
+			<a href="/media/{{ MEDIA_URL }}{{a.file}}" class="btn btn-primary"><i class="icon-download-alt icon-white"></i></a>
+			<a href="/print/{{a.id}}" class="btn btn-primary"><i class="icon-print icon-white"></i></a><br><br>
+		</div>
+	{% else %}
+		<div class="item"><img src= "/media/{{ MEDIA_URL }}{{a.file}}" width = 1500px height = 2500px ></div>
+		<div class="carousel-caption">
+			<h4>File: {{a}}</h4>
+			<a href="/media/{{ MEDIA_URL }}{{a.file}}" class="btn btn-primary"><i class="icon-download-alt icon-white"></i></a>
+			<a href="/print/{{a.id}}" class="btn btn-primary"><i class="icon-print icon-white"></i></a><br><br>
+		</div>
+	{% endif %}
+    {% endfor %}
+  </div>
+  <!-- Carousel nav -->
+  <a class="carousel-control left" href="#myCarousel" data-slide="prev">&lsaquo;</a>
+  <a class="carousel-control right" href="#myCarousel" data-slide="next">&rsaquo;</a>
+</div>	
+<script>
+$('.carousel').carousel('cycle');  
+</script>
 {%endblock%}
