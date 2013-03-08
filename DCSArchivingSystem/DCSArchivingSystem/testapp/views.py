@@ -96,7 +96,12 @@ def upload(request):
                 for key in request.FILES:
                     files = request.FILES[key]
                     filename = fnameTemplate + key.split('_')[1] + '.bmp'
-                    with open('DCSArchivingSystem/testapp/media/files/' + filename, 'wb+') as destination:
+					
+		    #On apache, use this:
+		    #with open('absolute/path/to/media/files/' + filename, 'wb+') as destination:
+		    #Instead of:
+                    #with open('DCSArchivingSystem/testapp/media/files/' + filename, 'wb+') as destination:
+		    with open('C:/Users/Marc/Documents/GitHub/DCS_Archiving_System2/DCSArchivingSystem/DCSArchivingSystem/testapp/media/files/' + filename, 'wb+') as destination:
                         for chunk in files.chunks():
                             destination.write(chunk)
                         file = File()

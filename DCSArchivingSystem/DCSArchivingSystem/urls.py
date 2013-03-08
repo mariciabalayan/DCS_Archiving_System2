@@ -6,6 +6,8 @@ from testapp import views
 from django.contrib import admin
 admin.autodiscover()
 
+url_root='archiving/'
+
 urlpatterns = patterns('DCSArchivingSystem.testapp.views',
     # 'DCSArchivingSystem.testapp.views' is a prefix
     # If prefix is empty (Eg. ''), we will need to use
@@ -19,7 +21,7 @@ urlpatterns = patterns('DCSArchivingSystem.testapp.views',
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
         
     # Uncomment the next line to enable the admin:
-    url(r'^admin/', include(admin.site.urls)),
+    url(r'admin/', include(admin.site.urls)),
     
     #view records
     url(r'^records/(?P<document_number>[0-9]+)/view/$', 'view'),
