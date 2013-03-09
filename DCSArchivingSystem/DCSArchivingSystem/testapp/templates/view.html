@@ -5,12 +5,8 @@
 	<br><div class="hero-unit2">
 		<center>
 		<h2>{{doc}}</h2>
-		<a href="/records/{{doc.id}}/change">(Change Owner)</a><br>
-		</center>
+		<a href="/records/{{doc.id}}/change">(Change Owner)</a><br>	
 	</div>
-    {% for a in doc.files.all %}
-        
-    {% endfor %}
 	
 <div id="myCarousel" class="carousel slide">
   <!-- Carousel items -->
@@ -39,4 +35,5 @@
   <a class="carousel-control left" href="#myCarousel" data-slide="prev">&lsaquo;</a>
   <a class="carousel-control right" href="#myCarousel" data-slide="next">&rsaquo;</a>
 </div>	
+
 {%endblock%}
