@@ -1,6 +1,7 @@
 from django.conf.urls import patterns, include, url
 from django.conf import settings
 from testapp import views
+from testapp import url_constants
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
@@ -16,6 +17,9 @@ urlpatterns = patterns('DCSArchivingSystem.testapp.views',
     # Examples:
     # url(r'^$', 'DCSArchivingSystem.views.home', name='home'),
     # url(r'^DCSArchivingSystem/', include('DCSArchivingSystem.foo.urls')),
+                       
+    # For the url prefix. Refers itself
+    url(r'^archiving/', include('DCSArchivingSystem.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
@@ -27,7 +31,7 @@ urlpatterns = patterns('DCSArchivingSystem.testapp.views',
     url(r'^records/(?P<document_number>[0-9]+)/view/$', 'view'),
 
     
-	#Records
+    #Records
     url(r'^records/$', 'records'),
 
     #Request
@@ -50,17 +54,17 @@ urlpatterns = patterns('DCSArchivingSystem.testapp.views',
     #Faculty Search Page
     url(r'^users/search/$', 'search_Faculty'),
 	
-	#Files Search Page
-	url(r'^users/(?P<current_id>[0-9]+)/profile/search/$', 'search_Files'),
+    #Files Search Page
+    url(r'^users/(?P<current_id>[0-9]+)/profile/search/$', 'search_Files'),
 	
-	#Records Search Page
-	url(r'^records/search/$', 'search_Records'),
+    #Records Search Page
+    url(r'^records/search/$', 'search_Records'),
 	
     #Users Page
     url(r'^users/$', 'view_users'),
     
     # Upload
-    url(r'^upload/$', 'upload'),
+    url(r'^' + url_constants.upload_url() + '$', 'upload'),
     
     # Logs
     url(r'^logs/$', 'view_logs'),
