@@ -14,8 +14,10 @@ from django.contrib.auth.models import User
 from datetime import datetime
 from django.views.decorators.csrf import csrf_exempt
 from django.template.context import RequestContext
+from list_manipulations import remove_first_characters, subtract_list
 import urllib2
 import random,string
+import re
 
 # Create your views here.
 
@@ -294,12 +296,42 @@ def search_Records(request):
     results = ""
     keywords = ""
     if request.GET:
-        search_term = request.GET.get('term')
-        keywords = search_term.split(' ')
+        search_term     = request.GET.get('term')
+        #keywords = search_term.split(' ')
+        keywords        = re.findall(r"[\w]+", search_term)
+        plus            = re.findall(r"\+[\w']+", search_term)
+        minus           = re.findall(r"-[\w']+", search_term)
+        remove_first_characters(plus)
+        remove_first_characters(minus)
+        subtract_list(keywords, plus)
+        subtract_list(keywords, minus)
+
         for x in keywords:
-            trans_starts = Dokument.objects.filter(transaction__name__istartswith=x+" ")
-            trans_ends = Dokument.objects.filter(transaction__name__iendswith=" "+x)
-            trans_mids = Dokument.objects.filter(transaction__name__icontains=" "+x+" ")
+            trans_starts= Dokument.objects.filter(transaction__name__istartswith=x+" ")
+            trans_ends  = Dokument.objects.filter(transaction__name__iendswith=" "+x)
+            trans_mids  = Dokument.objects.filter(transaction__name__icontains=" "+x+" ")
             trans_exact = Dokument.objects.filter(transaction__name__iexact=x)
             results = trans_starts | trans_ends | trans_mids | trans_exact
+            trans_starts= Dokument.objects.filter(transaction__search_tags__istartswith=x+" ")
+            trans_ends  = Dokument.objects.filter(transaction__search_tags__iendswith=" "+x)
+            trans_mids  = Dokument.objects.filter(transaction__search_tags__icontains=" "+x+" ")
+            trans_exact = Dokument.objects.filter(transaction__search_tags__iexact=x)
+            results = results | trans_starts | trans_ends | trans_mids | trans_exact
+
+        for x in plus:
+            trans_starts = Dokument.objects.filter(transaction__search_tags__istartswith=x+" ")
+            trans_ends = Dokument.objects.filter(transaction__search_tags__iendswith=" "+x)
+            trans_mids = Dokument.objects.filter(transaction__search_tags__icontains=" "+x+" ")
+            trans_exact = Dokument.objects.filter(transaction__search_tags__iexact=x)
+            if len(results) == 0:
+                results = (trans_starts | trans_ends | trans_mids | trans_exact)
+            else:
+                results = results & (trans_starts | trans_ends | trans_mids | trans_exact)
+
+        for x in minus:
+            if len(results) != 0:
+                results = results.exclude(transaction__search_tags__istartswith=x+" ")
+                results = results.exclude(transaction__search_tags__iendswith=" "+x)
+                results = results.exclude(transaction__search_tags__icontains=" "+x+" ")
+                results = results.exclude(transaction__search_tags__iexact=x)
     return render_to_response('searchRecords.html', {'user': request.user, 'results': results, 'keyword': search_term}, context_instance=RequestContext(request))
