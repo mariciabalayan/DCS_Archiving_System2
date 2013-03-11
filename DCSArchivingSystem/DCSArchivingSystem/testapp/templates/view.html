@@ -5,7 +5,7 @@
 	<br><div class="hero-unit2">
 		<center>
 		<h2>{{doc}}</h2>
-		<a href="/records/{{doc.id}}/change">(Change Owner)</a><br>	
+		<a href="records/{{doc.id}}/change">(Change Owner)</a><br>	
 	</div>
 	
 <div id="myCarousel" class="carousel slide">
@@ -17,7 +17,7 @@
 			<div class="carousel-caption">
 				<h4>File: {{a}}</h4>
 				<a href="/media/{{ MEDIA_URL }}{{a.file}}" class="btn btn-primary"><i class="icon-download-alt icon-white"></i></a>
-				<a href="/print/{{a.id}}" class="btn btn-primary" target="_blank"><i class="icon-print icon-white"></i></a><br><br>
+				<a href="print/{{a.id}}" class="btn btn-primary" target="_blank"><i class="icon-print icon-white"></i></a><br><br>
 			</div>
 		</div>
 	{% else %}
@@ -25,7 +25,7 @@
 			<div class="carousel-caption">
 				<h4>File: {{a}}</h4>
 				<a href="/media/{{ MEDIA_URL }}{{a.file}}" class="btn btn-primary"><i class="icon-download-alt icon-white"></i></a>
-				<a href="/print/{{a.id}}" class="btn btn-primary" target="_blank"><i class="icon-print icon-white"></i></a><br><br>
+				<a href="print/{{a.id}}" class="btn btn-primary" target="_blank"><i class="icon-print icon-white"></i></a><br><br>
 			</div>
 		</div>
 	{% endif %}

@@ -33,8 +33,8 @@
                     <a href="{{ docsroot }}">{% trans 'Documentation' %}</a> /
                 {% endif %}
                 <a href="{% url 'admin:password_change' %}">{% trans 'Change password' %}</a> /
-                <a href="/">{% trans 'Home' %}</a> /
-                <a href="/logs" target="_blank">{% trans 'View Logs' %}</a> /
+                <a href="/archiving">{% trans 'Home' %}</a> /
+                <a href="/archiving/logs" target="_blank">{% trans 'View Logs' %}</a> /
                 <a href="{% url 'admin:logout' %}">{% trans 'Log out' %}</a> 
             {% endblock %}
         </div>

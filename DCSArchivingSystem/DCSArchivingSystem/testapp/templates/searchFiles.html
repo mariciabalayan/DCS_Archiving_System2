@@ -17,7 +17,7 @@
 		<tr><th>Length Of Service</th><td>{{ current_faculty.length_of_service }}</td></tr>		
 	</table>
 	<br>
-	<form class="form-search" method="get" action="/users/{{current_faculty.id}}/profile/search/">
+	<form class="form-search" method="get" action="users/{{current_faculty.id}}/profile/search/">
 	{% csrf_token %}
 	<div class="row">
 	  <div class="span offset9">
@@ -36,7 +36,7 @@
 			{% autopaginate results 10 %}
 			{% for a in results %}
 				{% if a.faculty_id == current_faculty.id %}
-			<tr><td><a href="/records/{{a.id}}/view">{{ a.transaction }}</a></td></tr>					<!-- Sa link nalang idagdag yung para sa pag view, download, print file -->
+			<tr><td><a href="records/{{a.id}}/view">{{ a.transaction }}</a></td></tr>					<!-- Sa link nalang idagdag yung para sa pag view, download, print file -->
 				{% endif %}
 				{% empty %}
                                 <tr><td>There are no search results for: <b>{{ keyword }}</b></a></td></tr>
@@ -58,7 +58,7 @@
                         {% endfor %}
                 </tbody>
         </table>
-	<br> <a href="/users/{{ current_faculty.id }}/profile/">Back to profile</a>
+	<br> <a href="users/{{ current_faculty.id }}/profile/">Back to profile</a>
 {% endblock %}
 
 </html>
