@@ -71,7 +71,7 @@ class Address(models.Model):
     
 class Transaction(models.Model):
     name            = models.CharField(max_length=100)
-    
+    search_tags     = models.CharField(max_length=200, null = True, blank = True)
 
     def __unicode__(self):
         return self.name
