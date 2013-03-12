@@ -14,8 +14,10 @@ from django.contrib.auth.models import User
 from datetime import datetime
 from django.views.decorators.csrf import csrf_exempt
 from django.template.context import RequestContext
+from list_manipulations import remove_first_characters, subtract_list
 import urllib2
 import random,string
+import re
 
 # Create your views here.
 
@@ -96,12 +98,12 @@ def upload(request):
                 for key in request.FILES:
                     files = request.FILES[key]
                     filename = fnameTemplate + key.split('_')[1] + '.bmp'
-					
-		    #On apache, use this:
-		    #with open('absolute/path/to/media/files/' + filename, 'wb+') as destination:
-		    #Instead of:
+                                    
+                    #On apache, use this:
+                    #with open('absolute/path/to/media/files/' + filename, 'wb+') as destination:
+                    #Instead of:
                     #with open('DCSArchivingSystem/testapp/media/files/' + filename, 'wb+') as destination:
-		    with open('C:/Users/Marc/Documents/GitHub/DCS_Archiving_System2/DCSArchivingSystem/DCSArchivingSystem/testapp/media/files/' + filename, 'wb+') as destination:
+                    with open('C:/Users/Marc/Documents/GitHub/DCS_Archiving_System2/DCSArchivingSystem/DCSArchivingSystem/testapp/media/files/' + filename, 'wb+') as destination:
                         for chunk in files.chunks():
                             destination.write(chunk)
                         file = File()
@@ -109,9 +111,9 @@ def upload(request):
                         file.file = 'files/' + filename
                         file.save()                    
                         document.files.add(file)
-                    Log.create(user, "Uploaded file", file).save()    
+                    Log.create(user, "Uploaded file", file).save()
                 Log.create(user, "Created Document", file).save()    
-                return HttpResponseRedirect("/dashboard/")
+                return HttpResponseRedirect("/archiving/dashboard/")
             
     else:
         return render_to_response('upload.html', context_instance=RequestContext(request))
@@ -146,7 +148,7 @@ def change(request, document_number):
                     elif k not in person.first_name: break
                     doc.faculty_id=person.id
         doc.save()
-        return HttpResponseRedirect("/records")
+        return HttpResponseRedirect("/archiving/records")
     else:
         print 'hi'
         faculty_list= Faculty.objects.all()
@@ -194,7 +196,7 @@ def view_logs(request):
     if request.user.is_staff:
         log_list= Log.objects.all()
         return render_to_response('logs.html', {'log_list': log_list})
-    return HttpResponseRedirect("/dashboard/")
+    return HttpResponseRedirect("/archiving/dashboard/")
     
 @login_required
 def view_profile(request, faculty_number):
@@ -223,7 +225,7 @@ def request_delete(request, document_number):
             else:
                 k.delete=0
             k.save()
-        return HttpResponseRedirect("/records")
+        return HttpResponseRedirect("/archiving/records")
     else:
         doc= Dokument.objects.get(id= int(document_number))
         return render_to_response('request_delete.html', {'doc':doc})
@@ -299,12 +301,42 @@ def search_Records(request):
     results = ""
     keywords = ""
     if request.GET:
-        search_term = request.GET.get('term')
-        keywords = search_term.split(' ')
+        search_term     = request.GET.get('term')
+        #keywords = search_term.split(' ')
+        keywords        = re.findall(r"[\w]+", search_term)
+        plus            = re.findall(r"\+[\w']+", search_term)
+        minus           = re.findall(r"-[\w']+", search_term)
+        remove_first_characters(plus)
+        remove_first_characters(minus)
+        subtract_list(keywords, plus)
+        subtract_list(keywords, minus)
+
         for x in keywords:
-            trans_starts = Dokument.objects.filter(transaction__name__istartswith=x+" ")
-            trans_ends = Dokument.objects.filter(transaction__name__iendswith=" "+x)
-            trans_mids = Dokument.objects.filter(transaction__name__icontains=" "+x+" ")
+            trans_starts= Dokument.objects.filter(transaction__name__istartswith=x+" ")
+            trans_ends  = Dokument.objects.filter(transaction__name__iendswith=" "+x)
+            trans_mids  = Dokument.objects.filter(transaction__name__icontains=" "+x+" ")
             trans_exact = Dokument.objects.filter(transaction__name__iexact=x)
             results = trans_starts | trans_ends | trans_mids | trans_exact
+            trans_starts= Dokument.objects.filter(transaction__search_tags__istartswith=x+" ")
+            trans_ends  = Dokument.objects.filter(transaction__search_tags__iendswith=" "+x)
+            trans_mids  = Dokument.objects.filter(transaction__search_tags__icontains=" "+x+" ")
+            trans_exact = Dokument.objects.filter(transaction__search_tags__iexact=x)
+            results = results | trans_starts | trans_ends | trans_mids | trans_exact
+
+        for x in plus:
+            trans_starts = Dokument.objects.filter(transaction__search_tags__istartswith=x+" ")
+            trans_ends = Dokument.objects.filter(transaction__search_tags__iendswith=" "+x)
+            trans_mids = Dokument.objects.filter(transaction__search_tags__icontains=" "+x+" ")
+            trans_exact = Dokument.objects.filter(transaction__search_tags__iexact=x)
+            if len(results) == 0:
+                results = (trans_starts | trans_ends | trans_mids | trans_exact)
+            else:
+                results = results & (trans_starts | trans_ends | trans_mids | trans_exact)
+
+        for x in minus:
+            if len(results) != 0:
+                results = results.exclude(transaction__search_tags__istartswith=x+" ")
+                results = results.exclude(transaction__search_tags__iendswith=" "+x)
+                results = results.exclude(transaction__search_tags__icontains=" "+x+" ")
+                results = results.exclude(transaction__search_tags__iexact=x)
     return render_to_response('searchRecords.html', {'user': request.user, 'results': results, 'keyword': search_term}, context_instance=RequestContext(request))
