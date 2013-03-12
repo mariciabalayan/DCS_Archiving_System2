@@ -18,6 +18,7 @@ from list_manipulations import remove_first_characters, subtract_list
 import urllib2
 import random,string
 import re
+import url_constants
 
 # Create your views here.
 
@@ -179,7 +180,7 @@ def scanpage2(request):
         faculty= Faculty.objects.filter(last_name=nameParts[0],first_name=nameParts[1])[0]
         faculty_id= faculty.id
         if (title!= None and title != '') and (faculty!= None and faculty!= ''):
-            location = "scn://" + urllib2.quote("fid=%d&name=%s&title=%s&uid=%s&origin=%s" %(faculty_id,request.POST.get('faculty'),title,request.session['_auth_user_id'],request.META.get('HTTP_ORIGIN')))
+            location = "scn://" + urllib2.quote("fid=%d&name=%s&title=%s&uid=%s&ulink=%s" %(faculty_id,request.POST.get('faculty'),title,request.session['_auth_user_id'],request.META.get('HTTP_ORIGIN')+url_constants.upload_url()))
             res = HttpResponse(location, status=302)
             res['Location'] = location
             return res

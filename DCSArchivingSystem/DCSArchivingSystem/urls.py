@@ -64,7 +64,7 @@ urlpatterns = patterns('DCSArchivingSystem.testapp.views',
     url(r'^users/$', 'view_users'),
     
     # Upload
-    url(r'^' + url_constants.upload_url() + '$', 'upload'),
+    url(r'^upload/$', 'upload'),
     
     # Logs
     url(r'^logs/$', 'view_logs'),
