@@ -17,7 +17,6 @@ urlpatterns = patterns('DCSArchivingSystem.testapp.views',
     # url(r'^DCSArchivingSystem/', include('DCSArchivingSystem.foo.urls')),
                        
     # For the url prefix. Refers itself
-    url(r'^archiving/', include('DCSArchivingSystem.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
