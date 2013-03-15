@@ -7,7 +7,7 @@ from testapp import url_constants
 from django.contrib import admin
 admin.autodiscover()
 
-url_root='archiving/'
+
 
 urlpatterns = patterns('DCSArchivingSystem.testapp.views',
     # 'DCSArchivingSystem.testapp.views' is a prefix
@@ -17,9 +17,6 @@ urlpatterns = patterns('DCSArchivingSystem.testapp.views',
     # Examples:
     # url(r'^$', 'DCSArchivingSystem.views.home', name='home'),
     # url(r'^DCSArchivingSystem/', include('DCSArchivingSystem.foo.urls')),
-
-    # For the url prefix. Refers itself
-    #url(r'^archiving/', include('DCSArchivingSystem.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
