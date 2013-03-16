@@ -8,39 +8,48 @@
 {% endblock %}
 
 {% block content %}
+    <link rel="Stylesheet" href="/static/css-hover.css" type="text/css" />
+	<script src="/static/css-hover.css"></script> 
 	<br><div class="hero-unit">
-		<h1>Welcome, {{user}}</h1>
+		<h1>Welcome, {{user}}!</h1>
 			<p>This is the DCS Archiving System, made for the management of files and transactions of the UP Diliman DCS Faculty.</p>
 		{% if user.is_superuser %}
             <a href="/admin" class="btn btn-large btn-primary">Admin Page</a>
 {% endif %}
 		</h1>			
-	</div>
+	</div><br>
 
-	<div class="row">
-		<div class="span4">
-			<div class="hero-unit2">
-				<center>
-				{% load static %}<img width = 200px height = 200px src="{% static "images/scan.png" %}" class = "img-rounded" />
-				<a class="btn btn-inverse" href="/scanpage/"><i class="icon-camera icon-white"></i> Scan &raquo;</a></center>
-				</center>
+		<div class="row">
+			<div class="span4">
+				<h4><center>SCAN A DOCUMENT</center></h4>
+				<div class="holder smooth">
+					{% load static %}<img width = 300px height = 300px src="{% static "images/scan2.png" %}" class = "img-rounded" width=100%/>
+					<div class="go-left">
+						<a href = "/scanpage/"><font color = white> Scan &raquo; </font></a>
+					</div>
+				</div>
 			</div>
-		</div>
-		<div class="span4">
-			<div class="hero-unit2">
-				<center>
-				{% load static %} <img width = 200px height = 200px src="{% static "images/prof.png" %}" class = "img-rounded"/>
-				<a class="btn btn-inverse" href="/users/"><i class="icon-user icon-white"></i> View Faculty List &raquo;</a></center>
+			
+			<div class="span4">
+				<h4><center>VIEW FACULTY LIST</center></h4>
+				<div class="holder smooth">
+					{% load static %} <img width = 300px height = 300px src="{% static "images/prof2.png" %}" class = "img-rounded" width=100%/>
+				<div class="go-left">
+					<a href = "/users/"><font color = white> Faculty &raquo; </font></a>
+				</div>
+				</div>	
+
 			</div>
-		</div>
-		<div class="span4">
-			<div class="hero-unit2">
-				<center>
-				{% load static %} <img width = 200px height = 200px src="{% static "images/rex.png" %}" class = "img-rounded"/>
-				<a class="btn btn-inverse" href="/records/"><i class="icon-book icon-white"></i> View Records &raquo;</a>
-				</center>
+			<div class="span4">
+				<h4><center>VIEW FACULTY RECORDS</center></h4>
+				<div class="holder smooth">
+					{% load static %} <img width = 300px height = 300px src="{% static "images/rex2.png" %}" class = "img-rounded" width=100%/>
+					<div class="go-left">
+						<a href = "/users/"><font color = white> Records &raquo; </font></a>
+					</div>
+				</div>
 			</div>
-		</div>
-	</div>	
+		</div>	
+
 
 {% endblock %}
