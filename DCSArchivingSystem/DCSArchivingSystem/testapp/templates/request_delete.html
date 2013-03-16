@@ -8,7 +8,7 @@
 	<span class="label label-info"><h2>{{ doc.faculty }}: {{ doc.transaction }}</h2></span>
 	<table border=1 width=80% align=center class="table table-striped">	
 		<tr><th width = 200>Faculty</th><td>{{ doc.faculty }}</td></tr>
-		<tr><th>Transcation</th><td>{{ doc.transaction }}</td></tr>
+		<tr><th>Transaction</th><td>{{ doc.transaction }}</td></tr>
     </table>
 	<br>
     <form action="" method="POST">
@@ -23,7 +23,7 @@
         
 		{% endfor %}
     </table>
-    <button type="submit" class="btn">Request Delete</button>
+    <button type="submit" class="btn btn-primary">Request Delete</button>
     
     </form>
 {% endblock %}

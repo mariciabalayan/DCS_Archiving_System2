@@ -44,20 +44,7 @@
 			{% paginate %}
 	</tbody>
 		</table>
-	
-	<span class="label label-info"><h2>Tagged</h2></span>
-        <table border=1 width=80% align=center class="table table-striped">
-                {% if tagged_docs %}
-                        <thead> <tr> <th>Faculty</th> <th>Transaction</th> </tr> </thead> 
-                {% endif %}
-                <tbody> 
-                        {% for a in tagged_docs %}
-                                <tr> <td>{{ a.faculty }}</td> <td><a href="#">{{ a.dokument.transaction }}</a></td> </tr>           
-                        {% empty %}
-                                <tr><td>There are no tagged files for this faculty.</a></td></tr>
-                        {% endfor %}
-                </tbody>
-        </table>
+
 	<br> <a href="users/{{ current_faculty.id }}/profile/">Back to profile</a>
 {% endblock %}
 
