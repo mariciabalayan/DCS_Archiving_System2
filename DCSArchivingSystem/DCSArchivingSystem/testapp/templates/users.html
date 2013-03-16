@@ -43,7 +43,7 @@ $(document).ready(function()
         <tr>
         <td>{{ a.last_name }}</td>
         <td>{{ a.first_name }}</td>
-		<td><a href="{{ a.id }}/profile">View Faculty</a></td>
+		<td><a href="users/{{ a.id }}/profile">View Faculty</a></td>
 		</tr>	
     {% endfor %}
 	{% paginate %}

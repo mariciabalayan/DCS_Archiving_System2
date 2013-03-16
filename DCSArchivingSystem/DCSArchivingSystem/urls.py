@@ -52,7 +52,7 @@ urlpatterns = patterns('DCSArchivingSystem.testapp.views',
     url(r'^users/search/$', 'search_Faculty'),
 	
     #Files Search Page
-    url(r'^(?P<current_id>[0-9]+)/profile/search/$', 'search_Files'),
+    url(r'^users/(?P<current_id>[0-9]+)/profile/search/$', 'search_Files'),
 	
     #Records Search Page
     url(r'^records/search/$', 'search_Records'),
@@ -67,16 +67,16 @@ urlpatterns = patterns('DCSArchivingSystem.testapp.views',
     url(r'^logs/$', 'view_logs'),
     
     #Profile
-    url(r'^(?P<faculty_number>[0-9]+)/profile/$', 'view_profile'),
+    url(r'^users/(?P<faculty_number>[0-9]+)/profile/$', 'view_profile'),
     
     #Request Delete
-    url(r'^(?P<document_number>[0-9]+)/delete/$', 'request_delete'),
-    url(r'^(?P<document_number>[0-9]+)/delete/$', 'request_delete'),
+    url(r'^request/(?P<document_number>[0-9]+)/delete/$', 'request_delete'),
+    url(r'^records/(?P<document_number>[0-9]+)/delete/$', 'request_delete'),
     
     #print
     url(r'^print/(?P<file_number>[0-9]+)/$', 'print_page'),
 
-    url(r'^(?P<file_number>[0-9]+)/view/$', 'view_file'),
+    url(r'^files/(?P<file_number>[0-9]+)/$', 'view_file'),
 
     #change owner
     url(r'^records/(?P<document_number>[0-9]+)/change/$', 'change'),

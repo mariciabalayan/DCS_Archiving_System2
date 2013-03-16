@@ -9,7 +9,7 @@
 	<center><img src="{{ MEDIA_URL }}{{ current_faculty.photo }}" class = "img-polaroid" width = 150px height = 150px/><br>
 	<h2>{{ current_faculty.last_name }}, {{ current_faculty.first_name }} {{ current_faculty.middle_name }}</h2></div>
 	
-	<form class="form-search" method="get" action="search/">
+	<form class="form-search" method="get" action="users/{{ current_faculty.id }}/profile/search/">
 	{% csrf_token %}
 	<span class="label label-info"><h2>Profile</h2></span>
 	<table border=1 width=80% align=center class="table table-striped">	
