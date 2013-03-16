@@ -82,7 +82,7 @@ STATICFILES_DIRS = (
 )
 
 # URL of the login page.
-LOGIN_URL = 'login/'
+LOGIN_URL = FORCE_SCRIPT_NAME + '/login/'
 
 # List of finder classes that know how to find static files in
 # various locations.

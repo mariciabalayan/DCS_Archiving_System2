@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
+from django.conf import settings
 # from django.template import RequestContext
 from django.contrib.auth.models import User
 from models import Faculty, File, Log, Transaction, Dokument, Tag
@@ -46,7 +47,7 @@ def index(request):
                 
                 state = "Login ok!"
                 Log.create(user, "Logged in", None).save()
-                return HttpResponseRedirect("/archiving/dashboard/")
+                return HttpResponseRedirect(settings.FORCE_SCRIPT_NAME + "/dashboard/")
             else:
                 state = "Account not active."
         else:
@@ -114,7 +115,7 @@ def upload(request):
                         document.files.add(file)
                     Log.create(user, "Uploaded file", file).save()
                 Log.create(user, "Created Document", file).save()    
-                return HttpResponseRedirect("/archiving/dashboard/")
+                return HttpResponseRedirect(settings.FORCE_SCRIPT_NAME + "/dashboard/")
             
     else:
         return render_to_response('upload.html', context_instance=RequestContext(request))
@@ -149,7 +150,7 @@ def change(request, document_number):
                     elif k not in person.first_name: break
                     doc.faculty_id=person.id
         doc.save()
-        return HttpResponseRedirect("/archiving/records")
+        return HttpResponseRedirect(settings.FORCE_SCRIPT_NAME + "/records")
     else:
         print 'hi'
         faculty_list= Faculty.objects.all()
@@ -197,7 +198,7 @@ def view_logs(request):
     if request.user.is_staff:
         log_list= Log.objects.all()
         return render_to_response('logs.html', {'log_list': log_list})
-    return HttpResponseRedirect("/archiving/dashboard/")
+    return HttpResponseRedirect(settings.FORCE_SCRIPT_NAME + "/dashboard/")
     
 @login_required
 def view_profile(request, faculty_number):
@@ -226,7 +227,7 @@ def request_delete(request, document_number):
             else:
                 k.delete=0
             k.save()
-        return HttpResponseRedirect("/archiving/records")
+        return HttpResponseRedirect(settings.FORCE_SCRIPT_NAME + "records")
     else:
         doc= Dokument.objects.get(id= int(document_number))
         return render_to_response('request_delete.html', {'doc':doc})
@@ -245,7 +246,7 @@ def log_in(request):
                 login(request, user)
                 state = "Login ok!"
                 Log.create(user, "Logged in", None).save()
-                return HttpResponseRedirect("/archiving/dashboard/")
+                return HttpResponseRedirect(settings.FORCE_SCRIPT_NAME + "dashboard/")
             else:
                 state = "Account not active."
         else:
@@ -256,7 +257,7 @@ def log_in(request):
 def log_out(request):
     Log.create(request.user, "Logged out", None).save()
     logout(request)
-    return HttpResponseRedirect('/archiving/')
+    return HttpResponseRedirect(settings.FORCE_SCRIPT_NAME + "/")
 
 @csrf_exempt
 def search_Faculty(request):
