@@ -227,7 +227,7 @@ def request_delete(request, document_number):
             else:
                 k.delete=0
             k.save()
-        return HttpResponseRedirect(settings.FORCE_SCRIPT_NAME + "records")
+        return HttpResponseRedirect(settings.FORCE_SCRIPT_NAME + "/records")
     else:
         doc= Dokument.objects.get(id= int(document_number))
         return render_to_response('request_delete.html', {'doc':doc})
@@ -246,7 +246,7 @@ def log_in(request):
                 login(request, user)
                 state = "Login ok!"
                 Log.create(user, "Logged in", None).save()
-                return HttpResponseRedirect(settings.FORCE_SCRIPT_NAME + "dashboard/")
+                return HttpResponseRedirect(settings.FORCE_SCRIPT_NAME + "/dashboard/")
             else:
                 state = "Account not active."
         else:
