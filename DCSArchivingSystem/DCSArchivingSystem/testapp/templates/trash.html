@@ -40,7 +40,7 @@ $(document).ready(function()
 	{% autopaginate doc_list 10 %}
     {% for a in doc_list %}
         <tr>
-        <td><a href="/users/{{a.faculty_id}}/profile">{{ a.filename }}</a></td>
+        <td><a href="/files/{{a.id}}" target="_blank">{{ a.filename }}</a></td>
         <td><a href="{{a.id}}/restore/"> Restore </a></td>
 		</tr>		
     {% endfor %}
