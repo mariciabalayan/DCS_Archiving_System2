@@ -3,9 +3,9 @@
 <title> Users </title>
 
 {%block content%} 
-	
+
 	<div class = "row">
-	<br><div class="span offset10"><img src="/media/{{ MEDIA_URL }}{{ current_faculty.photo }}" class = "img-polaroid" width = 350px height = 350px/></div><br>
+	<br><div class="span offset10"><img src="{{ MEDIA_URL }}{{ current_faculty.photo }}" class = "img-polaroid" width = 350px height = 350px/></div><br>
 	</div>
 	<span class="label label-info"><h2>{{ current_faculty.last_name }},{{ current_faculty.first_name }} {{ current_faculty.middle_name }}</h2></span>
 	<table border=1 width=80% align=center class="table table-striped">	
