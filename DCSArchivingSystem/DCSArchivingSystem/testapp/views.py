@@ -65,8 +65,17 @@ def records(request):
     
 @login_required
 def trash(request):
-    doc_list = File.objects.filter(delete=True)
-    return render_to_response('trash.html', {'user': request.user, 'doc_list':doc_list}, context_instance=RequestContext(request))
+    if request.method=="POST":
+        file_list = File.objects.filter(delete=True)
+        for a in file_list:
+            if request.POST.get(str(a.id))!=None:
+                a.delete=False
+                a.save()
+            Log.create(request.user, "Restored a file", a).save()
+        return HttpResponseRedirect("/trash/")
+    else:
+        file_list = File.objects.filter(delete=True)
+        return render_to_response('trash.html', {'user': request.user, 'file_list':file_list}, context_instance=RequestContext(request))
     
 @login_required
 def restore(request, file_number):
@@ -230,8 +239,8 @@ def request_delete(request, document_number):
         for k in doc.files.all():
             if request.POST.get(str(k.id))!=None:
                 k.delete=1
-            else:
-                k.delete=0
+            # else:
+            #    k.delete=0
             k.save()
             Log.create(request.user, "Deleted a file", k).save()
         return HttpResponseRedirect("/records")

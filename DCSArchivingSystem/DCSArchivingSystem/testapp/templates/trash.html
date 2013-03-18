@@ -28,25 +28,28 @@ $(document).ready(function()
 
 
 <h1 align=center>Trash</h1>
-{% if doc_list|length > 0 %}
+{% if file_list|length > 0 %}
+<form action="" method="POST"> {% csrf_token %}
+<button type="submit" class="btn btn-primary">Restore selected files</button>
 <table id = "records_table" border=1 width=80% align=center class="table table-striped">
 	<thead> 
 	<tr> 
 		<th>File Name</th>
-        <th>Restore file</th>
+        <th>Restore a file</th>
 	</tr> 
 	</thead> 
 	<tbody>
-	{% autopaginate doc_list 10 %}
-    {% for a in doc_list %}
+	{% autopaginate file_list 10 %}
+    {% for a in file_list %}
         <tr>
-        <td><a href="/files/{{a.id}}" target="_blank">{{ a.filename }}</a></td>
-        <td><a href="{{a.id}}/restore/"> Restore </a></td>
+        <td><input type="checkbox" name= "{{a.id}}"> <a href="/files/{{a.id}}" target="_blank">{{ a.filename }}</a></td>
+        <td><a href="{{a.id}}/restore/"> Restore this file </a></td>
 		</tr>		
     {% endfor %}
 	{% paginate %}
 	</tbody>
 </table>
+</form>
 {% else %}
 <div class="well">
   <font size = 4><strong>Note:</strong> There are no files in the trash.</font>
