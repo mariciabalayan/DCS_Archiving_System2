@@ -73,6 +73,7 @@ def restore(request, file_number):
     file = File.objects.get(id=int(file_number))
     file.delete = False
     file.save()
+    Log.create(request.user, "Restored a file", file).save()
     return HttpResponseRedirect("/trash/")
     
 def upload(request):
