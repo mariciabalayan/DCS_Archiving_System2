@@ -71,7 +71,7 @@ def trash(request):
             if request.POST.get(str(a.id))!=None:
                 a.delete=False
                 a.save()
-            Log.create(request.user, "Restored a file", a).save()
+                Log.create(request.user, "Restored a file", a).save()
         return HttpResponseRedirect("/trash/")
     else:
         file_list = File.objects.filter(delete=True)
@@ -241,8 +241,8 @@ def request_delete(request, document_number):
                 k.delete=1
             # else:
             #    k.delete=0
-            k.save()
-            Log.create(request.user, "Deleted a file", k).save()
+                k.save()
+                Log.create(request.user, "Deleted a file", k).save()
         return HttpResponseRedirect("/records")
     else:
         doc= Dokument.objects.get(id= int(document_number))
