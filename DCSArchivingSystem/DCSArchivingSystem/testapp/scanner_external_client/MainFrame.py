@@ -7,20 +7,20 @@ import cookielib
 import webbrowser
 import os
 import random,string
+import time
 from poster.encode import multipart_encode
 from poster.streaminghttp import register_openers
 from simple_base import TwainBase
 
-# You can either Poll the TWAIN source, or process the scanned image in an
-# event callback. The event callback has not been fully tested using GTK.
-# Specifically this does not work with Tkinter.
+#You can either Poll the TWAIN source, or process the scanned image in an
+#event callback. The event callback has not been fully tested using GTK.
+#Specifically this does not work with Tkinter.
 USE_CALLBACK=True
-#PROXY='http://proxy8.upd.edu.ph:8080'
 
 #pOpener=register_openers()
 #pOpener.add_handler(urllib2.HTTPCookieProcessor(cookielib.CookieJar()))
 
-# Implementing MainFrameBase
+#Implementing MainFrameBase
 class MainFrame( gui.MainFrameBase, TwainBase):
         cookies = cookielib.LWPCookieJar()
         handlers = [
@@ -66,7 +66,7 @@ class MainFrame( gui.MainFrameBase, TwainBase):
                 for x in fileList:
                         if ".bmp" in x: os.remove(x)
         
-        def setParams(self,facultyID,facultyName,formTitle,userid,hostname,debug=False):
+        def setParams(self,facultyID,facultyName,formTitle,userid,upload_link,debug=False):
                 self.name=facultyName
                 self.m_lbFaculty.ChangeValue(facultyName)
                 self.fid=facultyID
@@ -79,7 +79,7 @@ class MainFrame( gui.MainFrameBase, TwainBase):
                 self.userid=userid
                 self.filenameList.append(None)
                 self.debugMode=debug
-                self.serverHost=hostname
+                self.ulink=upload_link
                 self.cleanUp()
 
         def genFilename(self):
@@ -93,14 +93,20 @@ class MainFrame( gui.MainFrameBase, TwainBase):
                 if os.path.isfile(self.filenameList[page-1]):
                         self.params["file_" + str(page)].close()
                         os.remove(self.filenameList[page-1])
+
+        def showDialog(self,msg,error=1):
+                dial = wx.MessageDialog(None, msg, 'Message', wx.OK | error)
+                dial.ShowModal()
+                
         
         def OnClose( self, event ):
                 self.cleanUp()
                 self.Terminate()
                 self.Destroy()
+
         
         def m_btConnectClick( self, event ):
-                self.OpenScanner(self.GetHandle(), ProductName="Simple wxPython Demo", UseCallback=USE_CALLBACK)
+                self.OpenScanner(self.GetHandle(), UseCallback=USE_CALLBACK)
         
         def m_btConnectHoverIn( self, event ):
                 self.m_statusBar.SetStatusText("Selects a scanner for acquiring images")
@@ -109,18 +115,8 @@ class MainFrame( gui.MainFrameBase, TwainBase):
                 self.m_statusBar.SetStatusText("")
         
         def m_btScanClick( self, event ):
-                self.m_bitmap.GetBitmap().Destroy()
-
-                #If an image is assigned to the page
-                if self.filenameList[self.pages-1]!=None:
-                        self.log('Found ' + self.filenameList[self.pages-1] + '. Replacing...')
-                        self.destroyFile(self.pages)
-
-                #Else
-                self.m_bitmap.SetBitmap(wx.NullBitmap)
-                self.filenameList[self.pages-1] = self.genFilename()
-                self.log('MainFrame: Saving scanned image to ' + self.filenameList[self.pages-1])
-                self.AcquireNatively(self.filenameList[self.pages-1])
+                self.tempName = self.genFilename()
+                self.AcquireNatively(self.tempName,self.filenameList[self.pages-1]!=None)
         
         def m_btScanHoverIn( self, event ):
                 self.m_statusBar.SetStatusText("Scans an image")
@@ -149,11 +145,14 @@ class MainFrame( gui.MainFrameBase, TwainBase):
                 
                 #If one page remains, do not delete!
                 if self.maxPage==1:
+                        self.showDialog('Cannot delete the remaining page.')
                         self.log('MainFrame: One page remaining. Will not delete ')
                         return
 
                 #Destroy previous file if an image is assigned
-                if self.filenameList[self.pages-1]!=None: self.destroyFile(self.pages)
+                if self.filenameList[self.pages-1]!=None:
+                        self.destroyFile(self.pages)
+                        del self.params["file_" + str(self.pages)]
 
                 #Move images after the deleted page
                 for x in range(1,self.maxPage):
@@ -174,6 +173,7 @@ class MainFrame( gui.MainFrameBase, TwainBase):
                 self.DisplayImage(self.filenameList[self.pages-1])
 
                 self.log(str(self.filenameList))
+                print self.params
     
         def m_btRemoveHoverIn( self, event ):
                 self.m_statusBar.SetStatusText("Deletes the current page")
@@ -182,22 +182,36 @@ class MainFrame( gui.MainFrameBase, TwainBase):
                 self.m_statusBar.SetStatusText("")
 
         def m_btUploadClick( self, event ):
-                self.log("connecting to " + self.serverHost)
-                res=self.fetch(self.serverHost+"/upload/")
+                #Checks if anything is uploaded
+
+                if len(self.params)==0:
+                        self.showDialog('No images to upload.')
+                        self.log('MainFrame: No image to upload!')
+                        return
+
+                busyDlg=wx.BusyInfo("Uploading files to %s" %(self.ulink))
+                self.log("connecting to " + self.ulink)
+                res=self.fetch(self.ulink)
                 XCSRFToken=self.getCookie("csrftoken")
 
                 #"http://httpbin.org/post": Test link. Change to appropriate upload link
                 self.params.update({"fid": str(self.fid), "faculty": str(self.name), "filename": str("_"+self.title+"_"), "page": str(self.pages), "userid": self.userid, "transaction": self.title})
                 datagen, headers = multipart_encode(self.params)
-                request=urllib2.Request(self.serverHost+"/upload/",datagen,headers)
+                request=urllib2.Request(self.ulink,datagen,headers)
                 request.add_header("X-CSRFToken", XCSRFToken.value)
                 request.add_header("User-Agent", "Mozilla/5.0") #browser spoofing
                 try:
                     print urllib2.urlopen(request).read()
                 except urllib2.HTTPError, error:
+                    busyDlg=None
                     with open("results.html", "w") as f:
                             f.write(error.read())
                     webbrowser.open("results.html")
+                    self.showDialog('Error uploading image. Please try again.',error=wx.ICON_ERROR)
+                    return
+                busyDlg=None
+                self.showDialog('Upload successful.')
+                
                         
         def m_btUploadHoverIn( self, event ):
                 self.m_statusBar.SetStatusText("Uploads an image")
@@ -243,7 +257,16 @@ class MainFrame( gui.MainFrameBase, TwainBase):
                 self.m_scrolledWindow.SetScrollbars(20, 20, bmp.GetWidth()/20, bmp.GetHeight()/20)
                 self.m_bitmap.Refresh()
 
-        def UpdateFiles(self):
+        def UpdateFiles(self,replacement):
+                #If an image is assigned to the page
+                if replacement:
+                        self.log('Found ' + self.filenameList[self.pages-1] + '. Replacing...')
+                        self.m_bitmap.GetBitmap().Destroy()
+                        self.destroyFile(self.pages)
+
+                #Otherwise, skip to here
+                self.filenameList[self.pages-1] = self.tempName
+                self.log('MainFrame: Saving scanned image to ' + self.filenameList[self.pages-1])
                 self.params.update({"file_" + str(self.pages): open(self.filenameList[self.pages-1], "rb")})
                 
                 
