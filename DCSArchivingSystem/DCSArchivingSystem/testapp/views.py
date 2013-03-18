@@ -60,8 +60,20 @@ def dashboard(request):
 
 @login_required
 def records(request):
-    doc_list= Dokument.objects.all()
+    doc_list= Dokument.objects.filter()
     return render_to_response('records.html', {'user': request.user, 'doc_list':doc_list}, context_instance=RequestContext(request))
+    
+@login_required
+def trash(request):
+    doc_list = File.objects.filter(delete=True)
+    return render_to_response('trash.html', {'user': request.user, 'doc_list':doc_list}, context_instance=RequestContext(request))
+    
+@login_required
+def restore(request, file_number):
+    file = File.objects.get(id=int(file_number))
+    file.delete = False
+    file.save()
+    return HttpResponseRedirect("/trash/")
     
 def upload(request):
     if request.POST:

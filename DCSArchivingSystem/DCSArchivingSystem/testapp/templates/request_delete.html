@@ -16,14 +16,14 @@
 	<table border=1 width=80% align=center class="table table-striped">	
 	    {% for a in doc.files.all %}
             {% if a.delete %}
-                <tr><td><input type="checkbox" checked="checked" name="{{a.id}}"> <a href= "/files/{{a.id}}" target="_blank"> {{a}}</a></td></tr><br>
+                {# <tr><td><input type="checkbox" checked="checked" name="{{a.id}}"> <a href= "/files/{{a.id}}" target="_blank"> {{a}}</a></td></tr><br> #}
             {% else %}
                 <tr><td><input type="checkbox" name= "{{a.id}}"><a href= "/files/{{a.id}}" target="_blank"> {{a}}</a></td></tr><br>
             {% endif %}
         
 		{% endfor %}
     </table>
-    <button type="submit" class="btn btn-primary">Request Delete</button>
+    <button type="submit" class="btn btn-primary">Delete</button>
     
     </form>
 {% endblock %}

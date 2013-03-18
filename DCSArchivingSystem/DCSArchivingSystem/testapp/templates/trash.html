@@ -1,6 +1,6 @@
 {% extends "template2.html" %}
 {% load pagination_tags %}
-<title> Files </title>
+<title> Trash </title>
 
 {%block content%}    
  
@@ -27,23 +27,21 @@ $(document).ready(function()
 </script>
 
 
-<h1 align=center>Records</h1>
+<h1 align=center>Trash</h1>
 {% if doc_list|length > 0 %}
 <table id = "records_table" border=1 width=80% align=center class="table table-striped">
 	<thead> 
 	<tr> 
-		<th>Faculty</th> 
-		<th>Transaction</th> 
-        <th>Delete</th>
+		<th>File Name</th>
+        <th>Restore file</th>
 	</tr> 
 	</thead> 
 	<tbody>
 	{% autopaginate doc_list 10 %}
     {% for a in doc_list %}
         <tr>
-        <td><a href="/users/{{a.faculty_id}}/profile">{{ a.faculty }}</a></td>
-        <td><a href="{{a.id}}/view/">{{ a.transaction }}</a></td>
-        <td><a href="{{a.id}}/delete/"> Delete </a></td>
+        <td><a href="/users/{{a.faculty_id}}/profile">{{ a.filename }}</a></td>
+        <td><a href="{{a.id}}/restore/"> Restore </a></td>
 		</tr>		
     {% endfor %}
 	{% paginate %}
@@ -51,7 +49,7 @@ $(document).ready(function()
 </table>
 {% else %}
 <div class="well">
-  <font size = 4><strong>Note:</strong> There are no records yet.</font>
+  <font size = 4><strong>Note:</strong> There are no files in the trash.</font>
 </div>
 {% endif %}
 {% endblock %}
