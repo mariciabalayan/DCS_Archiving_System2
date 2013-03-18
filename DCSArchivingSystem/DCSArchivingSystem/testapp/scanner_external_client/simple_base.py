@@ -2,6 +2,11 @@ import twain
 import traceback, sys
 import os, os.path
 
+# You can either Poll the TWAIN source, or process the scanned image in an
+# event callback. The event callback has not been fully tested using GTK.
+# Specifically this does not work with Tkinter.
+USE_CALLBACK=True
+
 XferByFile='File'
 XferNatively='Natively'
 
@@ -73,7 +78,7 @@ class TwainBase:
         """Begin the acquisition process. The actual acquisition will be notified by 
         either polling or a callback function."""
         if not self.SD:
-            self.OpenScanner()
+            self.OpenScanner(self.GetHandle(), UseCallback=USE_CALLBACK)
         if not self.SD: return
         try:
             self.SD.SetCapability(twain.ICAP_YRESOLUTION, twain.TWTY_FIX32, 100.0) 
@@ -83,8 +88,9 @@ class TwainBase:
         self.AcquirePending=True
         self.LogMessage(self.ProductName + ':' + 'Waiting for Scanner')
 
-    def AcquireNatively(self,filename):
+    def AcquireNatively(self,filename,replacement):
         """Acquire Natively - this is a memory based transfer"""
+        self.isReplacement=replacement
         self.XferMethod = XferNatively
         self.filename=filename
         return self._Acquire()
@@ -104,7 +110,7 @@ class TwainBase:
 
     def ProcessXFer(self):
         """An image is ready at the scanner - fetch and display it"""
-        more_to_come = False
+        more_to_come = True
         try:
             if self.XferMethod == XferNatively:
                 XferFileName=self.filename
@@ -136,8 +142,8 @@ class TwainBase:
                 self.SD.XferImageByFile()
                 self.LogMessage(self.ProductName + ':' + "Image acquired by file (%s)" % XferFileName)
 
+            self.UpdateFiles(self.isReplacement)
             self.DisplayImage(XferFileName)
-            self.UpdateFiles()
             if more_to_come: self.AcquirePending = True
             else: self.SD = None
         except:
