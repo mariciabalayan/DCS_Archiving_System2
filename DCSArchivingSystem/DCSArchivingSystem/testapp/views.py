@@ -180,8 +180,11 @@ def scanpage2(request):
         nameParts=faculty_name.split(',',1)
         faculty= Faculty.objects.filter(last_name=nameParts[0],first_name=nameParts[1])[0]
         faculty_id= faculty.id
+
+        httpHost="http://%s" %(request.META.get('HTTP_HOST'))
+
         if (title!= None and title != '') and (faculty!= None and faculty!= ''):
-            location = "scn://" + urllib2.quote("fid=%d&name=%s&title=%s&uid=%s&ulink=%s" %(faculty_id,request.POST.get('faculty'),title,request.session['_auth_user_id'],request.META.get('HTTP_ORIGIN')+url_constants.upload_url()))
+            location = "scn://" + urllib2.quote("fid=%d&name=%s&title=%s&uid=%s&ulink=%s" %(faculty_id,request.POST.get('faculty'),title,request.session['_auth_user_id'],httpHost+url_constants.upload_url()))
             res = HttpResponse(location, status=302)
             res['Location'] = location
             return res
