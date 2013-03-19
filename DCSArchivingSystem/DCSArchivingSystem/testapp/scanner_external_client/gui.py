@@ -16,7 +16,7 @@ import wx
 class MainFrameBase ( wx.Frame ):
 	
 	def __init__( self, parent ):
-		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = u"Scanner", pos = wx.DefaultPosition, size = wx.Size( 669,492 ), style = wx.CAPTION|wx.RESIZE_BORDER|wx.SYSTEM_MENU|wx.CLIP_CHILDREN|wx.TAB_TRAVERSAL )
+		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = u"DCS Archiving System Scanner", pos = wx.DefaultPosition, size = wx.Size( 669,492 ), style = wx.CAPTION|wx.RESIZE_BORDER|wx.SYSTEM_MENU|wx.CLIP_CHILDREN|wx.TAB_TRAVERSAL )
 		
 		self.SetSizeHintsSz( wx.DefaultSize, wx.DefaultSize )
 		
@@ -50,7 +50,7 @@ class MainFrameBase ( wx.Frame ):
 		self.m_staticline3 = wx.StaticLine( self.m_panel, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LI_HORIZONTAL )
 		bSizer5.Add( self.m_staticline3, 0, wx.EXPAND |wx.ALL, 5 )
 		
-		self.m_staticText20 = wx.StaticText( self.m_panel, wx.ID_ANY, u"Page navigation", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_staticText20 = wx.StaticText( self.m_panel, wx.ID_ANY, u"Page Navigation", wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_staticText20.Wrap( -1 )
 		bSizer5.Add( self.m_staticText20, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
 		
@@ -134,6 +134,15 @@ class MainFrameBase ( wx.Frame ):
 		
 		self.SetSizer( bSizer )
 		self.Layout()
+		self.m_menubar1 = wx.MenuBar( 0 )
+		self.m_help = wx.Menu()
+		self.m_about = wx.MenuItem( self.m_help, wx.ID_ANY, u"About"+ u"\t" + u"F1", u"Shows about dialog", wx.ITEM_NORMAL )
+		self.m_help.AppendItem( self.m_about )
+		
+		self.m_menubar1.Append( self.m_help, u"Help" ) 
+		
+		self.SetMenuBar( self.m_menubar1 )
+		
 		self.m_statusBar = self.CreateStatusBar( 1, wx.ST_SIZEGRIP, wx.ID_ANY )
 		
 		# Connect Events
@@ -160,6 +169,7 @@ class MainFrameBase ( wx.Frame ):
 		self.m_btExit.Bind( wx.EVT_BUTTON, self.m_btExitClick )
 		self.m_btExit.Bind( wx.EVT_ENTER_WINDOW, self.m_btExitHoverIn )
 		self.m_btExit.Bind( wx.EVT_LEAVE_WINDOW, self.m_btExitHoverOut )
+		self.Bind( wx.EVT_MENU, self.m_aboutClick, id = self.m_about.GetId() )
 	
 	def __del__( self ):
 		pass
@@ -233,6 +243,9 @@ class MainFrameBase ( wx.Frame ):
 		event.Skip()
 	
 	def m_btExitHoverOut( self, event ):
+		event.Skip()
+	
+	def m_aboutClick( self, event ):
 		event.Skip()
 	
 

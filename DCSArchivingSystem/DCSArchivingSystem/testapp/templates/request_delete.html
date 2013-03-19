@@ -15,7 +15,7 @@
 	<span class="label label-info"><h2>Files</h2></span>
 	<table border=1 width=80% align=center class="table table-striped">	
 	    {% for a in doc.files.all %}
-            {% if a.delete %}
+            {% if a.trashed %}
                 {# <tr><td><input type="checkbox" checked="checked" name="{{a.id}}"> <a href= "files/{{a.id}}" target="_blank"> {{a}}</a></td></tr><br> #}
             {% else %}
                 <tr><td><input type="checkbox" name= "{{a.id}}"><a href= "files/{{a.id}}" target="_blank"> {{a}}</a></td></tr><br>

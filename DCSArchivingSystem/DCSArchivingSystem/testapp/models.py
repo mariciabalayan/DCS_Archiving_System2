@@ -79,7 +79,7 @@ class Transaction(models.Model):
 class File(models.Model):
     filename        = models.CharField(max_length=100)
     file            = models.FileField(upload_to='files/%Y')
-    delete			= models.BooleanField(default=0)
+    trashed			= models.BooleanField(default=0)
 
     def __unicode__(self):
         return self.filename

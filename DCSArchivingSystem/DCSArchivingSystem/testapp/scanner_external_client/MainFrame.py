@@ -7,7 +7,7 @@ import cookielib
 import webbrowser
 import os
 import random,string
-import time
+import datetime
 from poster.encode import multipart_encode
 from poster.streaminghttp import register_openers
 from simple_base import TwainBase
@@ -17,10 +17,13 @@ from simple_base import TwainBase
 #Specifically this does not work with Tkinter.
 USE_CALLBACK=True
 
-#pOpener=register_openers()
-#pOpener.add_handler(urllib2.HTTPCookieProcessor(cookielib.CookieJar()))
+#Name of logfile
+logFileName='log.txt'
 
-#Implementing MainFrameBase
+#Version
+version=1.0
+
+#Implementing MainFrame
 class MainFrame( gui.MainFrameBase, TwainBase):
         cookies = cookielib.LWPCookieJar()
         handlers = [
@@ -35,9 +38,10 @@ class MainFrame( gui.MainFrameBase, TwainBase):
 
         params = {}
         filenameList = []
+        logFile=None
 
         def log(self,msg):
-                if self.debugMode==True: print '****LogMessage: ' + msg
+            self.logFile.write('****LogMessage: ' + msg + '\n')
 
         def fetch(self,uri):
             req = urllib2.Request(uri,headers={'User-Agent' : 'Mozilla/5.0'}) #browser spoofing
@@ -62,23 +66,24 @@ class MainFrame( gui.MainFrameBase, TwainBase):
                         if type(self.params[x])==file:
                                 print 'closing'
                                 self.params[x].close()
-                                self.params[x]=None
+                                self.params[x] = None
                 for x in fileList:
                         if ".bmp" in x: os.remove(x)
         
-        def setParams(self,facultyID,facultyName,formTitle,userid,upload_link,debug=False):
+        def setParams(self,facultyID,facultyName,titleID,titleName,userid,upload_link):
+                self.logFile=open(logFileName,'w')
+                self.logFile.write("DCS Archiving System Scanner Client %s\nSession start: %s\n" %(version,datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
                 self.name=facultyName
-                self.m_lbFaculty.ChangeValue(facultyName)
+                self.m_lbFaculty.ChangeValue(self.name)
                 self.fid=facultyID
                 self.maxPage=1
                 self.setMaxPage(self.maxPage)
                 self.setPage(self.maxPage)
-                self.title=formTitle
-                self.m_lbDoctype.ChangeValue(formTitle)
+                self.tid=titleID
+                self.m_lbDoctype.ChangeValue(titleName)
                 self.m_btChangePage.SetRange(1,self.maxPage)
                 self.userid=userid
                 self.filenameList.append(None)
-                self.debugMode=debug
                 self.ulink=upload_link
                 self.cleanUp()
 
@@ -94,16 +99,16 @@ class MainFrame( gui.MainFrameBase, TwainBase):
                         self.params["file_" + str(page)].close()
                         os.remove(self.filenameList[page-1])
 
-        def showDialog(self,msg,error=1):
-                dial = wx.MessageDialog(None, msg, 'Message', wx.OK | error)
+        def showDialog(self,msg,hdr='Message',extra_args=1):
+                dial = wx.MessageDialog(None, msg, hdr, wx.OK | extra_args)
                 dial.ShowModal()
-                
         
         def OnClose( self, event ):
+                self.log('MainFrame: Exiting')
+                self.logFile.close()
                 self.cleanUp()
                 self.Terminate()
                 self.Destroy()
-
         
         def m_btConnectClick( self, event ):
                 self.OpenScanner(self.GetHandle(), UseCallback=USE_CALLBACK)
@@ -132,7 +137,7 @@ class MainFrame( gui.MainFrameBase, TwainBase):
                 self.m_btChangePage.SetRange(1,self.maxPage)
                 self.filenameList.append(None)
 
-                self.log(str(self.filenameList))
+                self.log("MainFrame: Filename list: %s" %str(self.filenameList))
     
         def m_btAddHoverIn( self, event ):
                 self.m_statusBar.SetStatusText("Adds a new page")
@@ -172,8 +177,8 @@ class MainFrame( gui.MainFrameBase, TwainBase):
                 #Refreshes display image
                 self.DisplayImage(self.filenameList[self.pages-1])
 
-                self.log(str(self.filenameList))
-                print self.params
+                self.log("MainFrame: Filename list: %s" %str(self.filenameList))
+                self.log("MainFrame: File params: %s" %str(self.params))
     
         def m_btRemoveHoverIn( self, event ):
                 self.m_statusBar.SetStatusText("Deletes the current page")
@@ -190,12 +195,12 @@ class MainFrame( gui.MainFrameBase, TwainBase):
                         return
 
                 busyDlg=wx.BusyInfo("Uploading files to %s" %(self.ulink))
-                self.log("connecting to " + self.ulink)
+                self.log("MainFrame: Connecting to " + self.ulink)
                 res=self.fetch(self.ulink)
                 XCSRFToken=self.getCookie("csrftoken")
 
                 #"http://httpbin.org/post": Test link. Change to appropriate upload link
-                self.params.update({"fid": str(self.fid), "faculty": str(self.name), "filename": str("_"+self.title+"_"), "page": str(self.pages), "userid": self.userid, "transaction": self.title})
+                self.params.update({"fid": str(self.fid), "userid": self.userid, "transaction": self.tid})
                 datagen, headers = multipart_encode(self.params)
                 request=urllib2.Request(self.ulink,datagen,headers)
                 request.add_header("X-CSRFToken", XCSRFToken.value)
@@ -204,13 +209,15 @@ class MainFrame( gui.MainFrameBase, TwainBase):
                     print urllib2.urlopen(request).read()
                 except urllib2.HTTPError, error:
                     busyDlg=None
-                    with open("results.html", "w") as f:
-                            f.write(error.read())
-                    webbrowser.open("results.html")
-                    self.showDialog('Error uploading image. Please try again.',error=wx.ICON_ERROR)
+                    #with open("results.html", "w") as f:
+                    #        f.write(error.read())
+                    #webbrowser.open("results.html")
+                    self.log('MainFrame: Error uploading file(s)')
+                    self.showDialog('Error uploading image(s). Please try again.',hdr='Error',extra_args=wx.ICON_ERROR)
                     return
                 busyDlg=None
                 self.showDialog('Upload successful.')
+                self.log('MainFrame: Upload successful')
                 
                         
         def m_btUploadHoverIn( self, event ):
@@ -246,7 +253,18 @@ class MainFrame( gui.MainFrameBase, TwainBase):
         def m_btExitHoverOut( self, event ):
                 self.m_statusBar.SetStatusText("")
 
+        def m_aboutClick( self, event ):
+                self.log('MainFrame: About info')
+                self.showDialog("""DCS Archiving System Scanner Client version %s, Copyright (C) 2013 Team Park
+This program comes with ABSOLUTELY NO WARRANTY.
+This is free software, and you are welcome to redistribute it under certain conditions.
+http://www.gnu.org/licenses/gpl-2.0.html
+
+Used portions of code from twainmodule simple_wx.py, modified 12 December 2012:
+http://twainmodule.sourceforge.net/docs/quickstart.html""" %version,hdr='About')
+
         def DisplayImage(self, ImageFileName):
+                self.log("MainFrame: Display Image: %s" %ImageFileName)
                 if ImageFileName!=None and os.path.isfile(ImageFileName):
                         bmp = wx.Image(ImageFileName, wx.BITMAP_TYPE_BMP).ConvertToBitmap()
                 else:
@@ -260,7 +278,7 @@ class MainFrame( gui.MainFrameBase, TwainBase):
         def UpdateFiles(self,replacement):
                 #If an image is assigned to the page
                 if replacement:
-                        self.log('Found ' + self.filenameList[self.pages-1] + '. Replacing...')
+                        self.log('MainFrame: Found ' + self.filenameList[self.pages-1] + '. Replacing...')
                         self.m_bitmap.GetBitmap().Destroy()
                         self.destroyFile(self.pages)
 
