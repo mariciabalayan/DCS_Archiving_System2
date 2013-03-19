@@ -10,8 +10,8 @@ USE_CALLBACK=True
 XferByFile='File'
 XferNatively='Natively'
 
-tmpfilename="tmpnatively.bmp"
-OverrideXferFileName = "tmpfile.jpg" #'c:/twainxfer.jpg'
+tmpfilename='tmpnatively.bmp'
+OverrideXferFileName = 'tmpfile.jpg'
 
 class CannotWriteTransferFile(Exception):
     pass
@@ -24,19 +24,12 @@ class TwainBase:
 
     SM=None                        # Source Manager
     SD=None                        # Data Source
-    ProductName='SimpleTwainDemo'  # Name of this product
+    progName='DCS Archiving System Scanner Client' # Name of the program
+    ProductName='simple_base'      # Name of this python script
     XferMethod = XferNatively      # Transfer method currently in use
     AcquirePending = False         # Flag to indicate that there is an acquire pending
     mainWindow = None              # Window handle for the application window
     filename = None                # Temporary filename of scanned file
-
-    # Methods to be implemented by Sub-Class
-    def LogMessage(self, message):
-        print "****LogMessage:", message
-
-    def DisplayImage(self, ImageFileName):
-        """Display the image from a file"""
-        print "DisplayImage:", ImageFileName
 
     # End of required methods
 
@@ -68,8 +61,8 @@ class TwainBase:
             self.SD=None
         self.SD = self.SM.OpenSource()
         if self.SD:
-            self.LogMessage(self.ProductName+': ' + self.SD.GetSourceName())
-            self.SetTitle("Scanner - " + self.SD.GetSourceName())
+            self.log(self.productName+': ' + self.SD.GetSourceName())
+            self.SetTitle("%s - %s" %(self.progName, self.SD.GetSourceName()))
 
         if UseCallback:
             self.SM.SetCallback(self.OnTwainEvent)
@@ -86,7 +79,7 @@ class TwainBase:
             pass
         self.SD.RequestAcquire(1, 1)  # 1,1 to show scanner user interface
         self.AcquirePending=True
-        self.LogMessage(self.ProductName + ':' + 'Waiting for Scanner')
+        self.log(self.ProductName + ': ' + 'Waiting for Scanner')
 
     def AcquireNatively(self,filename,replacement):
         """Acquire Natively - this is a memory based transfer"""
@@ -117,7 +110,7 @@ class TwainBase:
                 (handle, more_to_come) = self.SD.XferImageNatively()
                 twain.DIBToBMFile(handle, XferFileName)
                 twain.GlobalHandleFree(handle)
-                self.LogMessage(self.ProductName + ':' + 'Image acquired natively')
+                self.log(self.ProductName + ': ' + 'Image acquired natively')
             else:
                 try:
                     XferFileName='TWAIN.TMP' # Default
@@ -140,7 +133,7 @@ class TwainBase:
 
                 self.VerifyCanWrite(XferFileName)
                 self.SD.XferImageByFile()
-                self.LogMessage(self.ProductName + ':' + "Image acquired by file (%s)" % XferFileName)
+                self.log(self.ProductName + ': ' + "Image acquired by file (%s)" % XferFileName)
 
             self.UpdateFiles(self.isReplacement)
             self.DisplayImage(XferFileName)

@@ -11,6 +11,8 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
+FORCE_SCRIPT_NAME = ''
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.

@@ -17,7 +17,12 @@ from django.template.context import RequestContext
 from list_manipulations import remove_first_characters, subtract_list
 import urllib2
 import random,string
+<<<<<<< HEAD
 import re, os
+=======
+import re
+import url_constants
+>>>>>>> Scanner client changes (and first release version)
 
 # Create your views here.
 
@@ -113,8 +118,7 @@ def upload(request):
                 user = User.objects.filter(id=userid)[0]
                 faculty=None
                 faculty=Faculty.objects.filter(id=request.POST.get('fid'))[0]
-                reqfname = request.POST.get('filename')
-                transaction = Transaction.objects.filter(id=request.POST.get('transaction'))[0]
+                transaction = Transaction.objects.get(id=request.POST.get('transaction'))
                 document = Dokument()
                 document.faculty= faculty
                 document.transaction= transaction
@@ -125,7 +129,7 @@ def upload(request):
                     fnameTemplate=''
                     fnameTemplate = ''.join(random.choice(string.ascii_lowercase))
                     fnameTemplate += ''.join(random.choice(string.ascii_lowercase + string.digits) for x in range(4)) + '_'
-                    if len(File.objects.filter(filename=fnameTemplate + '_1.bmp'))==0: break
+                    if len(File.objects.filter(filename__startswith = fnameTemplate))==0: break
 
                 #Processes uploaded files, page by page
                 for key in request.FILES:
@@ -200,14 +204,18 @@ def scanpage2(request):
     users_list= Faculty.objects.all()
     transaction= faculty= state= ''
     if request.method=='POST':
-        title= request.POST.get('transaction')
+        tid= request.POST.get('transaction')
+        title= Transaction.objects.get(id=tid)
         faculty_name= request.POST.get('faculty')
         faculty_name= faculty_name.replace(',', "")
         nameParts=faculty_name.split(' ',1)
-        faculty= Faculty.objects.filter(last_name=nameParts[0],first_name=nameParts[1])[0]
+        faculty= Faculty.objects.get(last_name=nameParts[0],first_name=nameParts[1])
         faculty_id= faculty.id
+
+        httpHost = "http://%s" %(request.META.get('HTTP_HOST'))
+        
         if (title!= None and title != '') and (faculty!= None and faculty!= ''):
-            location = "scn://" + urllib2.quote("fid=%d&name=%s&title=%s&uid=%s&origin=%s" %(faculty_id,request.POST.get('faculty'),title,request.session['_auth_user_id'],request.META.get('HTTP_ORIGIN')))
+            location = "scn://" + urllib2.quote("fid=%d&name=%s&tid=%s&title=%s&uid=%s&origin=%s" %(faculty_id,request.POST.get('faculty'),tid,title,request.session['_auth_user_id'],httpHost+url_constants.upload_url()))
             res = HttpResponse(location, status=302)
             res['Location'] = location
             return res
