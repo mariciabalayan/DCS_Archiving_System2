@@ -18,12 +18,8 @@ from django.template.context import RequestContext
 from list_manipulations import remove_first_characters, subtract_list
 import urllib2
 import random,string
-<<<<<<< HEAD
 import re, os
-=======
-import re
 import url_constants
->>>>>>> Scanner client changes (and first release version)
 
 # Create your views here.
 
@@ -92,7 +88,7 @@ def clean_trash(request):
         os.remove(os.path.realpath(os.path.dirname(__file__)) + "/media/" + a.file.name)
         a.delete()
         Log.create(request.user, "Permanently deleted a file", a).save()
-    return HttpResponseRedirect("/trash/")
+    return HttpResponseRedirect(settings.FORCE_SCRIPT_NAME + "/trash/")
     
 @login_required
 def restore(request, file_number):
