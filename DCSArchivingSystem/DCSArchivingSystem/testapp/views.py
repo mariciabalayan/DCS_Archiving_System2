@@ -11,13 +11,13 @@ from models import Faculty, File, Log, Transaction, Dokument, Tag
 from forms import ScanForm
 from django.contrib.sessions.models import Session
 from django.contrib.auth.models import User
-from datetime import datetime
+from datetime import datetime, timedelta
 from django.views.decorators.csrf import csrf_exempt
 from django.template.context import RequestContext
 from list_manipulations import remove_first_characters, subtract_list
 import urllib2
 import random,string
-import re
+import re, os
 
 # Create your views here.
 
@@ -66,21 +66,32 @@ def records(request):
 @login_required
 def trash(request):
     if request.method=="POST":
-        file_list = File.objects.filter(delete=True)
+        file_list = File.objects.filter(trashed=True)
         for a in file_list:
             if request.POST.get(str(a.id))!=None:
-                a.delete=False
+                a.trashed=False
                 a.save()
                 Log.create(request.user, "Restored a file", a).save()
         return HttpResponseRedirect("/trash/")
     else:
-        file_list = File.objects.filter(delete=True)
-        return render_to_response('trash.html', {'user': request.user, 'file_list':file_list}, context_instance=RequestContext(request))
+        is_admin = request.user.is_staff
+        file_list = File.objects.filter(trashed=True)
+        return render_to_response('trash.html', {'user': request.user, 'file_list':file_list, 'is_admin':is_admin}, context_instance=RequestContext(request))
+    
+@login_required
+def clean_trash(request):
+    file_list = File.objects.filter(trashed=True)
+    print "CLEAN ALL"
+    for a in file_list:
+        os.remove(os.path.realpath(os.path.dirname(__file__)) + "/media/" + a.file.name)
+        a.delete()
+        Log.create(request.user, "Permanently deleted a file", a).save()
+    return HttpResponseRedirect("/trash/")
     
 @login_required
 def restore(request, file_number):
     file = File.objects.get(id=int(file_number))
-    file.delete = False
+    file.trashed = False
     file.save()
     Log.create(request.user, "Restored a file", file).save()
     return HttpResponseRedirect("/trash/")
@@ -238,9 +249,9 @@ def request_delete(request, document_number):
         doc= Dokument.objects.get(id= int(document_number))
         for k in doc.files.all():
             if request.POST.get(str(k.id))!=None:
-                k.delete=1
+                k.trashed=1
             # else:
-            #    k.delete=0
+            #    k.trashed=0
                 k.save()
                 Log.create(request.user, "Deleted a file", k).save()
         return HttpResponseRedirect("/records")
