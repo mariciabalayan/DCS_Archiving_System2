@@ -11,7 +11,7 @@
   <div class="span offset9">
     <div class="input-append">
         <input class="form-data" type="text" id="term" name="term" placeholder="Search here"/>
-        <button type="submit" class="btn">Search</button>
+        <button type="submit" class="btn"><i class="icon-search"></i> Search</button>
     </div>
   </div>
 </div>
@@ -33,7 +33,8 @@ $(document).ready(function()
 	<thead> 
 	<tr> 
 		<th>Faculty</th> 
-		<th>Transaction</th> 
+		<th>Transaction</th>
+		<th>Delete</th>
 	</tr> 
 	</thead> 
 	<tbody> 
@@ -49,6 +50,8 @@ $(document).ready(function()
 	</tbody>
 </table>
 {% else %}
-<h4>No results found for: {{ keyword }}</h4>
+<div class="well">
+  <font size = 4><strong>Note:</strong> There are no results found for: {{ keyword }}.</font>
+</div>
 {% endif %}
 {% endblock %}

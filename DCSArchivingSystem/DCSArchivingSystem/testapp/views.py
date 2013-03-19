@@ -17,12 +17,12 @@ from django.template.context import RequestContext
 from list_manipulations import remove_first_characters, subtract_list
 import urllib2
 import random,string
-<<<<<<< HEAD
+# <<<<<<< HEAD
 import re, os
-=======
-import re
-import url_constants
->>>>>>> Scanner client changes (and first release version)
+# =======
+# import re
+# import url_constants
+# >>>>>>> Scanner client changes (and first release version)
 
 # Create your views here.
 
