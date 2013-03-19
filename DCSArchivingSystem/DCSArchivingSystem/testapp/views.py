@@ -62,8 +62,30 @@ def dashboard(request):
 
 @login_required
 def records(request):
-    doc_list= Dokument.objects.all()
+    doc_list= Dokument.objects.filter()
     return render_to_response('records.html', {'user': request.user, 'doc_list':doc_list}, context_instance=RequestContext(request))
+    
+@login_required
+def trash(request):
+    if request.method=="POST":
+        file_list = File.objects.filter(delete=True)
+        for a in file_list:
+            if request.POST.get(str(a.id))!=None:
+                a.delete=False
+                a.save()
+                Log.create(request.user, "Restored a file", a).save()
+        return HttpResponseRedirect(settings.FORCE_SCRIPT_NAME + "/trash/")
+    else:
+        file_list = File.objects.filter(delete=True)
+        return render_to_response('trash.html', {'user': request.user, 'file_list':file_list}, context_instance=RequestContext(request))
+    
+@login_required
+def restore(request, file_number):
+    file = File.objects.get(id=int(file_number))
+    file.delete = False
+    file.save()
+    Log.create(request.user, "Restored a file", file).save()
+    return HttpResponseRedirect(settings.FORCE_SCRIPT_NAME + "/trash/")
     
 def upload(request):
     if request.POST:

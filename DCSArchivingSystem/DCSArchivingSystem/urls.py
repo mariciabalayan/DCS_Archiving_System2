@@ -81,6 +81,12 @@ urlpatterns = patterns('DCSArchivingSystem.testapp.views',
     #change owner
     url(r'^records/(?P<document_number>[0-9]+)/change/$', 'change'),
     
+    # Trash
+    url(r'^trash/$', 'trash'),
+    
+    # Restore
+    url(r'^trash/(?P<file_number>[0-9]+)/restore/$', 'restore'),
+    
     # Main Page
     url(r'^$', 'index'),
 
