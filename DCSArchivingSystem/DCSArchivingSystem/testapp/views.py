@@ -17,12 +17,8 @@ from django.template.context import RequestContext
 from list_manipulations import remove_first_characters, subtract_list
 import urllib2
 import random,string
-# <<<<<<< HEAD
 import re, os
-# =======
-# import re
-# import url_constants
-# >>>>>>> Scanner client changes (and first release version)
+import url_constants
 
 # Create your views here.
 
@@ -211,8 +207,8 @@ def scanpage2(request):
         tid= request.POST.get('transaction')
         title= Transaction.objects.get(id=tid)
         faculty_name= request.POST.get('faculty')
-        faculty_name= faculty_name.replace(',', "")
-        nameParts=faculty_name.split(' ',1)
+        faculty_name= faculty_name.replace(', ', ',')
+        nameParts=faculty_name.split(',',1)
         faculty= Faculty.objects.get(last_name=nameParts[0],first_name=nameParts[1])
         faculty_id= faculty.id
 
