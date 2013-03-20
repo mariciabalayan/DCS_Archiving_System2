@@ -104,14 +104,15 @@ class Log(models.Model):
     user            = models.ForeignKey(User)
     action          = models.CharField(max_length=100)
     file            = models.ForeignKey(File, null=True, blank=True)
+    record          = models.ForeignKey(Dokument, null=True, blank=True)
     timestamp       = models.DateTimeField(auto_now=True)
 
     def __unicode__(self):
         return str(self.user) + " " + self.action + " " + str(self.file) + " " + str(self.timestamp)
         
     @classmethod
-    def create(cls, user, action, file):
-        log = cls(user=user, action=action, file=file)
+    def create(cls, user, action, file, record):
+        log = cls(user=user, action=action, file=file, record=record)
         return log
 
 # Register Models to Django Admin
