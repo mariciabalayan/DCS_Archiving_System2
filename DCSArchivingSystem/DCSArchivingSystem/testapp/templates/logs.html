@@ -17,13 +17,12 @@
 </form> 
 <h1 align=center>Logs</h1>
 <table border=1 width=80% align=center class="table table-striped">
-	<tr><th>username</th><th>Action</th><th>File</th><th>Record</th><th>Date</th><th>Time</th></tr>
+	<tr><th>username</th><th>Action</th><th>File</th><th>Date</th><th>Time</th></tr>
     {% for a in log_list %}
         <tr>
 		<td>{{ a.user }}</td>
 		<td>{{ a.action }}</td>
 		<td>{% if a.file.id != None %}<a href="/files/{{a.file.id}}" target="_blank">{% endif %}{{ a.file }}</a></td>
-        <td>{% if a.record.id != None %}<a href="/records/{{a.record.id}}/view/" target="_blank">{% endif %}{{ a.record }}</a></td>
 		<td>{{ a.timestamp.date }}</td>
 		<td>{{ a.timestamp.time }}</td>
 		</tr>		
