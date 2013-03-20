@@ -11,7 +11,7 @@
 <div id="myCarousel" class="carousel slide">
   <!-- Carousel items -->
   <div class="carousel-inner">
-    {% for a in doc.files.all %}
+    {% for a in file_list %}
 	{% if forloop.first %}  
 		<div class="active item"><img src= "/media/{{ MEDIA_URL }}{{a.file}}" width = 1500px height = 2500px >
 			<div class="carousel-caption">

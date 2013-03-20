@@ -61,7 +61,7 @@ class TwainBase:
             self.SD=None
         self.SD = self.SM.OpenSource()
         if self.SD:
-            self.log(self.productName+': ' + self.SD.GetSourceName())
+            self.log(self.ProductName+': ' + self.SD.GetSourceName())self.log(self.productName+': ' + self.SD.GetSourceName())
             self.SetTitle("%s - %s" %(self.progName, self.SD.GetSourceName()))
 
         if UseCallback:
