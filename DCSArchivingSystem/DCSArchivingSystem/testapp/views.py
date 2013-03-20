@@ -45,7 +45,7 @@ def index(request):
                 print request.session
                 
                 state = "Login ok!"
-                Log.create(user, "Logged in", None).save()
+                Log.create(user, "Logged in", None, None).save()
                 return HttpResponseRedirect("/dashboard/")
             else:
                 state = "Account not active."
@@ -72,7 +72,7 @@ def trash(request):
             if request.POST.get(str(a.id))!=None:
                 a.trashed=False
                 a.save()
-                Log.create(request.user, "Restored a file", a).save()
+                Log.create(request.user, "Restored a file", a, None).save()
         return HttpResponseRedirect("/trash/")
     else:
         is_admin = request.user.is_staff
@@ -86,7 +86,7 @@ def clean_trash(request):
     for a in file_list:
         os.remove(os.path.realpath(os.path.dirname(__file__)) + "/media/" + a.file.name)
         a.delete()
-        Log.create(request.user, "Permanently deleted a file", a).save()
+        Log.create(request.user, "Permanently deleted a file", a, None).save()
     return HttpResponseRedirect("/trash/")
     
 @login_required
@@ -94,7 +94,7 @@ def restore(request, file_number):
     file = File.objects.get(id=int(file_number))
     file.trashed = False
     file.save()
-    Log.create(request.user, "Restored a file", file).save()
+    Log.create(request.user, "Restored a file", file, None).save()
     return HttpResponseRedirect("/trash/")
     
 def upload(request):
@@ -139,8 +139,8 @@ def upload(request):
                         file.file = 'files/' + filename
                         file.save()                    
                         document.files.add(file)
-                    Log.create(user, "Uploaded file", file).save()    
-                Log.create(user, "Created Document", file).save()    
+                    Log.create(user, "Uploaded file", file, document).save()    
+                Log.create(user, "Created Document", None, document).save()    
                 return HttpResponseRedirect("/dashboard/")
             
     else:
@@ -164,9 +164,11 @@ def print_page(request, file_number):
 @csrf_exempt
 def change(request, document_number):
     doc= Dokument.objects.get(id=int(document_number))
+    prevfaculty = doc.faculty
     users_list= Faculty.objects.all()
     if request.method=='POST':
         faculty= request.POST.get('faculty')
+        current_faculty = faculty
         faculty_name= faculty
         faculty= faculty.replace(',', "")
         for person in users_list:
@@ -176,6 +178,7 @@ def change(request, document_number):
                     elif k not in person.first_name: break
                     doc.faculty_id=person.id
         doc.save()
+        Log.create(request.user, "Changed owenership of a record owned by " + str(prevfaculty) + " to " + str(current_faculty), None, doc).save()
         return HttpResponseRedirect("/records")
     else:
         print 'hi'
@@ -187,7 +190,8 @@ def view(request, document_number):
     doc= Dokument.objects.get(id=int(document_number))
     for a in doc.files.all():
         print "YO",a.file.path
-    return render_to_response('view.html', {'doc':doc})
+    file_list = doc.files.filter(trashed=False)
+    return render_to_response('view.html', {'doc':doc, 'file_list':file_list})
 
 @login_required
 def scanpage(request):
@@ -251,13 +255,13 @@ def request(request):
 def request_delete(request, document_number):
     if request.method=="POST":
         doc= Dokument.objects.get(id= int(document_number))
-        for k in doc.files.all():
+        for k in doc.files.filter(trashed=False):
             if request.POST.get(str(k.id))!=None:
                 k.trashed=1
             # else:
             #    k.trashed=0
                 k.save()
-                Log.create(request.user, "Deleted a file", k).save()
+                Log.create(request.user, "Deleted a file", k, doc).save()
         return HttpResponseRedirect("/records")
     else:
         doc= Dokument.objects.get(id= int(document_number))
@@ -276,7 +280,7 @@ def log_in(request):
             if user.is_active:
                 login(request, user)
                 state = "Login ok!"
-                Log.create(user, "Logged in", None).save()
+                Log.create(user, "Logged in", None, None).save()
                 return HttpResponseRedirect("/dashboard/")
             else:
                 state = "Account not active."
@@ -286,7 +290,7 @@ def log_in(request):
     return render_to_response('login.html',RequestContext(request, {'state':state}))
 
 def log_out(request):
-    Log.create(request.user, "Logged out", None).save()
+    Log.create(request.user, "Logged out", None, None).save()
     logout(request)
     return HttpResponseRedirect('/')
 
