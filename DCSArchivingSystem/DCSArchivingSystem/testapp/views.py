@@ -180,6 +180,7 @@ def change(request, document_number):
                     elif k not in person.first_name: break
                     doc.faculty_id=person.id
         doc.save()
+        Log.create(request.user, "Changed owenership of a record", None).save()
         return HttpResponseRedirect("/records")
     else:
         print 'hi'
@@ -191,7 +192,8 @@ def view(request, document_number):
     doc= Dokument.objects.get(id=int(document_number))
     for a in doc.files.all():
         print "YO",a.file.path
-    return render_to_response('view.html', {'doc':doc})
+    file_list = doc.files.filter(trashed=False)
+    return render_to_response('view.html', {'doc':doc, 'file_list':file_list})
 
 @login_required
 def scanpage(request):
@@ -255,7 +257,7 @@ def request(request):
 def request_delete(request, document_number):
     if request.method=="POST":
         doc= Dokument.objects.get(id= int(document_number))
-        for k in doc.files.all():
+        for k in doc.files.filter(trashed=False):
             if request.POST.get(str(k.id))!=None:
                 k.trashed=1
             # else:
