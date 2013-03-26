@@ -267,7 +267,7 @@ def request_delete(request, document_number):
             # else:
             #    k.trashed=0
                 k.save()
-                Log.create(request.user, "Deleted a file", k).save()
+                Log.create(request.user, "Deleted a file", k, doc).save()
         return HttpResponseRedirect(settings.FORCE_SCRIPT_NAME + "/records")
     else:
         doc= Dokument.objects.get(id= int(document_number))
