@@ -10,6 +10,7 @@
 {% block content %}
     <link rel="Stylesheet" href="/static/css-hover.css" type="text/css" />
 	<script src="/static/css-hover.css"></script> 
+		
 	<br><div class="hero-unit">
 		<h1>Welcome, {{user}}!</h1>
 			<p>This is the DCS Archiving System, made for the management of files and transactions of the UP Diliman DCS Faculty.</p>
@@ -21,8 +22,8 @@
 
 		<div class="row">
 			<div class="span4">
-				<h4><center>SCAN A DOCUMENT</center></h4>
 				<div class="holder smooth">
+					<h4><center>SCAN A DOCUMENT</center></h4>
 					{% load static %}<img width = 300px height = 300px src="{% static "images/scan2.png" %}" class = "img-rounded" width=100%/>
 					<div class="go-left">
 						<a href = "scanpage/"><font color = white> Scan &raquo; </font></a>
@@ -31,8 +32,8 @@
 			</div>
 			
 			<div class="span4">
-				<h4><center>VIEW FACULTY LIST</center></h4>
 				<div class="holder smooth">
+					<h4><center>VIEW FACULTY LIST</center></h4>
 					{% load static %} <img width = 300px height = 300px src="{% static "images/prof2.png" %}" class = "img-rounded" width=100%/>
 				<div class="go-left">
 					<a href = "users/"><font color = white> Faculty &raquo; </font></a>
@@ -42,8 +43,8 @@
 			</div>
 			
 			<div class="span4">
-				<h4><center>VIEW FACULTY RECORDS</center></h4>
 				<div class="holder smooth">
+					<h4><center>VIEW FACULTY RECORDS</center></h4>
 					{% load static %} <img width = 300px height = 300px src="{% static "images/rex2.png" %}" class = "img-rounded" width=100%/>
 					<div class="go-left">
 						<a href = "records/"><font color = white> Records &raquo; </font></a>
