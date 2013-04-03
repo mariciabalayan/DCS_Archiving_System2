@@ -137,7 +137,7 @@ def upload(request):
                     #with open('absolute/path/to/media/files/' + filename, 'wb+') as destination:
                     #Instead of:
                     #with open('DCSArchivingSystem/testapp/media/files/' + filename, 'wb+') as destination:
-                    with open('C:/Users/Marc/Documents/GitHub/DCS_Archiving_System2/DCSArchivingSystem/DCSArchivingSystem/testapp/media/files/' + filename, 'wb+') as destination:
+                    with open(os.path.realpath(os.path.dirname(__file__)) + '/media/files/' + filename, 'wb+') as destination:
                         for chunk in files.chunks():
                             destination.write(chunk)
                         file = File()
@@ -213,7 +213,7 @@ def scanpage2(request):
         tid= request.POST.get('transaction')
         title= Transaction.objects.get(id=tid)
         faculty_name= request.POST.get('faculty')
-        faculty_name= faculty_name.replace(',', "")
+        faculty_name= faculty_name.replace(', ', ',')
         nameParts=faculty_name.split(',',1)
         faculty= Faculty.objects.get(last_name=nameParts[0],first_name=nameParts[1])
         faculty_id= faculty.id

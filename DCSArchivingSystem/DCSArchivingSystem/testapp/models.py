@@ -28,7 +28,7 @@ class Course(models.Model):
 
 
 class Faculty(models.Model):
-    user            = models.ForeignKey(User)
+#    user            = models.ForeignKey(User)
     first_name      = models.CharField(max_length=64)
     middle_name     = models.CharField(max_length=32, null=True, blank=True)
     last_name       = models.CharField(max_length=32)
@@ -42,8 +42,9 @@ class Faculty(models.Model):
         return self.last_name+", "+ self.first_name
 
 def create_user_profile(sender, instance, created, **kwargs):
-    if created:
-        profile, created = Faculty.objects.get_or_create(user=instance)
+    pass
+    #if created:
+    #    profile, created = Faculty.objects.get_or_create(user=instance)
 
 post_save.connect(create_user_profile, sender=User)
 

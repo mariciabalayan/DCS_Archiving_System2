@@ -24,7 +24,7 @@ class UserAdmin(admin.ModelAdmin):
 
 '''
 class UserProfileInline(admin.StackedInline):
-        model=Faculty
+        #model=Faculty
         can_delete = False
 
 class ContactInline(admin.StackedInline):
@@ -42,7 +42,7 @@ class UserProfileAdmin(UserAdmin):
         #        ('Date information',            {'fields': ['last_login', 'date_joined']}),
         #        ('Personal information',        {'fields': ['email','first_name', 'last_name']}),
         #]
-        inlines=[UserProfileInline, ContactInline, Alternate_emailInline,]
+        inlines=[ContactInline, Alternate_emailInline,]
 
 
 admin.site.unregister(User)
