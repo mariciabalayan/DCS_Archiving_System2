@@ -32,8 +32,9 @@ $(document).ready(function()
 <form action="" method="POST"> {% csrf_token %}
 <button type="submit" class="btn btn-primary">Restore selected files</button>
 {% if is_admin %}
-<a href="/trash/clean" class="btn btn-secondary">Delete all files permanently</a>
+<a href="/trash/clean" class="btn btn-danger pull-right">Delete all files permanently</a>
 {% endif %}
+<br><br>
 <table id = "records_table" border=1 width=80% align=center class="table table-striped">
 	<thead> 
 	<tr> 
