@@ -20,6 +20,7 @@ import urllib2
 import random,string
 import re, os
 import url_constants
+import xlwt
 
 # Create your views here.
 
@@ -88,6 +89,11 @@ def clean_trash(request):
         os.remove(os.path.realpath(os.path.dirname(__file__)) + "/media/" + a.file.name)
         a.delete()
         Log.create(request.user, "Permanently deleted a file", a, None).save()
+	docu_list= Dokument.objects.filter(files=None)
+	for a in docu_list:
+		a.delete()
+        Log.create(request.user, "Document was deleted due to zero files attached", None, a).save()
+
     return HttpResponseRedirect(settings.FORCE_SCRIPT_NAME + "/trash/")
     
 @login_required
@@ -151,6 +157,27 @@ def upload(request):
             
     else:
         return render_to_response('upload.html', context_instance=RequestContext(request))
+
+@login_required
+def create_report(request):
+    book = xlwt.Workbook(encoding="utf-8")
+    sheet1 = book.add_sheet("Report")
+    faculty = Faculty.objects.all()
+    j = 0
+    for f in Faculty._meta.fields:
+        #write them in the excel
+        i = 0
+        if f.name != "user" and f.name != "id" and f.name != "photo":
+            sheet1.write(i, j, f.name)
+            i = i+1
+
+            for a in faculty:
+                sheet1.write(i,j, getattr(a, f.name))
+                i = i+1
+            j = j+1
+
+    book.save("report.xls")
+    return HttpResponseRedirect("/dashboard/")
     
 @login_required
 def scan(request):

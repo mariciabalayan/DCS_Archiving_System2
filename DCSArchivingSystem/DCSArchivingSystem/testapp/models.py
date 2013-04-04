@@ -37,6 +37,8 @@ class Faculty(models.Model):
     course          = models.ForeignKey(Course, null=True, blank=True)
     highest_degree_attained = models.CharField(max_length=100, null=True, blank=True)
     length_of_service       = models.CharField(max_length=100, null=True, blank=True)
+    position        = models.CharField(max_length=64)
+    payroll_number  = models.CharField(max_length=64)
 
     def __unicode__(self):
         return self.last_name+", "+ self.first_name
