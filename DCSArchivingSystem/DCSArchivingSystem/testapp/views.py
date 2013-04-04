@@ -177,7 +177,7 @@ def create_report(request):
             j = j+1
 
     book.save("report.xls")
-    return HttpResponseRedirect("/dashboard/")
+    return HttpResponseRedirect(settings.FORCE_SCRIPT_NAME + "/dashboard/")
     
 @login_required
 def scan(request):
