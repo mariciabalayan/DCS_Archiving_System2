@@ -85,6 +85,9 @@ urlpatterns = patterns('DCSArchivingSystem.testapp.views',
     # Clean
     url(r'^trash/clean/$', 'clean_trash'),
     
+    # Report generation
+    url(r'^report/$', 'create_report'),
+
     # Restore
     url(r'^trash/(?P<file_number>[0-9]+)/restore/$', 'restore'),
     
