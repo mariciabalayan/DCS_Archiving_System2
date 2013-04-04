@@ -88,6 +88,11 @@ def clean_trash(request):
         os.remove(os.path.realpath(os.path.dirname(__file__)) + "/media/" + a.file.name)
         a.delete()
         Log.create(request.user, "Permanently deleted a file", a, None).save()
+	docu_list= Dokument.objects.filter(files=None)
+	for a in docu_list:
+		a.delete()
+        Log.create(request.user, "Document was deleted due to zero files attached", None, a).save()
+
     return HttpResponseRedirect("/trash/")
     
 @login_required
