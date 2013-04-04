@@ -172,7 +172,10 @@ def create_report(request):
             i = i+1
 
             for a in faculty:
-                sheet1.write(i,j, getattr(a, f.name))
+                if f.name == "course" and a.course != None:              # to handle the case of course as foreign key (not good when there is additional foreign key attribute)
+                    sheet1.write(i,j, getattr(a.course, "name"))
+                else:
+                    sheet1.write(i,j, getattr(a, f.name))
                 i = i+1
             j = j+1
 
