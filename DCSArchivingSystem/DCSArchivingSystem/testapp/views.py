@@ -179,7 +179,7 @@ def create_report(request):
                 i = i+1
             j = j+1
 
-    book.save("report.xls")
+    book.save(os.path.realpath(os.path.dirname(__file__)) + "/report.xls")
     return HttpResponseRedirect(settings.FORCE_SCRIPT_NAME + "/dashboard/")
     
 @login_required
