@@ -192,7 +192,7 @@ def create_report(request):
                         max_width= get_width(getattr(a, f.name))
                     
                 i = i+1
-                sheet1.col(j).width= max_width
+                sheet1.col(j).width= max_width+256
             j = j+1
 
     book.save("report.xls")
