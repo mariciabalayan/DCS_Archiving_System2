@@ -96,6 +96,7 @@ urlpatterns = patterns('DCSArchivingSystem.testapp.views',
     # Main Page
     url(r'^$', 'index'),
 
+    url(r'^users/(?P<faculty_number>[0-9]+)/profile/change_status', 'change_status'),
     
     # URL format:
     # If browser url is www.mypage.com/pathInBrowser

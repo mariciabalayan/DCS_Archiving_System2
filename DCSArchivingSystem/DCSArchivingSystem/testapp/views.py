@@ -158,6 +158,11 @@ def upload(request):
     else:
         return render_to_response('upload.html', context_instance=RequestContext(request))
 
+def get_width(something):
+    if something==None:
+        return 1*256;
+    return int((1+len(something)) * 256)
+
 @login_required
 def create_report(request):
     book = xlwt.Workbook(encoding="utf-8")
@@ -167,22 +172,40 @@ def create_report(request):
     for f in Faculty._meta.fields:
         #write them in the excel
         i = 0
-        if f.name != "user" and f.name != "id" and f.name != "photo" and f.name != "birthday":
-            sheet1.write(i, j, f.name)
+        notincluded= ["user", "id", "photo", "course", "birthday", "length_of_service", "active"]
+        if f.name not in notincluded:
+            prettier= f.name.replace('_', ' ').title()
+            sheet1.write(i, j, prettier)
+            max_width= get_width(prettier)
             i = i+1
 
             for a in faculty:
-                if f.name == "course" and a.course != None:              # to handle the case of course as foreign key (not good when there is additional foreign key attribute)
-                    sheet1.write(i,j, getattr(a.course, "name"))
+                if f.name == "position" and a.position != None:              # to handle the case of course as foreign key (not good when there is additional foreign key attribute)
+                    sheet1.write(i,j, getattr(a.position, "name"))
+                    if max_width < get_width(getattr(a.position, "name")):
+                        max_width= get_width(getattr(a.position, "name"))
+                elif f.name == "degree" and a.degree!= None:
+                    sheet1.write(i,j, getattr(a.position, "name"))
+                    if max_width < get_width(getattr(a.degree, "name")):
+                        max_width= get_width(getattr(a.degree, "name"))
+                elif f.name == "status" and a.status!= None:
+                    sheet1.write(i,j, getattr(a.status, "name"))
+                    if max_width < get_width(getattr(a.status, "name")):
+                        max_width= get_width(getattr(a.status, "name"))
                 else:
-                    sheet1.write(i,j, getattr(a, f.name))
+                    sheet1.write(i,j, getattr(a, str(f.name)))
+                    if max_width < get_width(getattr(a, f.name)):
+                        max_width= get_width(getattr(a, f.name))
+                    
                 i = i+1
+                sheet1.col(j).width= max_width+256
             j = j+1
 
     book.save(os.path.realpath(os.path.dirname(__file__)) + '/media/files' + '/report.xls')
     #return HttpResponse(os.path.realpath(os.path.dirname(__file__)) + "\report.xls")
     return HttpResponseRedirect('/media/files' + '/report.xls')
-    
+
+
 @login_required
 def scan(request):
     return render_to_response('scan.html')
@@ -279,9 +302,18 @@ def view_profile(request, faculty_number):
     doc_list= Dokument.objects.filter(faculty_id = int(faculty_number))
     current_faculty = Faculty.objects.get(id = int(faculty_number))
     tagged_docs = Tag.objects.filter(faculty_id = int(faculty_number))
-    return render_to_response('profile.html', {'current_faculty': current_faculty, 'file_list': doc_list, 'tagged_docs':tagged_docs}, context_instance=RequestContext(request))
+    return render_to_response('profile.html', {'user':request.user,'current_faculty': current_faculty, 'file_list': doc_list, 'tagged_docs':tagged_docs}, context_instance=RequestContext(request))
 
-
+@login_required
+def change_status(request, faculty_number):
+    
+    doc_list= Dokument.objects.filter(faculty_id = int(faculty_number))
+    current_faculty = Faculty.objects.get(id = int(faculty_number))
+    tagged_docs = Tag.objects.filter(faculty_id = int(faculty_number))
+    current_faculty.active= not current_faculty.active
+    current_faculty.save()
+#    return render_to_response('profile.html', {'user':request.user,'current_faculty': current_faculty, 'file_list': doc_list, 'tagged_docs':tagged_docs}, context_instance=RequestContext(request))
+    return HttpResponseRedirect(settings.FORCE_SCRIPT_NAME + "/users/"+faculty_number+"/profile")
     
 @login_required
 def request(request):
