@@ -89,9 +89,9 @@ def clean_trash(request):
         os.remove(os.path.realpath(os.path.dirname(__file__)) + "/media/" + a.file.name)
         a.delete()
         Log.create(request.user, "Permanently deleted a file", a, None).save()
-	docu_list= Dokument.objects.filter(files=None)
-	for a in docu_list:
-		a.delete()
+    docu_list= Dokument.objects.filter(files=None)
+    for a in docu_list:
+        a.delete()
         Log.create(request.user, "Document was deleted due to zero files attached", None, a).save()
 
     return HttpResponseRedirect(settings.FORCE_SCRIPT_NAME + "/trash/")
@@ -167,7 +167,7 @@ def create_report(request):
     for f in Faculty._meta.fields:
         #write them in the excel
         i = 0
-        if f.name != "user" and f.name != "id" and f.name != "photo":
+        if f.name != "user" and f.name != "id" and f.name != "photo" and f.name != "birthday":
             sheet1.write(i, j, f.name)
             i = i+1
 
@@ -179,8 +179,9 @@ def create_report(request):
                 i = i+1
             j = j+1
 
-    book.save(os.path.realpath(os.path.dirname(__file__)) + "/report.xls")
-    return HttpResponseRedirect(settings.FORCE_SCRIPT_NAME + "/dashboard/")
+    book.save(os.path.realpath(os.path.dirname(__file__)) + '/media/files' + '/report.xls')
+    #return HttpResponse(os.path.realpath(os.path.dirname(__file__)) + "\report.xls")
+    return HttpResponseRedirect('/media/files' + '/report.xls')
     
 @login_required
 def scan(request):
