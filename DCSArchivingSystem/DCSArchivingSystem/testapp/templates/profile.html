@@ -7,7 +7,14 @@
     <script src="/static/bootstrap/js/bootstrap.min.js"></script>
 	<br><div class="hero-unit2">
 	<center><img src="{{ MEDIA_URL }}{{ current_faculty.photo }}" class = "img-polaroid" width = 150px height = 150px/><br>
-	<h2>{{ current_faculty.last_name }}, {{ current_faculty.first_name }} {{ current_faculty.middle_name }}</h2></div>
+    {% if current_faculty.active %}
+    <img src= "{{ MEDIA_URL}}icon/online.png" ><span>
+    {% else %}
+    <img src= "{{ MEDIA_URL}}icon/offline.png" >
+    {% endif %}
+    
+	{{ current_faculty.last_name }}, {{ current_faculty.first_name }} {{ current_faculty.middle_name }} </span>
+    </div>
 	
 	<form class="form-search" method="get" action="search/">
 	{% csrf_token %}
