@@ -12,8 +12,14 @@
     {% else %}
     <img src= "{{ MEDIA_URL}}icon/offline.png" >
     {% endif %}
-    
-	{{ current_faculty.last_name }}, {{ current_faculty.first_name }} {{ current_faculty.middle_name }} </span>
+	{{ current_faculty.last_name }}, {{ current_faculty.first_name }} {{ current_faculty.middle_name }} </span> <br>
+    {% if user.is_superuser %}
+    {% if current_faculty.active %}
+    <a href= "change_status" > (Deactivate) </a>
+    {%else%}
+    <a href= "change_status" > (Reactivate) </a>
+    {% endif %}
+    {% endif %}
     </div>
 	
 	<form class="form-search" method="get" action="search/">
