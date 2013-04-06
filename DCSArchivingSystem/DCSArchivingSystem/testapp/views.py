@@ -161,15 +161,21 @@ def create_report(request):
     for f in Faculty._meta.fields:
         #write them in the excel
         i = 0
-        if f.name != "user" and f.name != "id" and f.name != "photo":
-            sheet1.write(i, j, f.name)
+        notincluded= ["user", "id", "photo", "course", "birthday", "length_of_service", "active"]
+        if f.name not in notincluded:
+            prettier= f.name.replace('_', ' ').title()
+            sheet1.write(i, j, prettier)
             i = i+1
 
             for a in faculty:
-                if f.name == "course" and a.course != None:              # to handle the case of course as foreign key (not good when there is additional foreign key attribute)
-                    sheet1.write(i,j, getattr(a.course, "name"))
+                if f.name == "position" and a.position != None:              # to handle the case of course as foreign key (not good when there is additional foreign key attribute)
+                    sheet1.write(i,j, getattr(a.position, "name"))
+                elif f.name == "degree" and a.degree!= None:
+                    sheet1.write(i,j, getattr(a.position, "name"))
+                elif f.name == "status" and a.status!= None:
+                    sheet1.write(i,j, getattr(a.status, "name"))
                 else:
-                    sheet1.write(i,j, getattr(a, f.name))
+                    sheet1.write(i,j, getattr(a, str(f.name)))
                 i = i+1
             j = j+1
 

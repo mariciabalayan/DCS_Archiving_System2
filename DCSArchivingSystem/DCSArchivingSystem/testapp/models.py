@@ -26,7 +26,22 @@ class Course(models.Model):
     def __unicode__(self):
         return self.name + ", " + self.department.name
 
+class Position(models.Model):
+    name			= models.CharField(max_length= 32)
+    def __unicode__(self):
+        return self.name
 
+class Degree(models.Model):
+    name		= models.CharField(max_length= 32)
+    def __unicode__(self):
+        return self.name
+
+class Status(models.Model):
+    name        = models.CharField(max_length= 32)
+    def __unicode__(self):
+        return self.name
+    
+		
 class Faculty(models.Model):
     user            = models.ForeignKey(User)
     first_name      = models.CharField(max_length=64)
@@ -35,10 +50,18 @@ class Faculty(models.Model):
     photo           = models.FileField(upload_to='photos', null=True, blank=True)
     birthday        = models.DateField(null=True, blank=True)
     course          = models.ForeignKey(Course, null=True, blank=True)
-    highest_degree_attained = models.CharField(max_length=100, null=True, blank=True)
     length_of_service       = models.CharField(max_length=100, null=True, blank=True)
-    position        = models.CharField(max_length=64)
+    position        = models.ForeignKey(Position, null= True, blank= True)
+    rank			= models.CharField(max_length= 32)
+    salary_grade	= models.CharField(max_length= 32)
     payroll_number  = models.CharField(max_length=64)
+    status          = models.ForeignKey(Status, null= True, blank= True)
+    employee_no		= models.CharField(max_length= 32)
+    degree			= models.ForeignKey(Degree, null=True, blank=True)
+    appointment_date_start  = models.DateField(null= True, blank= True)
+    appointment_date_end    = models.DateField(null= True, blank= True)
+    active		    = models.BooleanField(default=1)
+    remarks         = models.CharField(max_length= 256, null= True, blank= True)
 
     def __unicode__(self):
         return self.last_name+", "+ self.first_name
@@ -90,7 +113,8 @@ class Dokument(models.Model):
     faculty         = models.ForeignKey(Faculty)
     transaction     = models.ForeignKey(Transaction)
     files           = models.ManyToManyField(File)
-    
+#    timestamp       = models.DateTimeField(auto_now=True)
+
     def __unicode__(self):
         return self.faculty.last_name+", "+ self.faculty.first_name+ ": "+ self.transaction.name
 
@@ -130,3 +154,6 @@ admin.site.register(Faculty)
 admin.site.register(File)
 admin.site.register(Log)
 admin.site.register(Tag)
+admin.site.register(Degree)
+admin.site.register(Position)
+admin.site.register(Status)
