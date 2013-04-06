@@ -5,14 +5,15 @@
 {%block content%} 
 
     <script src="/static/bootstrap/js/bootstrap.min.js"></script>
-	<br><div class="hero-unit2">
+	<br><div class="well">
 	<center><img src="{{ MEDIA_URL }}{{ current_faculty.photo }}" class = "img-polaroid" width = 150px height = 150px/><br>
+    <h3>
     {% if current_faculty.active %}
     <img src= "{{ MEDIA_URL}}icon/online.png" ><span>
     {% else %}
     <img src= "{{ MEDIA_URL}}icon/offline.png" >
     {% endif %}
-	{{ current_faculty.last_name }}, {{ current_faculty.first_name }} {{ current_faculty.middle_name }} </span> <br>
+	{{ current_faculty.last_name }}, {{ current_faculty.first_name }} {{ current_faculty.middle_name }} </span></h3>
     {% if user.is_superuser %}
     {% if current_faculty.active %}
     <a href= "change_status" > (Deactivate) </a>
