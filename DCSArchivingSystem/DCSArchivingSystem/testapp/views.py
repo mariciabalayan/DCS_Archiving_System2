@@ -305,8 +305,8 @@ def change_status(request, faculty_number):
     tagged_docs = Tag.objects.filter(faculty_id = int(faculty_number))
     current_faculty.active= not current_faculty.active
     current_faculty.save()
-    return render_to_response('profile.html', {'user':request.user,'current_faculty': current_faculty, 'file_list': doc_list, 'tagged_docs':tagged_docs}, context_instance=RequestContext(request))
-
+#    return render_to_response('profile.html', {'user':request.user,'current_faculty': current_faculty, 'file_list': doc_list, 'tagged_docs':tagged_docs}, context_instance=RequestContext(request))
+    return HttpResponseRedirect("/users/"+faculty_number+"/profile")
     
 @login_required
 def request(request):
