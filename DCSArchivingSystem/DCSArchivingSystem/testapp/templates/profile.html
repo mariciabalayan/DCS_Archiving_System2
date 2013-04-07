@@ -16,9 +16,9 @@
 	{{ current_faculty.last_name }}, {{ current_faculty.first_name }} {{ current_faculty.middle_name }} </span></h3>
     {% if user.is_superuser %}
     {% if current_faculty.active %}
-    <a href= "change_status" > (Deactivate) </a>
+    <a href= "/users/{{current_faculty.id}}/profile/change_status" > (Deactivate) </a>
     {%else%}
-    <a href= "change_status" > (Reactivate) </a>
+    <a href= "/users/{{current_faculty.id}}/profile/change_status" > (Reactivate) </a>
     {% endif %}
     {% endif %}
     </div>
