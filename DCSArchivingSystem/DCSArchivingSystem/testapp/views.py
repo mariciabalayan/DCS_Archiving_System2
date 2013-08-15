@@ -284,7 +284,7 @@ def view_users(request):
 def view_logs(request):
     if request.user.is_staff:
         log_list= Log.objects.all()
-        return render_to_response('logs.html', {'log_list': log_list})
+        return render_to_response('logs.html', {'log_list': log_list}, context_instance=RequestContext(request))
     return HttpResponseRedirect("/dashboard/")
     
 @login_required
