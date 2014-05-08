@@ -22,7 +22,7 @@
     {% endif %}
     </div>
 	
-	<form class="form-search" method="get" action="users/{{ current_faculty.id }}/profile/search/">
+	<form class="form-search" method="get" action="{% url 'DCSArchivingSystem.testapp.views.search_Files' current_faculty.id %}">
 	{% csrf_token %}
 	<span class="label label-info"><h2>Profile</h2></span>
 	<table border=1 width=80% align=center class="table table-striped">	

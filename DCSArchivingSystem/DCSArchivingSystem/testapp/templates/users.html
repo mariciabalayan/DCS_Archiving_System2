@@ -6,7 +6,7 @@
  
 <br>
 {{ state }}
-<form class="form-search" method="get" action="users/search/">
+<form class="form-search" method="get" action="{% url 'DCSArchivingSystem.testapp.views.search_Faculty' %}">
 {% csrf_token %}
 <div class="row">
   <div class="span offset9">

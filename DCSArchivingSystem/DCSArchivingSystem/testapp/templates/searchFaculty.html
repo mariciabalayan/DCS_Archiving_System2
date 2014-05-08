@@ -4,7 +4,7 @@
 
 {%block content%}    
 <br>
-<form class="form-search" method="get" action="users/search/">
+<form class="form-search" method="get" action="{% url 'DCSArchivingSystem.testapp.views.search_Faculty' %}">
 {% csrf_token %}
 <div class="row">
   <div class="span offset9">
@@ -42,7 +42,7 @@ $(document).ready(function()
         <tr>
         <td>{{ a.last_name }}</td>
         <td>{{ a.first_name }}</td>
-		<td><a href="users/{{ a.id }}/profile">View Faculty</a></td>
+		<td><a href="{% url 'DCSArchivingSystem.testapp.views.view_profile' a.id %}">View Faculty</a></td>
 		</tr>		
     {% endfor %}
 	{% paginate %}

@@ -22,7 +22,7 @@
 		<tr><th>Length Of Service</th><td>{{ current_faculty.length_of_service }}</td></tr>		
 	</table>
 	<br>
-	<form class="form-search" method="get" action="users/{{current_faculty.id}}/profile/search/">
+	<form class="form-search" method="get" action="{% url 'DCSArchivingSystem.testapp.views.search_Files' current_faculty.id %}">
 	{% csrf_token %}
 	<div class="row">
 	  <div class="span offset9">
@@ -41,7 +41,7 @@
 			{% autopaginate results 10 %}
 			{% for a in results %}
 				{% if a.faculty_id == current_faculty.id %}
-			<tr><td><a href="records/{{a.id}}/view">{{ a.transaction }}</a></td></tr>
+			<tr><td><a href="{% url 'DCSArchivingSystem.testapp.views.view' a.transaction %}">{{ a.transaction }}</a></td></tr>
 				{% endif %}
 				{% empty %}
                                 <tr><td>There are no search results for: <b>{{ keyword }}</b></a></td></tr>
@@ -50,7 +50,7 @@
 	</tbody>
 		</table>
 
-	<br> <a href="users/{{ current_faculty.id }}/profile/">Back to profile</a>
+	<br> <a href="{% url 'DCSArchivingSystem.testapp.views.view_profile' current_faculty.id % }">Back to profile</a>
 {% endblock %}
 
 </html>
