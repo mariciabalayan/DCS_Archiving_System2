@@ -7,7 +7,8 @@ from testapp import url_constants
 from django.contrib import admin
 admin.autodiscover()
 
-
+def apply_script_name(url):
+    return r'^%s%s$' %(settings.FORCE_SCRIPT_NAME, url)
 
 urlpatterns = patterns('DCSArchivingSystem.testapp.views',
     # 'DCSArchivingSystem.testapp.views' is a prefix

@@ -6,7 +6,7 @@
  
 <br>
 {{ state }}
-<form class="form-search" method="get" action="records/search/">
+<form class="form-search" method="get" action="{% url 'DCSArchivingSystem.testapp.views.search_Records' %}">
 {% csrf_token %}
 <div class="row">
   <div class="span offset9">
@@ -41,9 +41,9 @@ $(document).ready(function()
 	{% autopaginate doc_list 10 %}
     {% for a in doc_list %}
         <tr>
-        <td><a href="users/{{a.faculty_id}}/profile">{{ a.faculty }}</a></td>
-        <td><a href="records/{{a.id}}/view/">{{ a.transaction }}</a></td>
-        <td><a href="records/{{a.id}}/delete/"> Delete </a></td>
+        <td><a href="{% url 'DCSArchivingSystem.testapp.views.view_profile' a.faculty_id %}">{{ a.faculty }}</a></td>
+        <td><a href="{% url 'DCSArchivingSystem.testapp.views.view' a.transaction %}">{{ a.transaction }}</a></td>
+        <td><a href="{% url 'DCSArchivingSystem.testapp.views.request_delete' a.id %}"> Delete </a></td>
 		</tr>		
     {% endfor %}
 	{% paginate %}

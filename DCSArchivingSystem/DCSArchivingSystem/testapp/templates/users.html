@@ -38,12 +38,14 @@ $(document).ready(function()
 	</tr> 
 	</thead> 
 	<tbody>
+
 	{% autopaginate users_list 10 %}
     {% for a in users_list %}
+		{% url 'DCSArchivingSystem.testapp.views.view_profile' a.id as view_url %}
         <tr>
         <td>{{ a.last_name }}</td>
         <td>{{ a.first_name }}</td>
-		<td><a href="users/{{ a.id }}/profile">View Faculty</a></td>
+		<td><a href="{{view_url}}">View Faculty</a></td>
 		</tr>	
     {% endfor %}
 	{% paginate %}

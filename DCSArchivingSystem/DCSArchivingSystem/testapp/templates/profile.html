@@ -15,9 +15,9 @@
 	{{ current_faculty.last_name }}, {{ current_faculty.first_name }} {{ current_faculty.middle_name }} </span> <br>
     {% if user.is_superuser %}
     {% if current_faculty.active %}
-    <a href= "users/{{ current_faculty.id }}/profile/change_status" > (Deactivate) </a>
+    <a href= "{% url 'DCSArchivingSystem.testapp.views.change_status' current_faculty.id  %}" > (Deactivate) </a>
     {%else%}
-    <a href= "users/{{ current_faculty.id }}/profile/change_status" > (Reactivate) </a>
+    <a href= "{% url 'DCSArchivingSystem.testapp.views.change_status' current_faculty.id  %}" > (Reactivate) </a>
     {% endif %}
     {% endif %}
     </div>
@@ -56,7 +56,7 @@
 		<table border=1 width=80% align=center class="table table-striped">
 			{% autopaginate file_list 5 %}
 	        {% for a in file_list %}
-				<tr><td><a href="records/{{a.id}}/view">{{ a.transaction }}</a></td></tr>
+				<tr><td><a href="{% url 'DCSArchivingSystem.testapp.views.view' a.transaction %}">{{ a.transaction }}</a></td></tr>
 	        {% empty %}
 				<tr><td>There are no files for this faculty yet.</a></td></tr>
 	        {% endfor %}

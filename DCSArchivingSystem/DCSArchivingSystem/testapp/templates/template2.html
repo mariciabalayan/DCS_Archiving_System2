@@ -40,13 +40,13 @@
 		  <a class="brand" href="dashboard/">DCS Archiving System</a>
 		  <div class="nav-collapse">
 			<ul class="nav pull-right">
-				<li class=""><a href="dashboard/"><i class="icon-home icon-white"></i> Home</a>
-				<li class=""><a href="scanpage/"><i class="icon-camera icon-white"></i> Scan</a>
-				<li class=""><a href="users/"><i class="icon-user icon-white"></i> Faculty</a>
-				<li class=""><a href="records/"><i class="icon-book icon-white"></i> Records</a>
-				<li class=""><a href="report/"><i class="icon-book icon-white"></i> Report</a>
-				<li class=""><a href="trash/"><i class="icon-trash icon-white"></i> Trash</a>
-				<li class=""><a href="logout/"><i class="icon-off icon-white"></i> Log out</a>			
+				<li class=""><a href="{% url 'DCSArchivingSystem.testapp.views.dashboard' %}">		<i class="icon-home icon-white">	</i>	Home	</a>
+				<li class=""><a href="{% url 'DCSArchivingSystem.testapp.views.scanpage' %}">		<i class="icon-camera icon-white">	</i>	Scan	</a>
+				<li class=""><a href="{% url 'DCSArchivingSystem.testapp.views.view_users' %}">		<i class="icon-user icon-white">	</i>	Faculty	</a>
+				<li class=""><a href="{% url 'DCSArchivingSystem.testapp.views.records' %}">		<i class="icon-book icon-white">	</i>	Records	</a>
+				<li class=""><a href="{% url 'DCSArchivingSystem.testapp.views.create_report' %}">	<i class="icon-book icon-white">	</i>	Report	</a>
+				<li class=""><a href="{% url 'DCSArchivingSystem.testapp.views.trash' %}">			<i class="icon-trash icon-white">	</i>	Trash	</a>
+				<li class=""><a href="{% url 'DCSArchivingSystem.testapp.views.log_out' %}">		<i class="icon-off icon-white">		</i>	Log out	</a>			
 			</ul>
 		  </div><!-- /.nav-collapse -->
 	  </div><!-- /.navbar-inner -->

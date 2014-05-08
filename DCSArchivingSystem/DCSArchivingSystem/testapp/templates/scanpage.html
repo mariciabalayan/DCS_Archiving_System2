@@ -19,7 +19,7 @@
 	<div class="span6">
 		<div class="hero-unit2">
 			<h2> Scan Form </h2>
-			<form enctype="multipart/form-data" method="post" action="scanpage2/">
+			<form enctype="multipart/form-data" method="post" action="{% url 'DCSArchivingSystem.testapp.views.scanpage2' %}">
 			{% csrf_token %}
 				<div class="control-group">
 					<label class="control-label">Title</label>
@@ -42,7 +42,7 @@
 					<div class="controls">	
 					<select name= "faculty">
 					{% for a in faculty_list %}
-						<option>{{ a.last_name }}, {{ a.first_name}}</option>
+						<option value="{{a.id}}, {{ a.last_name }}, {{ a.first_name}}">{{ a.last_name }}, {{ a.first_name}}</option>
 					{% endfor %}
 					</select>
 					</div> 

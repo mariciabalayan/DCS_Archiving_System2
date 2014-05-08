@@ -268,14 +268,14 @@ def scanpage2(request):
         title= Transaction.objects.get(id=tid)
         faculty_name= request.POST.get('faculty')
         faculty_name= faculty_name.replace(', ', ',')
-        nameParts=faculty_name.split(',',1)
-        faculty= Faculty.objects.get(last_name=nameParts[0],first_name=nameParts[1])
+        nameParts=faculty_name.split(',',2)
+        faculty= Faculty.objects.get(id=nameParts[0],last_name=nameParts[1],first_name=nameParts[2])
         faculty_id= faculty.id
 
         httpHost = "http://%s" %(request.META.get('HTTP_HOST'))
         
         if (title!= None and title != '') and (faculty!= None and faculty!= ''):
-            location = "scn://" + urllib2.quote("fid=%d&name=%s&tid=%s&title=%s&uid=%s&origin=%s" %(faculty_id,request.POST.get('faculty'),tid,title,request.session['_auth_user_id'],httpHost+url_constants.upload_url()))
+            location = "scn://" + urllib2.quote("fid=%d&name=%s&tid=%s&title=%s&uid=%s&origin=%s" %(faculty_id,'%s, %s' %(nameParts[1],nameParts[2]),tid,title,request.session['_auth_user_id'],httpHost+url_constants.upload_url()))
             res = HttpResponse(location, status=302)
             res['Location'] = location
             return res

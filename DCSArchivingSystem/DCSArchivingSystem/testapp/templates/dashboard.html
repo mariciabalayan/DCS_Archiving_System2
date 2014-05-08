@@ -23,7 +23,7 @@
 		<div class="row">
 			<div class="span4">
 				<div class="holder smooth">
-                    <a href = "scanpage/"><h4><center>SCAN A DOCUMENT</center></h4>
+                    <a href = "{% url 'DCSArchivingSystem.testapp.views.scanpage' %}"><h4><center>SCAN A DOCUMENT</center></h4>
 					{% load static %}<img width = 300px height = 300px src="{% static "images/scan2.png" %}" class = "img-rounded" width=100%/>
 					<div class="go-left">
                     <font color = white> Scan &raquo; </font></a>
@@ -33,7 +33,7 @@
 			
 			<div class="span4">
 				<div class="holder smooth">
-					<a href = "users/"><h4><center>VIEW FACULTY LIST</center></h4>
+					<a href = "{% url 'DCSArchivingSystem.testapp.views.view_users' %}"><h4><center>VIEW FACULTY LIST</center></h4>
 					{% load static %} <img width = 300px height = 300px src="{% static "images/prof2.png" %}" class = "img-rounded" width=100%/>
 				<div class="go-left">
 					<font color = white> Faculty &raquo; </font></a>
@@ -44,7 +44,7 @@
 			
 			<div class="span4">
 				<div class="holder smooth">
-					<a href = "records/"><h4><center>VIEW FACULTY RECORDS</center></h4>
+					<a href = "{% url 'DCSArchivingSystem.testapp.views.records' %}"><h4><center>VIEW FACULTY RECORDS</center></h4>
 					{% load static %} <img width = 300px height = 300px src="{% static "images/rex2.png" %}" class = "img-rounded" width=100%/>
 					<div class="go-left">
 						<font color = white> Records &raquo; </font></a>

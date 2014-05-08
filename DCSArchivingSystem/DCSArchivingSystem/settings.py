@@ -1,6 +1,7 @@
 # Django settings for DCSArchivingSystem project.
 
 import os
+from url_prefix import getUrlPrefix
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -11,16 +12,19 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
-FORCE_SCRIPT_NAME = '/archiving'
+#Gets the WSGIScriptAlias url from "../django.conf"
+scriptDir = os.path.dirname(os.path.abspath(__file__))
+confLocation = '../django.conf'
+FORCE_SCRIPT_NAME = getUrlPrefix(os.path.join(scriptDir,confLocation))
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'DCS_Archiving_System',                      # Or path to database file if using sqlite3.
-        'USER': 'CS192',                      # Not used with sqlite3.
-        'PASSWORD': 'CS192',                  # Not used with sqlite3.
-        'HOST': '127.0.0.1',                      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '3306',                      # Set to empty string for default. Not used with sqlite3.
+        'ENGINE': 'django.db.backends.mysql',   # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': 'DCS_Archiving_System',         # Or path to database file if using sqlite3.
+        'USER': 'CS192',                        # Not used with sqlite3.
+        'PASSWORD': 'CS192',                    # Not used with sqlite3.
+        'HOST': '127.0.0.1',                    # Set to empty string for localhost. Not used with sqlite3.
+        'PORT': '3306',                         # Set to empty string for default. Not used with sqlite3.
     }
 }
 
